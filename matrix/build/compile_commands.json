@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/denis/Projects/dlang-works/matrix/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/dlang-works.dir/dlang-works.cpp.o -c /home/denis/Projects/dlang-works/matrix/dlang-works.cpp",
+  "file": "/home/denis/Projects/dlang-works/matrix/dlang-works.cpp"
+}
+]

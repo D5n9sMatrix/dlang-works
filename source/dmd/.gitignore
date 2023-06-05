@@ -1,0 +1,55 @@
+*.[oa]
+*.deps
+.B*
+test/test_results
+test/trace.def
+test/trace.log
+generated/
+*.obj
+*.map
+-.DS_Store
+-trace.def
+-trace.log
+*.lst
+.dub
+dub.selections.json
+
+# Visual Studio files
+*.exe
+*.pdb
+src/vcbuild/Win32
+src/vcbuild/x64
+src/vcbuild/.vs
+*.ncb
+*.suo
+*.sdf
+*.opensdf
+*.user
+*.ilk
+ipch
+.vscode
+
+# Xcode files
+DerivedData/
+xcuserdata/
+dmd.xcodeproj/
+
+# Output files
+src/*.bak
+src/*.lib
+src/*.lst
+tags
+
+# OSX
+src/optabgen.dSYM/
+
+# GCov
+*.gcno
+*.gcda
+
+# IntelliJ IDEA / CLion
+.idea/
+dmd.iml
+
+# Deliberately ignored files
+untracked_files/

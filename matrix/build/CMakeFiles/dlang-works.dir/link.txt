@@ -1,0 +1,2 @@
+/usr/bin/ar qc libdlang-works.a CMakeFiles/dlang-works.dir/dlang-works.cpp.o
+/usr/bin/ranlib libdlang-works.a

@@ -1,0 +1,137 @@
+name "dmd"
+description "The DMD compiler"
+authors "Walter Bright"
+copyright "Copyright © 1999-2018, The D Language Foundation"
+license "BSL-1.0"
+
+targetType "none"
+dependency ":frontend" version="*"
+
+subPackage {
+  name "root"
+  targetType "library"
+  sourcePaths "src/dmd/common" "src/dmd/root"
+}
+
+subPackage {
+  name "lexer"
+  targetType "library"
+  sourcePaths
+
+  sourceFiles \
+    "src/dmd/console.d" \
+    "src/dmd/entity.d" \
+    "src/dmd/errors.d" \
+    "src/dmd/file_manager.d" \
+    "src/dmd/globals.d" \
+    "src/dmd/id.d" \
+    "src/dmd/identifier.d" \
+    "src/dmd/lexer.d" \
+    "src/dmd/tokens.d" \
+    "src/dmd/utils.d"
+
+  versions \
+    "CallbackAPI" \
+    "DMDLIB"
+
+  preGenerateCommands `
+    "$${DUB_EXE}" \
+    --arch=$${DUB_ARCH} \
+    --compiler=$${DC} \
+    --single "$${DUB_PACKAGE_DIR}config.d" \
+    -- "$${DUB_PACKAGE_DIR}generated/dub" \
+    "$${DUB_PACKAGE_DIR}VERSION" \
+    /etc
+   ` platform="posix"
+
+  preGenerateCommands `"%DUB_EXE%" --arch=%DUB_ARCH% --compiler="%DC%" --single "%DUB_PACKAGE_DIR%config.d" -- "%DUB_PACKAGE_DIR%generated/dub" "%DUB_PACKAGE_DIR%VERSION"` platform="windows"
+
+  stringImportPaths \
+    "src/dmd/res" \
+    "generated/dub"
+
+  dependency "dmd:root" version="*"
+}
+
+subPackage {
+  name "parser"
+  targetType "library"
+  sourcePaths
+
+  sourceFiles \
+    "src/dmd/astbase.d" \
+    "src/dmd/parse.d" \
+    "src/dmd/transitivevisitor.d" \
+    "src/dmd/permissivevisitor.d" \
+    "src/dmd/strictvisitor.d"
+
+  versions "CallbackAPI"
+
+  dependency "dmd:lexer" version="*"
+}
+
+subPackage {
+  name "frontend"
+  targetType "library"
+  sourcePaths "src/dmd"
+  stringImportPaths "src/dmd/res"
+
+  versions \
+    "NoBackend" \
+    "GC" \
+    "NoMain" \
+    "MARS" \
+    "CallbackAPI"
+
+  excludedSourceFiles "src/dmd/backend/*"
+  excludedSourceFiles "src/dmd/root/*"
+  excludedSourceFiles "src/dmd/common/*"
+  excludedSourceFiles "src/dmd/{\
+    astbase,\
+    console,\
+    entity,\
+    errors,\
+    file_manager,\
+    globals,\
+    id,\
+    identifier,\
+    lexer,\
+    parse,\
+    permissivevisitor,\
+    strictvisitor,\
+    tokens,\
+    transitivevisitor,\
+    utf,\
+    utils\
+  }.d"
+  excludedSourceFiles "src/dmd/{\
+    dmsc,\
+    e2ir,\
+    eh,\
+    glue,\
+    iasm,\
+    iasmdmd,\
+    iasmgcc,\
+    irstate,\
+    lib,\
+    libelf,\
+    libmach,\
+    libmscoff,\
+    libomf,\
+    link,\
+    objc_glue,\
+    s2ir,\
+    scanelf,\
+    scanmach,\
+    scanmscoff,\
+    scanomf,\
+    tocsym,\
+    toctype,\
+    tocvdebug,\
+    toobj,\
+    todt,\
+    toir\
+  }.d"
+
+  dependency "dmd:parser" version="*"
+}
