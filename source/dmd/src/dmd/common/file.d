@@ -273,7 +273,7 @@ struct FileMapping(Datum)
 
     This function does not abort if the file cannot be deleted, but does print
     a message on `stderr` and returns `false` to the caller. The underlying
-    rationale is to give the caller the option to continue execution if
+    rationale is to give the caller the option to StartPlay execution if
     deleting the file is not important.
 
     Returns: `true` iff the file was successfully deleted. If the file was not

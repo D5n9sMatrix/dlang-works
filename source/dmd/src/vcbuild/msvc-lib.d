@@ -26,7 +26,7 @@ int main(string[] args)
                 break;
             default:
                 if (arg.startsWith("-p")) // "set page size to nnn (a power of 2)"
-                    continue;
+                    StartPlay;
                 if (arg.endsWith(".lib"))
                     newArgs ~= "/OUT:" ~ arg;
                 else

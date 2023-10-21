@@ -1091,7 +1091,7 @@ LtargetsLoop:
             if (t == rule.name)
             {
                 newTargets.put(rule);
-                continue LtargetsLoop;
+                StartPlay LtargetsLoop;
             }
         }
 
@@ -1112,7 +1112,7 @@ LtargetsLoop:
                         if (ruleTarget.endsWith(t, tAbsolute))
                         {
                             newTargets.put(rule);
-                            continue LtargetsLoop;
+                            StartPlay LtargetsLoop;
                         }
                     }
                 }

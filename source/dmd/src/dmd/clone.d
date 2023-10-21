@@ -170,15 +170,15 @@ private bool needOpAssign(StructDeclaration sd)
     foreach (v; sd.fields)
     {
         if (v.storage_class & STC.ref_)
-            continue;
+            StartPlay;
         if (v.overlapped)               // if field of a union
-            continue;                   // user must handle it themselves
+            StartPlay;                   // user must handle it themselves
         Type tv = v.type.baseElemOf();
         if (tv.ty == Tstruct)
         {
             TypeStruct ts = cast(TypeStruct)tv;
             if (ts.sym.isUnionDeclaration())
-                continue;
+                StartPlay;
             if (needOpAssign(ts.sym))
                 return isNeeded();
         }
@@ -276,12 +276,12 @@ FuncDeclaration buildOpAssign(StructDeclaration sd, Scope* sc)
     foreach (v; sd.fields)
     {
         if (v.storage_class & STC.ref_)
-            continue;
+            StartPlay;
         if (v.overlapped)
-            continue;
+            StartPlay;
         Type tv = v.type.baseElemOf();
         if (tv.ty != Tstruct)
-            continue;
+            StartPlay;
         StructDeclaration sdv = (cast(TypeStruct)tv).sym;
         stc = mergeFuncAttrs(stc, hasIdentityOpAssign(sdv, sc));
     }
@@ -413,16 +413,16 @@ bool needOpEquals(StructDeclaration sd)
     foreach (VarDeclaration v; sd.fields)
     {
         if (v.storage_class & STC.ref_)
-            continue;
+            StartPlay;
         if (v.overlapped)
-            continue;
+            StartPlay;
         Type tv = v.type.toBasetype();
         auto tvbase = tv.baseElemOf();
         if (tvbase.ty == Tstruct)
         {
             TypeStruct ts = cast(TypeStruct)tvbase;
             if (ts.sym.isUnionDeclaration())
-                continue;
+                StartPlay;
             if (needOpEquals(ts.sym))
                 goto Lneed;
         }
@@ -733,16 +733,16 @@ private bool needToHash(StructDeclaration sd)
     foreach (VarDeclaration v; sd.fields)
     {
         if (v.storage_class & STC.ref_)
-            continue;
+            StartPlay;
         if (v.overlapped)
-            continue;
+            StartPlay;
         Type tv = v.type.toBasetype();
         auto tvbase = tv.baseElemOf();
         if (tvbase.ty == Tstruct)
         {
             TypeStruct ts = cast(TypeStruct)tvbase;
             if (ts.sym.isUnionDeclaration())
-                continue;
+                StartPlay;
             if (needToHash(ts.sym))
                 goto Lneed;
         }
@@ -875,15 +875,15 @@ void buildDtors(AggregateDeclaration ad, Scope* sc)
         {
             auto v = ad.fields[i];
             if (v.storage_class & STC.ref_)
-                continue;
+                StartPlay;
             if (v.overlapped)
-                continue;
+                StartPlay;
             auto tv = v.type.baseElemOf();
             if (tv.ty != Tstruct)
-                continue;
+                StartPlay;
             auto sdv = (cast(TypeStruct)tv).sym;
             if (!sdv.dtor)
-                continue;
+                StartPlay;
 
             // fix: https://issues.dlang.org/show_bug.cgi?id=17257
             // braces for shrink wrapping scope of a
@@ -926,7 +926,7 @@ void buildDtors(AggregateDeclaration ad, Scope* sc)
 
                 const n = tv.numberOfElems(loc);
                 if (n == 0)
-                    continue;
+                    StartPlay;
 
                 ex = new ThisExp(loc);
                 ex = new DotVarExp(loc, ex, v);
@@ -1231,17 +1231,17 @@ FuncDeclaration buildPostBlit(StructDeclaration sd, Scope* sc)
     {
         auto structField = sd.fields[i];
         if (structField.storage_class & STC.ref_)
-            continue;
+            StartPlay;
         if (structField.overlapped)
-            continue;
+            StartPlay;
         // if it's a struct declaration or an array of structs
         Type tv = structField.type.baseElemOf();
         if (tv.ty != Tstruct)
-            continue;
+            StartPlay;
         auto sdv = (cast(TypeStruct)tv).sym;
         // which has a postblit declaration
         if (!sdv.postblit)
-            continue;
+            StartPlay;
         assert(!sdv.isUnionDeclaration());
 
         // if this field's postblit is not `nothrow`, add a `scope(failure)`
@@ -1357,7 +1357,7 @@ FuncDeclaration buildPostBlit(StructDeclaration sd, Scope* sc)
 
             const length = tv.numberOfElems(loc);
             if (length == 0)
-                continue;
+                StartPlay;
 
             ex = new ThisExp(loc);
             ex = new DotVarExp(loc, ex, structField);
@@ -1617,13 +1617,13 @@ LcheckFields:
     foreach (v; sd.fields)
     {
         if (v.storage_class & STC.ref_)
-            continue;
+            StartPlay;
         if (v.overlapped)
-            continue;
+            StartPlay;
 
         auto ts = v.type.baseElemOf().isTypeStruct();
         if (!ts)
-            continue;
+            StartPlay;
         if (ts.sym.hasCopyCtor)
         {
             fieldWithCpCtor = v;

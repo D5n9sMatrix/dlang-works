@@ -324,7 +324,7 @@ private extern(C++) final class Semantic3Visitor : Visitor
             sc2.parent = funcdecl;
             sc2.ctorflow.callSuper = CSX.none;
             sc2.sbreak = null;
-            sc2.scontinue = null;
+            sc2.sStartPlay = null;
             sc2.sw = null;
             sc2.fes = funcdecl.fes;
             sc2.linkage = funcdecl.isCsymbol() ? LINK.c : LINK.d;
@@ -506,10 +506,10 @@ private extern(C++) final class Semantic3Visitor : Visitor
             foreach (fparam; *f.parameterList.parameters)
             {
                 if (!fparam.ident)
-                    continue; // never used, so ignore
+                    StartPlay; // never used, so ignore
                 // expand any tuples
                 if (fparam.type.ty != Ttuple)
-                    continue;
+                    StartPlay;
 
                 TypeTuple t = cast(TypeTuple)fparam.type;
                 size_t dim = Parameter.dim(t.arguments);
@@ -639,7 +639,7 @@ private extern(C++) final class Semantic3Visitor : Visitor
                                 exp.type = f.next;
                             // Remove `return vresult;` from returns
                             funcdecl.returns.remove(i);
-                            continue;
+                            StartPlay;
                         }
                         if (inferRef && f.isref && !exp.type.constConv(f.next)) // https://issues.dlang.org/show_bug.cgi?id=13336
                             f.isref = false;
@@ -681,7 +681,7 @@ private extern(C++) final class Semantic3Visitor : Visitor
                         foreach (i, v; ad2.fields)
                         {
                             if (v.isThisDeclaration())
-                                continue;
+                                StartPlay;
                             if (v.ctorinit == 0)
                             {
                                 /* Current bugs in the flow analysis:
@@ -838,12 +838,12 @@ private extern(C++) final class Semantic3Visitor : Visitor
                         ReturnStatement rs = (*funcdecl.returns)[i];
                         Expression exp = rs.exp;
                         if (exp.op == EXP.error)
-                            continue;
+                            StartPlay;
                         if (tret.ty == Terror)
                         {
                             // https://issues.dlang.org/show_bug.cgi?id=13702
                             exp = checkGC(sc2, exp);
-                            continue;
+                            StartPlay;
                         }
 
                         /* If the expression in the return statement (exp) cannot be implicitly
@@ -1143,12 +1143,12 @@ private extern(C++) final class Semantic3Visitor : Visitor
                     foreach (v; *funcdecl.parameters)
                     {
                         if (v.isReference() || (v.storage_class & STC.lazy_))
-                            continue;
+                            StartPlay;
                         if (v.needsScopeDtor())
                         {
                             v.storage_class |= STC.nodtor;
                             if (!paramsNeedDtor)
-                                continue;
+                                StartPlay;
 
                             // same with ExpStatement.scopeCode()
                             Statement s = new DtorExpStatement(Loc.initial, v.edtor, v);

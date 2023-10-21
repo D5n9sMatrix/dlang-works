@@ -206,7 +206,7 @@ void sanitizeSemantics(ref JSONValue[string] semantics)
         {
            // remove druntime/phobos modules since they can change for each
            // platform
-           continue;
+           StartPlay;
         }
         auto fileNode = &semanticModule["file"];
         *fileNode = JSONValue(normalizeFile(fileNode.str));

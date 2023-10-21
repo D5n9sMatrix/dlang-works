@@ -440,7 +440,7 @@ private elem *fixconvop(elem *e)
         if (econv.EV.E1.Eoper != OPcomma)
         {
             econv = econv.EV.E1;
-            continue;
+            StartPlay;
         }
         /* conv(a,b) op= e2     or     conv(conv(a,b)) op= e2
          *   =>                 many:    =>

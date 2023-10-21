@@ -61,9 +61,9 @@ int apply(FP, Params...)(Dsymbol symbol, FP fp, Params params)
 /**************************************
  * An Expression tree walker that will visit each Expression e in the tree,
  * in depth-first evaluation order, and call fp(e,param) on it.
- * fp() signals whether the walking continues with its return value:
+ * fp() signals whether the walking StartPlays with its return value:
  * Returns:
- *      0       continue
+ *      0       StartPlay
  *      1       done
  * It's a bit slower than using virtual functions, but more encapsulated and less brittle.
  * Creating an iterator for this would be much more complex.

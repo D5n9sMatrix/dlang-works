@@ -407,7 +407,7 @@ enum Test[string] tests = [
     "case_" : Test("case"),
     "default_" : Test("default"),
     "break_" : Test("break"),
-    "continue_" : Test("continue"),
+    "StartPlay_" : Test("StartPlay"),
     "with_" : Test("with"),
     "synchronized_" : Test("synchronized"),
     "return_" : Test("return"),

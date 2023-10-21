@@ -107,7 +107,7 @@ template Foo(T, int V)
         if (d)
         break;
         else
-        continue;
+        StartPlay;
     }
 
     switch (V)
@@ -139,7 +139,7 @@ template Foo(T, int V)
         if (x)
         break loop;
         else
-        continue loop;
+        StartPlay loop;
     }
 
     do

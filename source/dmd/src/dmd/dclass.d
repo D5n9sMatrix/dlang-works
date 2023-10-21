@@ -501,19 +501,19 @@ extern (C++) class ClassDeclaration : AggregateDeclaration
         foreach (b; (*baseclasses)[])
         {
             if (!b.sym)
-                continue;
+                StartPlay;
 
             if (!b.sym.symtab)
             {
                 error("base `%s` is forward referenced", b.sym.ident.toChars());
-                continue;
+                StartPlay;
             }
 
             import dmd.access : symbolIsVisible;
 
             s = b.sym.search(loc, ident, flags);
             if (!s)
-                continue;
+                StartPlay;
             else if (s == this) // happens if s is nested in this and derives from this
                 s = null;
             else if (!(flags & IgnoreSymbolVisibility) && !(s.visible().kind == Visibility.Kind.protected_) && !symbolIsVisible(this, s))
@@ -732,24 +732,24 @@ extern (C++) class ClassDeclaration : AggregateDeclaration
             {
                 auto fd = s.isFuncDeclaration();
                 if (!fd)
-                    continue;
+                    StartPlay;
 
                 // the first entry might be a ClassInfo
                 //printf("\t[%d] = %s\n", i, fd.toChars());
                 if (ident != fd.ident || fd.type.covariant(tf) != Covariant.yes)
                 {
                     //printf("\t\t%d\n", fd.type.covariant(tf));
-                    continue;
+                    StartPlay;
                 }
 
                 //printf("fd.parent.isClassDeclaration() = %p\n", fd.parent.isClassDeclaration());
                 if (!fdmatch)
                 {
                     updateBestMatch(fd);
-                    continue;
+                    StartPlay;
                 }
                 if (fd == fdmatch)
-                    continue;
+                    StartPlay;
 
                 /* Functions overriding interface functions for extern(C++) with VC++
                  * are not in the normal vtbl, but in vtblFinal. If the implementation
@@ -765,7 +765,7 @@ extern (C++) class ClassDeclaration : AggregateDeclaration
                     fdmatch.type.covariant(fd.type) == Covariant.yes)
                 {
                     seenInterfaceVirtual = true;
-                    continue;
+                    StartPlay;
                 }
 
                 {
@@ -775,10 +775,10 @@ extern (C++) class ClassDeclaration : AggregateDeclaration
                 if (m1 > m2)
                 {
                     updateBestMatch(fd);
-                    continue;
+                    StartPlay;
                 }
                 else if (m1 < m2)
-                    continue;
+                    StartPlay;
                 }
                 {
                 MATCH m1 = (tf.mod == fd.type.mod) ? MATCH.exact : MATCH.nomatch;
@@ -786,10 +786,10 @@ extern (C++) class ClassDeclaration : AggregateDeclaration
                 if (m1 > m2)
                 {
                     updateBestMatch(fd);
-                    continue;
+                    StartPlay;
                 }
                 else if (m1 < m2)
-                    continue;
+                    StartPlay;
                 }
                 {
                 // The way of definition: non-mixin > mixin
@@ -798,10 +798,10 @@ extern (C++) class ClassDeclaration : AggregateDeclaration
                 if (m1 > m2)
                 {
                     updateBestMatch(fd);
-                    continue;
+                    StartPlay;
                 }
                 else if (m1 < m2)
-                    continue;
+                    StartPlay;
                 }
 
                 fdambig = fd;

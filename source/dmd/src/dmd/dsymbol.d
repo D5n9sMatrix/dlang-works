@@ -640,10 +640,10 @@ extern (C++) class Dsymbol : ASTNode
                 {
                     auto sa = getDsymbol(oarg);
                     if (!sa)
-                        continue;
+                        StartPlay;
                     sa = sa.toAlias().toParent2();
                     if (!sa)
-                        continue;
+                        StartPlay;
                     if (sa == p1)
                         return true;
                     else if (p2 && sa == p2)
@@ -1143,7 +1143,7 @@ extern (C++) class Dsymbol : ASTNode
             {
                 assert(ident);
                 if (!(*ps).ident || !(*ps).ident.equals(ident))
-                    continue;
+                    StartPlay;
                 if (!s)
                     s = *ps;
                 else if (s.isOverloadable() && (*ps).isOverloadable())
@@ -1449,7 +1449,7 @@ public:
         {
             // If private import, don't search it
             if ((flags & IgnorePrivateImports) && visibilities[i] == Visibility.Kind.private_)
-                continue;
+                StartPlay;
             int sflags = flags & (IgnoreErrors | IgnoreAmbiguous); // remember these in recursive searches
             Dsymbol ss = (*importedScopes)[i];
             //printf("\tscanning import '%s', visibilities = %d, isModule = %p, isImport = %p\n", ss.toChars(), visibilities[i], ss.isModule(), ss.isImport());
@@ -1457,12 +1457,12 @@ public:
             if (ss.isModule())
             {
                 if (flags & SearchLocalsOnly)
-                    continue;
+                    StartPlay;
             }
             else // mixin template
             {
                 if (flags & SearchImportsOnly)
-                    continue;
+                    StartPlay;
 
                 sflags |= SearchLocalsOnly;
             }
@@ -1472,7 +1472,7 @@ public:
             Dsymbol s2 = ss.search(loc, ident, sflags | (ss.isModule() ? IgnorePrivateImports : IgnoreNone));
             import dmd.access : symbolIsVisible;
             if (!s2 || !(flags & IgnoreSymbolVisibility) && !symbolIsVisible(this, s2))
-                continue;
+                StartPlay;
             if (!s)
             {
                 s = s2;
@@ -1520,7 +1520,7 @@ public:
                             }
                             if (!symbolIsVisible(this, s))
                                 s = s2;
-                            continue;
+                            StartPlay;
                         }
 
                         /* Two different overflow sets can have the same members
@@ -1536,7 +1536,7 @@ public:
                                     if (so.a[j] !is so2.a[j])
                                         goto L1;
                                 }
-                                continue;  // the same
+                                StartPlay;  // the same
                               L1:
                                 {   } // different
                             }
@@ -1605,11 +1605,11 @@ public:
                     {
                         os.a[j] = s;
                     }
-                    goto Lcontinue;
+                    goto LStartPlay;
                 }
             }
             os.push(s);
-        Lcontinue:
+        LStartPlay:
         }
         return os;
     }

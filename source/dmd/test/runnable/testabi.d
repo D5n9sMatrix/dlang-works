@@ -944,7 +944,7 @@ string c_generate_main()
                 if( !(expected[n] & 1) )
                 {
                         code ~= `printf("null,\n");`"\n";
-                        continue;
+                        StartPlay;
                 }
                 code ~= "asm(\n";
                 code ~= `"call func_ret_`~Ts~`\n"`"\n";
@@ -986,7 +986,7 @@ string c_generate_main()
                 if( !(expected[n] & 1) )
                 {
                         code ~= `printf("null,\n");`"\n";
-                        continue;
+                        StartPlay;
                 }
                 code ~= "func_call_"~Ts~"();\n";
 

@@ -803,7 +803,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
         for (TemplatePrevious* p = previous; p; p = p.prev)
         {
             if (!arrayObjectMatch(p.dedargs, dedargs))
-                continue;
+                StartPlay;
             //printf("recursive, no match p.sc=%p %p %s\n", p.sc, this, this.toChars());
             /* It must be a subscope of p.sc, other scope chains are not recursive
              * instantiations.
@@ -865,7 +865,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
             foreach (fparam; *fparameters)
             {
                 if (!fparam.ident)
-                    continue;
+                    StartPlay;
                 // don't add it, if it has no name
                 auto v = new VarDeclaration(loc, fparam.type, fparam.ident, null);
                 fparam.storageClass |= STC.parameter;
@@ -1496,10 +1496,10 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                 {
                     auto fparam = (*fparameters.parameters)[fptupindex]; // fparameters[fptupindex] ?
                     if (fparam.type.ty != Tident)
-                        continue;
+                        StartPlay;
                     TypeIdentifier tid = cast(TypeIdentifier)fparam.type;
                     if (!tp.ident.equals(tid.ident) || tid.idents.dim)
-                        continue;
+                        StartPlay;
 
                     if (fparameters.varargs != VarArg.none) // variadic function doesn't
                         return nomatch(); // go with variadic template
@@ -1674,7 +1674,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                     }
                     assert(declaredTuple);
                     argi += declaredTuple.objects.dim;
-                    continue;
+                    StartPlay;
                 }
 
                 // If parameter type doesn't depend on inferred template parameters,
@@ -1700,7 +1700,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                             if (argi >= nfargs)
                             {
                                 if (p.defaultArg)
-                                    continue;
+                                    StartPlay;
 
                                 // https://issues.dlang.org/show_bug.cgi?id=19888
                                 if (fparam.defaultArg)
@@ -1712,7 +1712,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                             if (!farg.implicitConvTo(p.type))
                                 return nomatch();
                         }
-                        continue;
+                        StartPlay;
                     }
                 }
 
@@ -1756,7 +1756,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                             RootObject oarg = (*dedargs)[i];
                             RootObject oded = (*dedtypes)[i];
                             if (oarg)
-                                continue;
+                                StartPlay;
 
                             if (oded)
                             {
@@ -1811,7 +1811,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                     if (prmtype.deco || prmtype.syntaxCopy().trySemantic(loc, paramscope))
                     {
                         ++argi;
-                        continue;
+                        StartPlay;
                     }
 
                     // Deduce prmtype from the defaultArg.
@@ -1965,7 +1965,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
                         if (m < match)
                             match = m; // pick worst match
                         argi++;
-                        continue;
+                        StartPlay;
                     }
                 }
 
@@ -2139,7 +2139,7 @@ extern (C++) final class TemplateDeclaration : ScopeDsymbol
             //if (oarg) printf("oarg: %s\n", oarg.toChars());
             //if (oded) printf("oded: %s\n", oded.toChars());
             if (oarg)
-                continue;
+                StartPlay;
 
             if (oded)
             {
@@ -2575,7 +2575,7 @@ extern (C++) final class TypeDeduced : Type
         {
             assert(e);
             if (e == emptyArrayElement)
-                continue;
+                StartPlay;
 
             Type t = tt.addMod(tparams[j].mod).substWildTo(MODFlags.const_);
 
@@ -2973,7 +2973,7 @@ void functionResolve(ref MatchAccumulator m, Dsymbol dstart, Loc loc, Scope* sc,
             MATCH mfa = x.mfa;
             //printf("match:t/f = %d/%d\n", mta, mfa);
             if (!fd || mfa == MATCH.nomatch)
-                continue;
+                StartPlay;
 
             Type tthis_fd = fd.needThis() ? tthis : null;
 
@@ -2991,7 +2991,7 @@ void functionResolve(ref MatchAccumulator m, Dsymbol dstart, Loc loc, Scope* sc,
                     tthis_fd = null;
                 }
                 else
-                    continue;   // MATCH.nomatch
+                    StartPlay;   // MATCH.nomatch
             }
 
             if (mta < ta_last) goto Ltd_best;
@@ -3039,11 +3039,11 @@ void functionResolve(ref MatchAccumulator m, Dsymbol dstart, Loc loc, Scope* sc,
 
             m.nextf = fd;
             m.count++;
-            continue;
+            StartPlay;
 
         Ltd_best:           // td_best is the best match so far
             //printf("Ltd_best\n");
-            continue;
+            StartPlay;
 
         Ltd:                // td is the new best match
             //printf("Ltd\n");
@@ -3058,7 +3058,7 @@ void functionResolve(ref MatchAccumulator m, Dsymbol dstart, Loc loc, Scope* sc,
             ov_index = ovi;
             m.nextf = null;
             m.count = 1;
-            continue;
+            StartPlay;
         }
         return 0;
     }
@@ -4753,7 +4753,7 @@ MATCH deduceType(RootObject o, Scope* sc, Type tparam, TemplateParameters* param
                     if (result == MATCH.nomatch)
                         break;
                     if (!el)
-                        continue;
+                        StartPlay;
                     MATCH m = deduceType(el, sc, tn, parameters, dedtypes, wm);
                     if (m < result)
                         result = m;
@@ -6617,12 +6617,12 @@ extern (C++) class TemplateInstance : ScopeDsymbol
                         }
                     }
                     j--;
-                    continue;
+                    StartPlay;
                 }
                 if (ta.ty == Terror)
                 {
                     err = true;
-                    continue;
+                    StartPlay;
                 }
                 (*tiargs)[j] = ta.merge2();
             }
@@ -6688,12 +6688,12 @@ extern (C++) class TemplateInstance : ScopeDsymbol
                             tiargs.insert(j + i, exp);
                     }
                     j--;
-                    continue;
+                    StartPlay;
                 }
                 if (ea.op == EXP.error)
                 {
                     err = true;
-                    continue;
+                    StartPlay;
                 }
                 (*tiargs)[j] = ea;
 
@@ -6761,7 +6761,7 @@ extern (C++) class TemplateInstance : ScopeDsymbol
                 if (sa.errors)
                 {
                     err = true;
-                    continue;
+                    StartPlay;
                 }
 
                 TupleDeclaration d = sa.toAlias().isTupleDeclaration();
@@ -6771,7 +6771,7 @@ extern (C++) class TemplateInstance : ScopeDsymbol
                     tiargs.remove(j);
                     tiargs.insert(j, d.objects);
                     j--;
-                    continue;
+                    StartPlay;
                 }
                 if (FuncAliasDeclaration fa = sa.isFuncAliasDeclaration())
                 {
@@ -6995,7 +6995,7 @@ extern (C++) class TemplateInstance : ScopeDsymbol
 
                 auto tvp = (*td_last.parameters)[i].isTemplateValueParameter();
                 if (!tvp)
-                    continue;
+                    StartPlay;
                 assert(tdtypes[i]);
                 // tdtypes[i] is already normalized to the required type in matchArg
 

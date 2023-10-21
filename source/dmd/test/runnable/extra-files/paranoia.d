@@ -1849,7 +1849,7 @@ int part8(){
 			printf("  X / X  traps when X = "), printFLOAT("%g", X), printf("\n");
 		else {
 			V9 = (Y / X - Half) - Half;
-			if (V9 == Zero) continue;
+			if (V9 == Zero) StartPlay;
 			if (V9 == - U1 && Indx < 5) BadCond(Flaw, "");
 			else  BadCond(Serious, "");
 			printf("  X / X differs from 1 when X = "); printFLOAT("%.17e", X); printf("\n");
@@ -1984,7 +1984,7 @@ version(NOPAUSE) {} else {
 version(NOPAUSE) {} else {
 	char[8]  ch;
 
-	printf("\nTo continue, press RETURN");
+	printf("\nTo StartPlay, press RETURN");
 	fflush(stdout);
 	read(KEYBOARD, ch, 8);
 }

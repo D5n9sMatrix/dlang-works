@@ -855,7 +855,7 @@ UnionExp Equal(EXP op, const ref Loc loc, Type type, Expression e1, Expression e
                 Expression ee1 = (*es1.elements)[i];
                 Expression ee2 = (*es2.elements)[i];
                 if (ee1 == ee2)
-                    continue;
+                    StartPlay;
                 if (!ee1 || !ee2)
                 {
                     cmp = 0;

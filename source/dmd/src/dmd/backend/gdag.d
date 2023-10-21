@@ -225,13 +225,13 @@ private void aewalk(elem **pn,vec_t ae)
                             if (OTunary(n.Eoper))
                             {
                                 n = n.EV.E1;
-                                continue;
+                                StartPlay;
                             }
                             else if (OTbinary(n.Eoper))
                             {
                                 aeclear(n.EV.E1);
                                 n = n.EV.E2;
-                                continue;
+                                StartPlay;
                             }
                             break;
                         }
@@ -338,25 +338,25 @@ private void aewalk(elem **pn,vec_t ae)
             {
                 elem *e = go.expnod[i];
 
-                if (!e) continue;
+                if (!e) StartPlay;
                 if (OTunary(e.Eoper))
                 {
                     if (vec_testbit(e.EV.E1.Eexp,ae))
-                        continue;
+                        StartPlay;
                 }
                 else if (OTbinary(e.Eoper))
                 {
                     if (vec_testbit(e.EV.E1.Eexp,ae) &&
                         vec_testbit(e.EV.E2.Eexp,ae))
-                        continue;
+                        StartPlay;
                 }
                 else if (e.Eoper == OPvar)
                 {
                     if (e.EV.Vsym != s)
-                        continue;
+                        StartPlay;
                 }
                 else
-                    continue;
+                    StartPlay;
                 vec_clearbit(i,ae);
             }
         }
@@ -827,7 +827,7 @@ private void abewalk(elem *n,vec_t ae,vec_t aeval)
             {
                 elem *e = go.expnod[i];
 
-                if (!e) continue;
+                if (!e) StartPlay;
                 if (el_appears(e,s))
                     vec_clearbit(i,ae);
             }
@@ -953,12 +953,12 @@ private void abeset(elem *e,vec_t ae,vec_t aeval,int flag)
         {   case OPnot:
                 flag ^= 1;
                 e = e.EV.E1;
-                continue;
+                StartPlay;
 
             case OPbool:
             case OPeq:
                 e = e.EV.E1;
-                continue;
+                StartPlay;
 
             default:
                 break;

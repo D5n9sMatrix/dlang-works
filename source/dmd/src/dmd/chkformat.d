@@ -68,7 +68,7 @@ bool checkPrintfFormat(ref const Loc loc, scope const char[] format, scope Expre
         if (format[i] != '%')
         {
             ++i;
-            continue;
+            StartPlay;
         }
         bool widthStar;
         bool precisionStar;
@@ -78,14 +78,14 @@ bool checkPrintfFormat(ref const Loc loc, scope const char[] format, scope Expre
         i = j;
 
         if (fmt == Format.percent)
-            continue;                   // "%%", no arguments
+            StartPlay;                   // "%%", no arguments
 
         if (isVa_list)
         {
             // format check only
             if (fmt == Format.error)
                 deprecation(loc, "format specifier `\"%.*s\"` is invalid", cast(int)slice.length, slice.ptr);
-            continue;
+            StartPlay;
         }
 
         if (fmt == Format.GNU_m)
@@ -115,7 +115,7 @@ bool checkPrintfFormat(ref const Loc loc, scope const char[] format, scope Expre
             bool skip;
             auto e = getNextArg(skip);
             if (skip)
-                continue;
+                StartPlay;
             if (!e)
                 return true;
             auto t = e.type.toBasetype();
@@ -128,7 +128,7 @@ bool checkPrintfFormat(ref const Loc loc, scope const char[] format, scope Expre
             bool skip;
             auto e = getNextArg(skip);
             if (skip)
-                continue;
+                StartPlay;
             if (!e)
                 return true;
             auto t = e.type.toBasetype();
@@ -139,7 +139,7 @@ bool checkPrintfFormat(ref const Loc loc, scope const char[] format, scope Expre
         bool skip;
         auto e = getNextArg(skip);
         if (skip)
-            continue;
+            StartPlay;
         if (!e)
             return true;
         auto t = e.type.toBasetype();
@@ -341,7 +341,7 @@ bool checkScanfFormat(ref const Loc loc, scope const char[] format, scope Expres
         if (format[i] != '%')
         {
             ++i;
-            continue;
+            StartPlay;
         }
         bool asterisk;
         size_t j = i;
@@ -350,14 +350,14 @@ bool checkScanfFormat(ref const Loc loc, scope const char[] format, scope Expres
         i = j;
 
         if (fmt == Format.percent || asterisk)
-            continue;   // "%%", "%*": no arguments
+            StartPlay;   // "%%", "%*": no arguments
 
         if (isVa_list)
         {
             // format check only
             if (fmt == Format.error)
                 deprecation(loc, "format specifier `\"%.*s\"` is invalid", cast(int)slice.length, slice.ptr);
-            continue;
+            StartPlay;
         }
 
         Expression getNextArg()

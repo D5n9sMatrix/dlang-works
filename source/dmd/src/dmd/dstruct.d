@@ -363,11 +363,11 @@ extern (C++) class StructDeclaration : AggregateDeclaration
                     /* Treat as 0 for the purposes of putting the initializer
                      * in the BSS segment, or doing a mass set to 0
                      */
-                    continue;
+                    StartPlay;
 
                 // Zero size fields are zero initialized
                 if (vd.type.size(vd.loc) == 0)
-                    continue;
+                    StartPlay;
 
                 // Examine init to see if it is all 0s.
                 auto exp = vd.getConstInitializer();

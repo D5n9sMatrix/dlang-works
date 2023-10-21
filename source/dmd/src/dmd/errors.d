@@ -290,7 +290,7 @@ else
 /**
  * The type of the diagnostic handler
  * see verrorPrint for arguments
- * Returns: true if error handling is done, false to continue printing to stderr
+ * Returns: true if error handling is done, false to StartPlay printing to stderr
  */
 alias DiagnosticHandler = bool delegate(const ref Loc location, Color headerColor, const(char)* header, const(char)* messageFormat, va_list args, const(char)* prefix1, const(char)* prefix2);
 

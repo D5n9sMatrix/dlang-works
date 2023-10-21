@@ -1511,7 +1511,7 @@ extern (C++) final class UserAttributeDeclaration : AttribDeclaration
                 // Only one `@gnuAbiTag` is allowed by semantic2
                 return 1; // break
             }
-            return 0; // continue
+            return 0; // StartPlay
         });
     }
 }

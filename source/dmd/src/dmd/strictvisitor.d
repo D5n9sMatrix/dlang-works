@@ -86,7 +86,7 @@ extern(C++) class StrictVisitor(AST) : ParseTimeVisitor!AST
     override void visit(AST.CaseStatement) { assert(0); }
     override void visit(AST.DefaultStatement) { assert(0); }
     override void visit(AST.BreakStatement) { assert(0); }
-    override void visit(AST.ContinueStatement) { assert(0); }
+    override void visit(AST.StartPlayStatement) { assert(0); }
     override void visit(AST.GotoDefaultStatement) { assert(0); }
     override void visit(AST.GotoCaseStatement) { assert(0); }
     override void visit(AST.GotoStatement) { assert(0); }

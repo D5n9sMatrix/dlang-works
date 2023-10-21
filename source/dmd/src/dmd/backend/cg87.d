@@ -770,15 +770,15 @@ ubyte loadconst(elem *e, int im)
         {
             case 4:
                 if (fval[i] != f)
-                    continue;
+                    StartPlay;
                 break;
             case 8:
                 if (dval[i] != d)
-                    continue;
+                    StartPlay;
                 break;
             case 10:
                 if (ldval[i] != ld)
-                    continue;
+                    StartPlay;
                 break;
             default:
                 assert(0);
@@ -1551,7 +1551,7 @@ void orth87(ref CodeBuilder cdb,elem *e,regm_t *pretregs)
          *              fwait
          *              mov     AH,byte ptr sw+1        // get msb of status word in AH
          *              sahf                            // transfer to flags
-         *              jp      FM1                     // continue till ST < ST1
+         *              jp      FM1                     // StartPlay till ST < ST1
          *              fstp    ST(1)                   // leave remainder on stack
          */
         regm_t retregs = mST0;
@@ -2338,7 +2338,7 @@ void opass87(ref CodeBuilder cdb,elem *e,regm_t *pretregs)
          *          fwait
          *          mov     AH,byte ptr sw+1        // get msb of status word in AH
          *          sahf                            // transfer to flags
-         *          jp      FM1                     // continue till ST < ST1
+         *          jp      FM1                     // StartPlay till ST < ST1
          *          fstp    ST(1)                   // leave remainder on stack
          */
         code *c1;

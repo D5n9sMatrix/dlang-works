@@ -100,7 +100,7 @@ else
     {   int mark;
 
         if (b.Bflags & BFLoutsideprolog)
-            continue;
+            StartPlay;
 
         // If all predecessors are marked
         mark = 0;

@@ -672,7 +672,7 @@ extern (C++) class FuncDeclaration : Declaration
                         if (fdv.isFuture())
                         {
                             bestvi = vi;
-                            continue;           // keep looking
+                            StartPlay;           // keep looking
                         }
                         return vi; // no need to look further
                     }
@@ -684,7 +684,7 @@ extern (C++) class FuncDeclaration : Declaration
                     }
                     exactvi = vi;
                     bestvi = vi;
-                    continue;
+                    StartPlay;
                 }
 
                 StorageClass stc = 0;
@@ -1734,13 +1734,13 @@ extern (C++) class FuncDeclaration : Declaration
         {
             Type tp = fparam.type;
             if (!tp)
-                continue;
+                StartPlay;
 
             if (fparam.storageClass & (STC.lazy_ | STC.out_ | STC.ref_))
             {
                 if (!traverseIndirections(tp, t))
                     return false;
-                continue;
+                StartPlay;
             }
 
             /* Goes down one level of indirection, then calls traverseIndirection() on
@@ -2080,7 +2080,7 @@ extern (C++) class FuncDeclaration : Declaration
                  * so they never make outer functions closure.
                  */
                 if (f.ident == Id.require || f.ident == Id.ensure)
-                    continue;
+                    StartPlay;
 
                 //printf("\t\tf = %p, %s, isVirtual=%d, isThis=%p, tookAddressOf=%d\n", f, f.toChars(), f.isVirtual(), f.isThis(), f.tookAddressOf);
 
@@ -2093,7 +2093,7 @@ extern (C++) class FuncDeclaration : Declaration
                 {
                     FuncDeclaration fx = s.isFuncDeclaration();
                     if (!fx)
-                        continue;
+                        StartPlay;
                     if (fx.isThis() || fx.tookAddressOf)
                     {
                         //printf("\t\tfx = %s, isVirtual=%d, isThis=%p, tookAddressOf=%d\n", fx.toChars(), fx.isVirtual(), fx.isThis(), fx.tookAddressOf);
@@ -2166,7 +2166,7 @@ extern (C++) class FuncDeclaration : Declaration
                 {
                     auto fx = s.isFuncDeclaration();
                     if (!fx)
-                        continue;
+                        StartPlay;
                     if (fx.isThis() ||
                         fx.tookAddressOf ||
                         checkEscapingSiblings(fx, this))
@@ -2945,7 +2945,7 @@ Expression addInvariant(AggregateDeclaration ad, VarDeclaration vthis)
  *       can be null
  *
  * Returns:
- *      ==0     continue
+ *      ==0     StartPlay
  *      !=0     done (and the return value from the last dg() call)
  */
 extern (D) int overloadApply(Dsymbol fstart, scope int delegate(Dsymbol) dg, Scope* sc = null)

@@ -757,7 +757,7 @@ loop_simple:
     foreach (i; [10, 20])
     {
         sum += i;
-        continue loop_simple;
+        StartPlay loop_simple;
     }
     assert(sum == 30);
 
@@ -769,7 +769,7 @@ X:  foreach (i; SimpleCounter11885())
         switch(i)
         {
             case 3:
-                continue X;
+                StartPlay X;
             default:
                 last = i;
        }
@@ -784,7 +784,7 @@ loop_with_range:
     foreach (i; SimpleCounter11885())
     {
         last = i;
-        continue loop_with_range;
+        StartPlay loop_with_range;
     }
     assert(last == 4);
     assert(SimpleCounter11885.destroyedCount == 2);
@@ -796,17 +796,17 @@ loop_with_dtors:
     for (auto x = Foo11885(4), y = Foo11885(5); x.x != 10; ++x.x)
     {
         if (x.x == 8)
-            continue loop_with_dtors;
+            StartPlay loop_with_dtors;
     }
     assert(Foo11885.destroyed == [5, 10]);
     Foo11885.destroyed = null;
 
     //----------------------------------------
-    // Same with an unlabelled continue.
+    // Same with an unlabelled StartPlay.
     for (auto x = Foo11885(4), y = Foo11885(5); x.x != 10; ++x.x)
     {
         if (x.x == 7)
-            continue;
+            StartPlay;
     }
     assert(Foo11885.destroyed == [5, 10]);
     Foo11885.destroyed = null;

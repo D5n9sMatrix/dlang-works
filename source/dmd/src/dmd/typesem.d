@@ -249,7 +249,7 @@ private void resolveHelper(TypeQualified mt, const ref Loc loc, Scope* sc, Dsymb
             if (sx)
             {
                 s = sx.toAlias();
-                continue;
+                StartPlay;
             }
             if (tx)
                 ex = new TypeExp(loc, tx);
@@ -1336,7 +1336,7 @@ extern(C++) Type typeSemantic(Type type, const ref Loc loc, Scope* sc)
                 if (fparam.type.ty == Terror)
                 {
                     errors = true;
-                    continue;
+                    StartPlay;
                 }
 
                 fparam.type = fparam.type.addStorageClass(fparam.storageClass);
@@ -1344,7 +1344,7 @@ extern(C++) Type typeSemantic(Type type, const ref Loc loc, Scope* sc)
                 if (fparam.storageClass & (STC.auto_ | STC.alias_ | STC.static_))
                 {
                     if (!fparam.type)
-                        continue;
+                        StartPlay;
                 }
 
                 fparam.type = fparam.type.cAdjustParamType(sc); // adjust C array and function parameter types
@@ -1402,7 +1402,7 @@ extern(C++) Type typeSemantic(Type type, const ref Loc loc, Scope* sc)
                      */
                     dim = tf.parameterList.length;
                     i--;
-                    continue;
+                    StartPlay;
                 }
 
                 if (t.ty == Tfunction)
@@ -2048,7 +2048,7 @@ extern(C++) Type typeSemantic(Type type, const ref Loc loc, Scope* sc)
             if (scopesym.isStructDeclaration())
             {
                 sc2 = sc2.enclosing;
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -4195,7 +4195,7 @@ Expression dotExp(Type mt, Scope* sc, Expression e, Identifier ident, int flag)
                 VarDeclaration v = mt.sym.fields[i];
                 // Don't include hidden 'this' pointer
                 if (v.isThisDeclaration())
-                    continue;
+                    StartPlay;
                 Expression ex;
                 if (ev)
                     ex = new DotVarExp(e.loc, ev, v);
@@ -4343,7 +4343,7 @@ Expression dotExp(Type mt, Scope* sc, Expression e, Identifier ident, int flag)
                         break;
                     auto ad = fd.isThis();
                     if (!ad && fd.isNested())
-                        continue;
+                        StartPlay;
                     if (!ad)
                         break;
                     if (auto cdp = ad.isClassDeclaration())
@@ -4360,7 +4360,7 @@ Expression dotExp(Type mt, Scope* sc, Expression e, Identifier ident, int flag)
                     break;
                 }
 
-                // Continue to show enclosing function's frame (stack or closure).
+                // StartPlay to show enclosing function's frame (stack or closure).
                 auto dve = new DotVarExp(e.loc, e, mt.sym.vthis);
                 dve.type = mt.sym.vthis.type.addMod(e.type.mod);
                 return dve;
@@ -4518,7 +4518,7 @@ Expression dotExp(Type mt, Scope* sc, Expression e, Identifier ident, int flag)
                     // This is almost same as getRightThis() in expressionsem.d
                     Expression e1;
                     Type t;
-                    /* returns: true to continue, false to return */
+                    /* returns: true to StartPlay, false to return */
                     if (f.hasDualContext())
                     {
                         if (f.followInstantiationContext(ad))
@@ -4889,18 +4889,18 @@ private Expression getMaxMinValue(EnumDeclaration ed, const ref Loc loc, Identif
     {
         EnumMember em = (*ed.members)[i].isEnumMember();
         if (!em)
-            continue;
+            StartPlay;
         if (em.errors)
         {
             ed.errors = true;
-            continue;
+            StartPlay;
         }
 
         if (em.semanticRun < PASS.semanticdone)
         {
             em.error("is forward referenced looking for `.%s`", id.toChars());
             ed.errors = true;
-            continue;
+            StartPlay;
         }
 
         if (first)
@@ -4929,7 +4929,7 @@ private Expression getMaxMinValue(EnumDeclaration ed, const ref Loc loc, Identif
             if (ec.op == EXP.error)
             {
                 ed.errors = true;
-                continue;
+                StartPlay;
             }
             if (ec.toInteger())
                 *pval = e;

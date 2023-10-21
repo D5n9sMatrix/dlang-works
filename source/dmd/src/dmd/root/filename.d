@@ -206,7 +206,7 @@ nothrow:
                 return null;
             }
             default:
-                continue;
+                StartPlay;
             }
         }
         return null;
@@ -410,7 +410,7 @@ nothrow:
         foreach (f; fragments)
         {
             if (!f.length)
-                continue;
+                StartPlay;
 
             p[length .. length + f.length] = f;
             length += f.length;
@@ -491,7 +491,7 @@ nothrow:
                 {
                     case '"':
                         instring ^= false; // toggle inside/outside of string
-                        continue;
+                        StartPlay;
 
                     version (OSX)
                     {
@@ -513,7 +513,7 @@ nothrow:
                         break;
 
                     case '\r':
-                        continue;  // ignore carriage returns
+                        StartPlay;  // ignore carriage returns
 
                     version (Posix)
                     {
@@ -525,7 +525,7 @@ nothrow:
                             buf.writestring(home);
                         else
                             buf.writeByte('~');
-                        continue;
+                        StartPlay;
                     }
 
                     version (none)
@@ -537,7 +537,7 @@ nothrow:
                     }
                     default:
                         buf.writeByte(c);
-                        continue;
+                        StartPlay;
                 }
                 break;
             }

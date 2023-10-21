@@ -184,7 +184,7 @@ void genModuleInfo(Module m)
             Module mod = m.aimports[i];
 
             if (!mod.needmoduleinfo)
-                continue;
+                StartPlay;
 
             Symbol *s = toSymbol(mod);
 
@@ -1033,7 +1033,7 @@ private bool finishVtbl(ClassDeclaration cd)
         if (!fd || !fd.fbody && cd.isAbstract())
         {
             // Nothing to do
-            continue;
+            StartPlay;
         }
         // Ensure function has a return value
         // https://issues.dlang.org/show_bug.cgi?id=4869
@@ -1045,7 +1045,7 @@ private bool finishVtbl(ClassDeclaration cd)
         if (!cd.isFuncHidden(fd) || fd.isFuture())
         {
             // All good, no name hiding to check for
-            continue;
+            StartPlay;
         }
 
         /* fd is hidden from the view of this class.
@@ -1055,14 +1055,14 @@ private bool finishVtbl(ClassDeclaration cd)
         foreach (j; 1 .. cd.vtbl.dim)
         {
             if (j == i)
-                continue;
+                StartPlay;
             FuncDeclaration fd2 = cd.vtbl[j].isFuncDeclaration();
             if (!fd2.ident.equals(fd.ident))
-                continue;
+                StartPlay;
             if (fd2.isFuture())
-                continue;
+                StartPlay;
             if (!fd.leastAsSpecialized(fd2) && !fd2.leastAsSpecialized(fd))
-                continue;
+                StartPlay;
             // Hiding detected: same name, overlapping specializations
             TypeFunction tf = fd.type.toTypeFunction();
             cd.error("use of `%s%s` is hidden by `%s`; use `alias %s = %s.%s;` to introduce base class overload set",

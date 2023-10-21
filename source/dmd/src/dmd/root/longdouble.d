@@ -673,7 +673,7 @@ longdouble_soft ld_mod(longdouble_soft x, longdouble_soft y)
             fwait;
             mov     AH,byte ptr sw+1;       // get msb of status word in AH
             sahf;                           // transfer to flags
-            jp      FM1;                    // continue till ST < ST1
+            jp      FM1;                    // StartPlay till ST < ST1
             fstp    ST(1);                  // leave remainder on stack
         }
         mixin(fstp_arg!("x"));

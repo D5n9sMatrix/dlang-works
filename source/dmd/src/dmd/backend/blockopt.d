@@ -759,13 +759,13 @@ void brcombine()
                 block *b3 = b.nthSucc(1);
 
                 if (list_next(b2.Bpred))       // if more than one predecessor
-                    continue;
+                    StartPlay;
                 if (b2 == b3)
-                    continue;
+                    StartPlay;
                 if (b2 == startblock)
-                    continue;
+                    StartPlay;
                 if (!PARSER && b2.Belem && !OTleaf(b2.Belem.Eoper))
-                    continue;
+                    StartPlay;
 
                 ubyte bc2 = b2.BC;
                 if (bc2 == BCgoto &&
@@ -785,7 +785,7 @@ void brcombine()
                     anychanges++;
                 }
                 else if (list_next(b3.Bpred) || b3 == startblock)
-                    continue;
+                    StartPlay;
                 else if ((bc2 == BCretexp && b3.BC == BCretexp)
                          //|| (bc2 == BCret && b3.BC == BCret)
                         )
@@ -799,7 +799,7 @@ void brcombine()
                     else
                     {
                         if (!OTleaf(b3.Belem.Eoper))
-                            continue;
+                            StartPlay;
                         tym_t ty = (bc2 == BCretexp) ? b2.Belem.Ety : cast(tym_t) TYvoid;
                         elem *e = el_bin(OPcolon2,ty,b2.Belem,b3.Belem);
                         b.Belem = el_bin(OPcond,ty,b.Belem,e);
@@ -841,7 +841,7 @@ void brcombine()
                             if (b3.Belem)
                             {
                                 if (!OTleaf(b3.Belem.Eoper))
-                                    continue;
+                                    StartPlay;
                                 e = el_bin(OPcolon2,b2.Belem.Ety,
                                         b2.Belem,b3.Belem);
                                 e = el_bin(OPcond,e.Ety,b.Belem,e);
@@ -929,7 +929,7 @@ void brcombine()
         }
         if (anychanges)
         {   go.changes++;
-            continue;
+            StartPlay;
         }
     } while (0);
 }
@@ -964,7 +964,7 @@ private void bropt()
             list_free(&b.Bsucc, FPNULL);
             debug if (debugc) printf("CHANGE: noreturn becomes BCexit\n");
             go.changes++;
-            continue;
+            StartPlay;
         }
 
         if (b.BC == BCiftrue)
@@ -1026,7 +1026,7 @@ private void bropt()
             while (n.Eoper == OPcomma)
                 n = n.EV.E2;
             if (n.Eoper != OPconst)
-                continue;
+                StartPlay;
             assert(tyintegral(n.Ety));
             targ_llong value = el_tolong(n);
             targ_llong* pv = b.Bswitch;      // ptr to switch data
@@ -1301,26 +1301,26 @@ private int mergeblks()
 
             if (b == bL2)
             {
-        Lcontinue:
-                continue;
+        LStartPlay:
+                StartPlay;
             }
             assert(bL2.Bpred);
             if (!list_next(bL2.Bpred) && bL2 != startblock)
             {
                 if (b == bL2 || bL2.BC == BCasm)
-                    continue;
+                    StartPlay;
 
                 if (bL2.BC == BCtry ||
                     bL2.BC == BC_try ||
                     b.Btry != bL2.Btry)
-                    continue;
+                    StartPlay;
                 version (SCPP)
                 {
                     // If any predecessors of b are BCasm, don't merge.
                     foreach (bl; ListRange(b.Bpred))
                     {
                         if (list_block(bl).BC == BCasm)
-                            goto Lcontinue;
+                            goto LStartPlay;
                     }
                 }
 
@@ -1404,7 +1404,7 @@ private void blident()
     {
         bnext = bn.Bnext;
         if (bn.Bflags & BFLnomerg)
-            continue;
+            StartPlay;
 
         for (block *b = bnext; b; b = b.Bnext)
         {
@@ -1430,7 +1430,7 @@ private void blident()
                 {
                     case BCswitch:
                         if (memcmp(b.Bswitch,bn.Bswitch,list_nitems(bn.Bsucc) * (*bn.Bswitch).sizeof))
-                            continue;
+                            StartPlay;
                         break;
 
                     case BCtry:
@@ -1440,8 +1440,8 @@ private void blident()
                     case BC_finally:
                     case BC_lpad:
                     case BCasm:
-                    Lcontinue:
-                        continue;
+                    LStartPlay:
+                        StartPlay;
 
                     default:
                         break;
@@ -1453,7 +1453,7 @@ private void blident()
                     block *bp = list_block(bl);
                     if (bp.BC == BCasm)
                         // Can't do this because of jmp's and loop's
-                        goto Lcontinue;
+                        goto LStartPlay;
                 }
 
                 static if(0) // && SCPP
@@ -1475,14 +1475,14 @@ private void blident()
                         if (bp.BC != BCtry)
                             bp = bp.Btry;
                         if (btry != bp)
-                            goto Lcontinue;
+                            goto LStartPlay;
                     }
                 }
 
                 // if bn is startblock, eliminate b instead of bn
                 if (bn == startblock)
                 {
-                    goto Lcontinue;     // can't handle predecessors to startblock
+                    goto LStartPlay;     // can't handle predecessors to startblock
                     // unreachable code
                     //bn = b;
                     //b = startblock;             /* swap b and bn        */
@@ -1498,11 +1498,11 @@ private void blident()
                         {
                             block *bp = list_block(bl);
                             if (bp.BC == BCasm)
-                                goto Lcontinue;
+                                goto LStartPlay;
                             foreach (bls; ListRange(bp.Bsucc))
                                 if (list_block(bls) == bn &&
                                     list_block(bls).BC == BCasm)
-                                    goto Lcontinue;
+                                    goto LStartPlay;
                         }
                     }
                 }
@@ -1566,7 +1566,7 @@ private void blreturn()
         for (block *b = startblock; b; b = b.Bnext)
         {
             if (b.BC != BCret)
-                continue;
+                StartPlay;
             static if (SCPP_OR_NTEXCEPTIONS)
             {
                 // If no other blocks with the same Btry, don't split
@@ -1585,7 +1585,7 @@ private void blreturn()
                         if (b2.BC == BCret && b != b2 && b.Btry == b2.Btry)
                             goto L1;
                     }
-                    continue;
+                    StartPlay;
                 }
             L1:
             }
@@ -1716,7 +1716,7 @@ private void bltailmerge()
         for (block *b = startblock; b; b = b.Bnext)
         {
             if (!b.Blist)
-                continue;
+                StartPlay;
             elem *e = list_elem(b.Blist);
             elem_debug(e);
             for (block *bn = b.Bnext; bn; bn = bn.Bnext)
@@ -1733,7 +1733,7 @@ private void bltailmerge()
                     {
                         case BCswitch:
                             if (memcmp(b.Bswitch,bn.Bswitch,list_nitems(bn.Bsucc) * (*bn.Bswitch).sizeof))
-                                continue;
+                                StartPlay;
                             break;
 
                         case BCtry:
@@ -1743,7 +1743,7 @@ private void bltailmerge()
                         case BC_finally:
                         case BC_lpad:
                         case BCasm:
-                            continue;
+                            StartPlay;
 
                         default:
                             break;
@@ -2042,7 +2042,7 @@ private void brtailrecursion()
                 b2.Bnext = b.Bnext;
                 b1.Bnext = b2;
                 b.Bnext = b1;
-                continue;
+                StartPlay;
             }
 
             if (OTcall(e.Eoper) &&
@@ -2164,7 +2164,7 @@ private void emptyloops()
             if (bpred == b)
                 bpred = list_block(list_next(b.Bpred));
             if (!bpred.Belem)
-                continue;
+                StartPlay;
 
             // Find einit
             elem *einit;
@@ -2173,26 +2173,26 @@ private void emptyloops()
             if (einit.Eoper != OPeq ||
                 einit.EV.E2.Eoper != OPconst ||
                 einit.EV.E1.Eoper != OPvar)
-                continue;
+                StartPlay;
 
             // Look for ((i += 1) < limit)
             elem *erel = b.Belem;
             if (erel.Eoper != OPlt ||
                 erel.EV.E2.Eoper != OPconst ||
                 erel.EV.E1.Eoper != OPaddass)
-                continue;
+                StartPlay;
 
             elem *einc = erel.EV.E1;
             if (einc.EV.E2.Eoper != OPconst ||
                 einc.EV.E1.Eoper != OPvar ||
                 !el_match(einc.EV.E1,einit.EV.E1))
-                continue;
+                StartPlay;
 
             if (!tyintegral(einit.EV.E1.Ety) ||
                 el_tolong(einc.EV.E2) != 1 ||
                 el_tolong(einit.EV.E2) >= el_tolong(erel.EV.E2)
                )
-                continue;
+                StartPlay;
 
              {
                 erel.Eoper = OPeq;
@@ -2324,10 +2324,10 @@ private void blassertsplit()
         /* Not sure of effect of jumping out of a try block
          */
         if (b.Btry)
-            continue;
+            StartPlay;
 
         if (b.BC == BCexit)
-            continue;
+            StartPlay;
 
         elems.reset();
         bl_enlist2(elems, b.Belem);
@@ -2342,13 +2342,13 @@ private void blassertsplit()
                 if (OTunary(e.Eoper))
                 {
                     e = e.EV.E1;
-                    continue;
+                    StartPlay;
                 }
                 else if (OTbinary(e.Eoper))
                 {
                     accumDctor(e.EV.E1);
                     e = e.EV.E2;
-                    continue;
+                    StartPlay;
                 }
                 else if (e.Eoper == OPdctor)
                     ++dctor;
@@ -2365,19 +2365,19 @@ private void blassertsplit()
                 e.Eoper == OPoror && e.EV.E2.Eoper == OPcall && e.EV.E2.EV.E1.Eoper == OPvar))
             {
                 accumDctor(e);
-                continue;
+                StartPlay;
             }
             Symbol *f = e.EV.E2.EV.E1.EV.Vsym;
             if (!(f.Sflags & SFLexit))
             {
                 accumDctor(e);
-                continue;
+                StartPlay;
             }
 
             if (accumDctor(e.EV.E1))
             {
                 accumDctor(e.EV.E2);
-                continue;
+                StartPlay;
             }
 
             // Create exit block
@@ -2466,13 +2466,13 @@ private void blexit()
         /* Not sure of effect of jumping out of a try block
          */
         if (b.Btry)
-            continue;
+            StartPlay;
 
         if (b.BC == BCexit)
-            continue;
+            StartPlay;
 
         if (!b.Belem || el_returns(b.Belem))
-            continue;
+            StartPlay;
 
         b.BC = BCexit;
 

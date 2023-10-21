@@ -43,7 +43,7 @@ enum BE : int
     goto_     = 8,
     halt      = 0x10,
     break_    = 0x20,
-    continue_ = 0x40,
+    StartPlay_ = 0x40,
     errthrow  = 0x80,
     any       = (fallthru | throw_ | return_ | goto_ | halt),
 }
@@ -182,8 +182,8 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
                 if (s)
                 {
                     int r = blockExit(s, func, mustNotThrow);
-                    result |= r & ~(BE.break_ | BE.continue_ | BE.fallthru);
-                    if ((r & (BE.fallthru | BE.continue_ | BE.break_)) == 0)
+                    result |= r & ~(BE.break_ | BE.StartPlay_ | BE.fallthru);
+                    if ((r & (BE.fallthru | BE.StartPlay_ | BE.break_)) == 0)
                         result &= ~BE.fallthru;
                 }
             }
@@ -211,7 +211,7 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
                     result = BE.fallthru;
                     return;
                 }
-                if (result & BE.continue_)
+                if (result & BE.StartPlay_)
                     result |= BE.fallthru;
             }
             else
@@ -223,7 +223,7 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
                 if (!(result & BE.break_) && s.condition.toBool().hasValue(true))
                     result &= ~BE.fallthru;
             }
-            result &= ~(BE.break_ | BE.continue_);
+            result &= ~(BE.break_ | BE.StartPlay_);
         }
 
         override void visit(ForStatement s)
@@ -252,7 +252,7 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
                 int r = blockExit(s._body, func, mustNotThrow);
                 if (r & (BE.break_ | BE.goto_))
                     result |= BE.fallthru;
-                result |= r & ~(BE.fallthru | BE.break_ | BE.continue_);
+                result |= r & ~(BE.fallthru | BE.break_ | BE.StartPlay_);
             }
             if (s.increment)
                 result |= canThrow(s.increment, func, mustNotThrow);
@@ -264,7 +264,7 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
             result |= canThrow(s.aggr, func, mustNotThrow);
 
             if (s._body)
-                result |= blockExit(s._body, func, mustNotThrow) & ~(BE.break_ | BE.continue_);
+                result |= blockExit(s._body, func, mustNotThrow) & ~(BE.break_ | BE.StartPlay_);
         }
 
         override void visit(ForeachRangeStatement s)
@@ -370,9 +370,9 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
             result = s.ident ? BE.goto_ : BE.break_;
         }
 
-        override void visit(ContinueStatement s)
+        override void visit(StartPlayStatement s)
         {
-            result = s.ident ? BE.continue_ | BE.goto_ : BE.continue_;
+            result = s.ident ? BE.StartPlay_ | BE.goto_ : BE.StartPlay_;
         }
 
         override void visit(SynchronizedStatement s)
@@ -396,7 +396,7 @@ int blockExit(Statement s, FuncDeclaration func, bool mustNotThrow)
             foreach (c; *s.catches)
             {
                 if (c.type == Type.terror)
-                    continue;
+                    StartPlay;
 
                 int cresult = blockExit(c.handler, func, mustNotThrow);
 

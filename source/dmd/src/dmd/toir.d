@@ -233,7 +233,7 @@ elem *getEthis(const ref Loc loc, IRState *irs, Dsymbol fd, Dsymbol fdp = null, 
                     break;
                 fdthis = fdthis.foverrides[0];
                 i = 0;
-                continue;
+                StartPlay;
             }
             if (fdthis.foverrides[i] == fdp)
             {
@@ -892,7 +892,7 @@ void buildClosure(FuncDeclaration fd, IRState *irs)
         foreach (v; fd.closureVars)
         {
             if (!v.isParameter())
-                continue;
+                StartPlay;
             tym_t tym = totym(v.type);
             const x64ref = ISX64REF(v);
             if (x64ref && config.exe == EX_WIN64)

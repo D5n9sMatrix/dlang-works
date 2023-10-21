@@ -694,11 +694,11 @@ PTRNTAB asm_classify(OP *pop, OPND[] opnds, out int outNumops)
         foreach (i, ref opnd; opnds)
         {
             if (ASM_GET_aopty(opnd.usFlags) == _reg)
-                continue;
+                StartPlay;
 
             opflags[i] = opnd.usFlags = (opnd.usFlags & ~0x1F) | OpndSize._anysize;
             if(asmstate.ucItype != ITjump)
-                continue;
+                StartPlay;
 
             if (i == 0 && bRetry && opnd.s && !opnd.s.isLabel())
             {
@@ -790,13 +790,13 @@ RETRY:
                         table1.usOp1 == _imm16
                       )
                         // Don't match PUSH imm16 in 32 bit code
-                        continue;
+                        StartPlay;
 
                     // Check if match is invalid in 64bit mode
                     if (target.is64bit && (table1.usFlags & _i64_bit))
                     {
                         bInvalid64bit = true;
-                        continue;
+                        StartPlay;
                     }
 
                     // Check for ambiguous size
@@ -896,15 +896,15 @@ RETRY:
                             {
                                 case OpndSize._8:
                                     if (opnds[1].disp > byte.max)
-                                        continue;
+                                        StartPlay;
                                     break;
                                 case OpndSize._16:
                                     if (opnds[1].disp > short.max)
-                                        continue;
+                                        StartPlay;
                                     break;
                                 case OpndSize._32:
                                     if (opnds[1].disp > int.max)
-                                        continue;
+                                        StartPlay;
                                     break;
                                 default:
                                     assert(0);

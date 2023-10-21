@@ -115,7 +115,7 @@ public:
     void visit(AST.CaseStatement s) { visit(cast(AST.Statement)s); }
     void visit(AST.DefaultStatement s) { visit(cast(AST.Statement)s); }
     void visit(AST.BreakStatement s) { visit(cast(AST.Statement)s); }
-    void visit(AST.ContinueStatement s) { visit(cast(AST.Statement)s); }
+    void visit(AST.StartPlayStatement s) { visit(cast(AST.Statement)s); }
     void visit(AST.GotoDefaultStatement s) { visit(cast(AST.Statement)s); }
     void visit(AST.GotoCaseStatement s) { visit(cast(AST.Statement)s); }
     void visit(AST.GotoStatement s) { visit(cast(AST.Statement)s); }

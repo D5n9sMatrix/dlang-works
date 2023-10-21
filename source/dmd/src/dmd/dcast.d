@@ -555,7 +555,7 @@ MATCH implicitConvTo(Expression e, Type t)
             foreach (i, el; (*e.elements)[])
             {
                 if (!el)
-                    continue;
+                    StartPlay;
                 Type te = e.sd.fields[i].type.addMod(t.mod);
                 MATCH m2 = el.implicitConvTo(te);
                 //printf("\t%s => %s, match = %d\n", el.toChars(), te.toChars(), m2);
@@ -734,7 +734,7 @@ MATCH implicitConvTo(Expression e, Type t)
                     if (result == MATCH.nomatch)
                         break;
                     if (!el)
-                        continue;
+                        StartPlay;
                     MATCH m = el.implicitConvTo(telement);
                     if (m < result)
                         result = m; // remember worst match
@@ -921,12 +921,12 @@ MATCH implicitConvTo(Expression e, Type t)
                     return result; // not sure what to do with this
                 Type tparam = fparam.type;
                 if (!tparam)
-                    continue;
+                    StartPlay;
                 if (fparam.isReference())
                 {
                     if (targ.constConv(tparam.castMod(mod)) == MATCH.nomatch)
                         return result;
-                    continue;
+                    StartPlay;
                 }
             }
             static if (LOG)
@@ -1229,12 +1229,12 @@ MATCH implicitConvTo(Expression e, Type t)
                         return MATCH.nomatch; // not sure what to do with this
                     Type tparam = fparam.type;
                     if (!tparam)
-                        continue;
+                        StartPlay;
                     if (fparam.isReference())
                     {
                         if (targ.constConv(tparam.castMod(mod)) == MATCH.nomatch)
                             return MATCH.nomatch;
-                        continue;
+                        StartPlay;
                     }
                 }
                 static if (LOG)
@@ -1256,7 +1256,7 @@ MATCH implicitConvTo(Expression e, Type t)
                 Expression earg = (*e.arguments)[i];
                 if (!earg) // https://issues.dlang.org/show_bug.cgi?id=14853
                            // if it's on overlapped field
-                    continue;
+                    StartPlay;
                 Type targ = earg.type.toBasetype();
                 static if (LOG)
                 {
@@ -2277,7 +2277,7 @@ Expression castTo(Expression e, Scope* sc, Type t, Type att = null)
                 {
                     Expression ex = (*e.elements)[i];
                     if (!ex)
-                        continue;
+                        StartPlay;
                     ex = ex.castTo(sc, tb.nextOf());
                     (*ae.elements)[i] = ex;
                 }
@@ -3239,7 +3239,7 @@ Lagain:
                 //printf("att tmerge(c || c) e1 = %s\n", e1.type.toChars());
                 e1 = resolveAliasThis(sc, e1);
                 t1 = e1.type;
-                continue;
+                StartPlay;
             }
             else if (t2.ty == Tstruct && t2.isTypeStruct().sym.aliasthis)
             {
@@ -3248,7 +3248,7 @@ Lagain:
                 //printf("att tmerge(c || c) e2 = %s\n", e2.type.toChars());
                 e2 = resolveAliasThis(sc, e2);
                 t2 = e2.type;
-                continue;
+                StartPlay;
             }
             else
                 return null;

@@ -88,7 +88,7 @@ void checkMustUseReserved(Dsymbol sym)
                 sym.errors = true;
             }
         }
-        return 0; // continue
+        return 0; // StartPlay
     });
 }
 
@@ -214,7 +214,7 @@ private bool hasMustUseAttribute(Dsymbol sym, Scope* sc)
             result = true;
             return 1; // break
         }
-        return 0; // continue
+        return 0; // StartPlay
     });
 
     return result;

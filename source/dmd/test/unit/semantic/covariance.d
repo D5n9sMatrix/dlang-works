@@ -911,7 +911,7 @@ string toString(const StorageClass stc) pure nothrow @safe
     {
         enum val = __traits(getMember, STC, member);
         if ((stc & val) == 0 || popcnt(val) > 1)
-            continue;
+            StartPlay;
 
         if (first)
             first = false;

@@ -145,7 +145,7 @@ void foo4(A...)()
         aa ~= a;
         if (i == 1)
             break;
-        continue;
+        StartPlay;
     }
     assert(ai == [0,1]);
     assert(aa == [7,4]);

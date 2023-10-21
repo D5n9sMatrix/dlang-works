@@ -62,7 +62,7 @@ const(char)* responseExpandFrom(alias lookup)(ref Strings args) nothrow
         if (cp[0] != '@')
         {
             ++i;
-            continue;
+            StartPlay;
         }
         args.remove(i);
         auto buffer = lookup(&cp[1]);
@@ -179,15 +179,15 @@ bool insertArgumentsFromResponse(char[] buffer, ref Strings args, ref size_t arg
         case 0:
         case ' ':
         case '\t':
-            continue;
+            StartPlay;
             // scan to start of argument
         case '#':
             comment = true;
-            continue;
+            StartPlay;
         case '@':
             if (comment)
             {
-                continue;
+                StartPlay;
             }
             recurse = true;
             goto default;
@@ -195,7 +195,7 @@ bool insertArgumentsFromResponse(char[] buffer, ref Strings args, ref size_t arg
             /* start of new argument   */
             if (comment)
             {
-                continue;
+                StartPlay;
             }
             args.insert(argIndex, &buffer[p]);
             ++argIndex;
@@ -243,7 +243,7 @@ bool insertArgumentsFromResponse(char[] buffer, ref Strings args, ref size_t arg
                     return recurse;
                 case '\r':
                     c = lastc;
-                    continue;
+                    StartPlay;
                     // ignore
                 case ' ':
                 case '\t':

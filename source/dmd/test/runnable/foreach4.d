@@ -98,7 +98,7 @@ void test4()
     {
         i++;
         if (i == 1)
-            continue;
+            StartPlay;
         u++;
     }
     assert(i == 2);
@@ -148,7 +148,7 @@ Loop:
         {
             i++;
             if (i == 1)
-                continue Loop;
+                StartPlay Loop;
             u++;
         }
         break;
@@ -604,7 +604,7 @@ void test20()
     label:
     foreach(int i; foo20)
     {
-       continue label;
+       StartPlay label;
     }
 }
 

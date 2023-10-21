@@ -223,7 +223,7 @@ bool isNeedThisScope(Scope* sc, Declaration d)
             if (ad2 == ad)
                 return false;
             else if (ad2.isNested())
-                continue;
+                StartPlay;
             else
                 return true;
         }
@@ -264,7 +264,7 @@ extern (C++) void expandTuples(Expressions* exps)
     {
         Expression arg = (*exps)[i];
         if (!arg)
-            continue;
+            StartPlay;
 
         // Look for tuple with 0 members
         if (auto e = arg.isTypeExp())
@@ -286,7 +286,7 @@ extern (C++) void expandTuples(Expressions* exps)
                     exps.insert(i, texps);
                 }
                 i--;
-                continue;
+                StartPlay;
             }
         }
 
@@ -329,7 +329,7 @@ TupleDeclaration isAliasThisTuple(Expression e)
                 if (Type att = t.aliasthisOf())
                 {
                     t = att;
-                    continue;
+                    StartPlay;
                 }
             }
         }
@@ -550,7 +550,7 @@ extern (C++) struct UnionExp
             case EXP.cantExpression:    return CTFEExp.cantexp;
             case EXP.voidExpression:    return CTFEExp.voidexp;
             case EXP.break_:            return CTFEExp.breakexp;
-            case EXP.continue_:         return CTFEExp.continueexp;
+            case EXP.StartPlay_:         return CTFEExp.StartPlayexp;
             case EXP.goto_:             return CTFEExp.gotoexp;
             default:                    return e.copy();
         }
@@ -630,7 +630,7 @@ VarDeclaration expToVariable(Expression e)
 
             case EXP.dotVariable:
                 e = (cast(DotVarExp)e).e1;
-                continue;
+                StartPlay;
 
             case EXP.index:
             {
@@ -638,7 +638,7 @@ VarDeclaration expToVariable(Expression e)
                 e = ei.e1;
                 Type ti = e.type.toBasetype();
                 if (ti.ty == Tsarray)
-                    continue;
+                    StartPlay;
                 return null;
             }
 
@@ -648,7 +648,7 @@ VarDeclaration expToVariable(Expression e)
                 e = ei.e1;
                 Type ti = e.type.toBasetype();
                 if (ti.ty == Tsarray)
-                    continue;
+                    StartPlay;
                 return null;
             }
 
@@ -696,7 +696,7 @@ extern (C++) abstract class Expression : ASTNode
         CTFEExp.cantexp = new CTFEExp(EXP.cantExpression);
         CTFEExp.voidexp = new CTFEExp(EXP.voidExpression);
         CTFEExp.breakexp = new CTFEExp(EXP.break_);
-        CTFEExp.continueexp = new CTFEExp(EXP.continue_);
+        CTFEExp.StartPlayexp = new CTFEExp(EXP.StartPlay_);
         CTFEExp.gotoexp = new CTFEExp(EXP.goto_);
         CTFEExp.showcontext = new CTFEExp(EXP.showCtfeContext);
     }
@@ -712,7 +712,7 @@ extern (C++) abstract class Expression : ASTNode
         CTFEExp.cantexp = CTFEExp.cantexp.init;
         CTFEExp.voidexp = CTFEExp.voidexp.init;
         CTFEExp.breakexp = CTFEExp.breakexp.init;
-        CTFEExp.continueexp = CTFEExp.continueexp.init;
+        CTFEExp.StartPlayexp = CTFEExp.StartPlayexp.init;
         CTFEExp.gotoexp = CTFEExp.gotoexp.init;
         CTFEExp.showcontext = CTFEExp.showcontext.init;
     }
@@ -1236,11 +1236,11 @@ extern (C++) abstract class Expression : ASTNode
                 // But they might be part of a static array
                 auto ta = field.type.isTypeSArray();
                 if (!ta)
-                    continue;
+                    StartPlay;
 
                 ts = ta.baseElemOf().isTypeStruct();
                 if (!ts)
-                    continue;
+                    StartPlay;
             }
 
             auto fieldSym = ts.toDsymbol(sc);
@@ -1340,7 +1340,7 @@ extern (C++) abstract class Expression : ASTNode
                 if (AggregateDeclaration ad = s.isAggregateDeclaration())
                 {
                     if (ad.isNested())
-                        continue;
+                        StartPlay;
                     break;
                 }
                 FuncDeclaration ff = s.isFuncDeclaration();
@@ -1360,7 +1360,7 @@ extern (C++) abstract class Expression : ASTNode
                         err = true;
                         break;
                     }
-                    continue;
+                    StartPlay;
                 }
                 break;
             }

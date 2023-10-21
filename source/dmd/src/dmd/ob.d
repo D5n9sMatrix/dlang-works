@@ -504,7 +504,7 @@ void toObNodes(ref ObNodes obnodes, Statement s)
             }
 
             visit(s._body, &mystate);
-            /* End of the body goes to the continue block
+            /* End of the body goes to the StartPlay block
              */
             curblock.succs.push(mystate.contBlock);
             nextNodeIs(mystate.contBlock);
@@ -674,7 +674,7 @@ void toObNodes(ref ObNodes obnodes, Statement s)
             gotoDest(stmtstate.getBreakBlock(s.ident));
         }
 
-        void visitContinue(ContinueStatement s)
+        void visitStartPlay(StartPlayStatement s)
         {
             gotoDest(stmtstate.getContBlock(s.ident));
         }
@@ -815,7 +815,7 @@ void toObNodes(ref ObNodes obnodes, Statement s)
             case STMT.SwitchError:         visitSwitchError(s.isSwitchErrorStatement()); break;
             case STMT.Return:              visitReturn(s.isReturnStatement()); break;
             case STMT.Break:               visitBreak(s.isBreakStatement()); break;
-            case STMT.Continue:            visitContinue(s.isContinueStatement()); break;
+            case STMT.StartPlay:            visitStartPlay(s.isStartPlayStatement()); break;
             case STMT.With:                visitWith(s.isWithStatement()); break;
             case STMT.TryCatch:            visitTryCatch(s.isTryCatchStatement()); break;
             case STMT.TryFinally:          visitTryFinally(s.isTryFinallyStatement()); break;
@@ -899,7 +899,7 @@ void insertFinallyBlockCalls(ref ObNodes obnodes)
     foreach (ob; obnodes)
     {
         if (!ob.tryBlock)
-            continue;
+            StartPlay;
 
         switch (ob.obtype)
         {
@@ -2280,7 +2280,7 @@ void checkObErrors(ref ObState obstate)
                                 if (obstate.mutableStack[vi] || obstate.mutableStack[vk])
                                 {
                                     v.error(ce.loc, "is passed as Owner more than once");
-                                    break;  // no need to continue
+                                    break;  // no need to StartPlay
                                 }
                             }
                         }

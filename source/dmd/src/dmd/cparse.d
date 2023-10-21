@@ -562,10 +562,10 @@ final class CParser(AST) : Parser!AST
             s = new AST.BreakStatement(loc, null);
             break;
 
-        case TOK.continue_:
+        case TOK.StartPlay_:
             nextToken();
-            check(TOK.semicolon, "`continue` statement");
-            s = new AST.ContinueStatement(loc, null);
+            check(TOK.semicolon, "`StartPlay` statement");
+            s = new AST.StartPlayStatement(loc, null);
             break;
 
         case TOK.goto_:
@@ -852,7 +852,7 @@ final class CParser(AST) : Parser!AST
 
             case TOK.leftParenthesis:
                 e = new AST.CallExp(loc, e, cparseArguments());
-                continue;
+                StartPlay;
 
             case TOK.leftBracket:
                 {
@@ -868,7 +868,7 @@ final class CParser(AST) : Parser!AST
                     check(TOK.rightBracket);
                     inBrackets--;
                     e = new AST.ArrayExp(loc, e, arguments);
-                    continue;
+                    StartPlay;
                 }
             default:
                 return e;
@@ -1109,19 +1109,19 @@ final class CParser(AST) : Parser!AST
                 nextToken();
                 auto e2 = cparseCastExp();
                 e = new AST.MulExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.div:
                 nextToken();
                 auto e2 = cparseCastExp();
                 e = new AST.DivExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.mod:
                 nextToken();
                 auto e2 = cparseCastExp();
                 e = new AST.ModExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -1151,13 +1151,13 @@ final class CParser(AST) : Parser!AST
                 nextToken();
                 auto e2 = cparseMulExp();
                 e = new AST.AddExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.min:
                 nextToken();
                 auto e2 = cparseMulExp();
                 e = new AST.MinExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -1187,13 +1187,13 @@ final class CParser(AST) : Parser!AST
                 nextToken();
                 auto e2 = cparseAddExp();
                 e = new AST.ShlExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.rightShift:
                 nextToken();
                 auto e2 = cparseAddExp();
                 e = new AST.ShrExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -2002,7 +2002,7 @@ final class CParser(AST) : Parser!AST
         addFuncName = false;    // gets set to true if somebody references __func__ in this function
         const locFunc = token.loc;
 
-        auto body = cparseStatement(ParseStatementFlags.curly);  // don't start a new scope; continue with parameter scope
+        auto body = cparseStatement(ParseStatementFlags.curly);  // don't start a new scope; StartPlay with parameter scope
         typedefTab.pop();                                        // end of function scope
 
         auto fd = new AST.FuncDeclaration(locFunc, prevloc, id, specifiersToSTC(LVL.global, specifier), ft, specifier.noreturn);
@@ -2103,7 +2103,7 @@ final class CParser(AST) : Parser!AST
             {
                 nextToken();
                 if (token.value != TOK.rightCurly)
-                    continue;
+                    StartPlay;
             }
             break;
         }
@@ -2372,14 +2372,14 @@ final class CParser(AST) : Parser!AST
                 tkw |= tkwx;
                 if (!(tkwx & TKW.xtag)) // if parser already advanced
                     nextToken();
-                continue;
+                StartPlay;
             }
 
             if (modx)
             {
                 mod |= modx;
                 nextToken();
-                continue;
+                StartPlay;
             }
 
             if (scwx)
@@ -2407,7 +2407,7 @@ final class CParser(AST) : Parser!AST
                     scw &= ~scwx;
                 }
                 nextToken();
-                continue;
+                StartPlay;
             }
         }
 
@@ -2598,7 +2598,7 @@ final class CParser(AST) : Parser!AST
                         constTypes.push(t);
                     if (token.value == TOK.__attribute__)
                         cparseGnuAttributes(specifier);
-                    continue;
+                    StartPlay;
 
                 default:
                     if (declarator == DTR.xdirect)
@@ -2717,7 +2717,7 @@ final class CParser(AST) : Parser!AST
                         if (mod & MOD.xconst) // ignore the other bits
                             ta = toConst(ta);
                         insertTx(ts, ta, t);  // ts -> ... -> ta -> t
-                        continue;
+                        StartPlay;
                     }
 
                     case TOK.leftParenthesis:
@@ -3380,7 +3380,7 @@ final class CParser(AST) : Parser!AST
                 if (token.value == TOK.comma)
                 {
                     nextToken();
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -3763,7 +3763,7 @@ final class CParser(AST) : Parser!AST
             if (t.value == TOK.comma)
             {
                 t = peek(t);
-                continue;
+                StartPlay;
             }
             if (t.value == TOK.rightParenthesis)
             {
@@ -3820,22 +3820,22 @@ final class CParser(AST) : Parser!AST
                         (whereas `(1) + 1` would not be affected.).
                     */
                     any = true;
-                    continue;
+                    StartPlay;
 
                 case TOK.leftBracket:
                     if (!skipBrackets(t))
                         return false;
-                    continue;
+                    StartPlay;
 
                 case TOK.leftCurly:
                     if (!skipBraces(t))
                         return false;
-                    continue;
+                    StartPlay;
 
                 default:
                     any = true;   // assume token was part of an a-e
                     t = peek(t);
-                    continue;
+                    StartPlay;
             }
             pt = t;
             return true;
@@ -3890,7 +3890,7 @@ final class CParser(AST) : Parser!AST
                     t = peek(t);
                     seenType = true;
                     any = true;
-                    continue;
+                    StartPlay;
 
                 case TOK.identifier: // typedef-name
                     if (!seenType)
@@ -3898,7 +3898,7 @@ final class CParser(AST) : Parser!AST
                         t = peek(t);
                         seenType = true;
                         any = true;
-                        continue;
+                        StartPlay;
                     }
                     break;
 
@@ -3923,7 +3923,7 @@ final class CParser(AST) : Parser!AST
                     else
                         return false;
                     any = true;
-                    continue;
+                    StartPlay;
 
                 // storage-class-specifiers
                 case TOK.typedef_:
@@ -3944,7 +3944,7 @@ final class CParser(AST) : Parser!AST
                 case TOK.__stdcall:
                     t = peek(t);
                     any = true;
-                    continue;
+                    StartPlay;
 
                 case TOK._Alignas:      // alignment-specifier
                 case TOK.__declspec:    // decl-specifier
@@ -3953,7 +3953,7 @@ final class CParser(AST) : Parser!AST
                     if (!skipParens(t, &t))
                         return false;
                     any = true;
-                    continue;
+                    StartPlay;
 
                 // either atomic-type-specifier or type_qualifier
                 case TOK._Atomic:  // TODO _Atomic ( type-name )
@@ -3966,12 +3966,12 @@ final class CParser(AST) : Parser!AST
                         {   // it's a type-qualifier
                             t = tsave;  // back up parser
                             any = true;
-                            continue;
+                            StartPlay;
                         }
                         t = peek(t);    // move past right parenthesis of atomic-type-specifier
                     }
                     any = true;
-                    continue;
+                    StartPlay;
 
                 default:
                     break;
@@ -4029,7 +4029,7 @@ final class CParser(AST) : Parser!AST
                 case TOK.leftCurly:
                     ++braces;
                     t = peek(t);
-                    continue;
+                    StartPlay;
 
                 case TOK.rightCurly:
                     --braces;
@@ -4042,14 +4042,14 @@ final class CParser(AST) : Parser!AST
                         return false;
 
                     t = peek(t);
-                    continue;
+                    StartPlay;
 
                 case TOK.endOfFile:
                     return false;
 
                 default:
                     t = peek(t);
-                    continue;
+                    StartPlay;
             }
         }
     }
@@ -4076,7 +4076,7 @@ final class CParser(AST) : Parser!AST
                 case TOK.leftBracket:
                     ++brackets;
                     t = peek(t);
-                    continue;
+                    StartPlay;
 
                 case TOK.rightBracket:
                     --brackets;
@@ -4089,14 +4089,14 @@ final class CParser(AST) : Parser!AST
                         return false;
 
                     t = peek(t);
-                    continue;
+                    StartPlay;
 
                 case TOK.endOfFile:
                     return false;
 
                 default:
                     t = peek(t);
-                    continue;
+                    StartPlay;
             }
         }
     }
@@ -4184,7 +4184,7 @@ final class CParser(AST) : Parser!AST
                 case TOK._Atomic:
                 case TOK.__stdcall:
                     t = peek(t);
-                    continue;
+                    StartPlay;
 
                 default:
                     break;

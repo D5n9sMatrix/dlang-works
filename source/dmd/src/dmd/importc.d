@@ -220,16 +220,16 @@ Expression castCallAmbiguity(Expression e, Scope* sc)
         {
             case EXP.dotIdentifier:
                 pe = &(*pe).isDotIdExp().e1;
-                continue;
+                StartPlay;
 
             case EXP.plusPlus:
             case EXP.minusMinus:
                 pe = &(*pe).isPostExp().e1;
-                continue;
+                StartPlay;
 
             case EXP.array:
                 pe = &(*pe).isArrayExp().e1;
-                continue;
+                StartPlay;
 
             case EXP.call:
                 auto ce = (*pe).isCallExp();

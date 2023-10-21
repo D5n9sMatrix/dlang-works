@@ -190,7 +190,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                     errors = true;
                     elems[fieldi] = ErrorExp.get(); // for better diagnostics on multiple errors
                     ++fieldi;
-                    continue;
+                    StartPlay;
                 }
 
                 // Check for @safe violations
@@ -206,7 +206,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                             errors = true;
                             elems[fieldi] = ErrorExp.get(); // for better diagnostics on multiple errors
                             ++fieldi;
-                            continue;
+                            StartPlay;
                         }
                     }
                 }
@@ -218,7 +218,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                     {
                         error(elems[k].loc, "overlapping initialization for field `%s` and `%s`", v2.toChars(), vd.toChars());
                         errors = true;
-                        continue;
+                        StartPlay;
                     }
                 }
 
@@ -232,7 +232,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                     errors = true;
                     elems[fieldi] = ErrorExp.get(); // for better diagnostics on multiple errors
                     ++fieldi;
-                    continue;
+                    StartPlay;
                 }
 
                 i.value[j] = iz;
@@ -358,7 +358,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                     i.value.insert(j + k, new ExpInitializer(e.loc, e));
                 }
                 j--;
-                continue;
+                StartPlay;
             }
             else
             {
@@ -687,7 +687,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                 {
                     if (vd.isOverlappedWith(v2) && elems[k])
                     {
-                        continue FieldLoop;     // skip it
+                        StartPlay FieldLoop;     // skip it
                     }
                 }
 
@@ -701,7 +701,7 @@ extern(C++) Initializer initializerSemantic(Initializer init, Scope* sc, ref Typ
                 if (ex.op == EXP.error)
                 {
                     errors = true;
-                    continue;
+                    StartPlay;
                 }
 
                 elems[fieldi] = ex;

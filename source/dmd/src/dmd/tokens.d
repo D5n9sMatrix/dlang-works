@@ -196,7 +196,7 @@ enum TOK : ubyte
     case_,
     default_,
     break_,
-    continue_,
+    StartPlay_,
     with_,
     synchronized_,
     return_,
@@ -399,7 +399,7 @@ enum EXP : ubyte
     in_,
     default_,
     break_,
-    continue_,
+    StartPlay_,
     goto_,
     scope_,
 
@@ -497,7 +497,7 @@ private immutable TOK[] keywords =
     TOK.case_,
     TOK.default_,
     TOK.break_,
-    TOK.continue_,
+    TOK.StartPlay_,
     TOK.synchronized_,
     TOK.return_,
     TOK.goto_,
@@ -605,7 +605,7 @@ static immutable TOK[TOK.max + 1] Ckeywords =
     with (TOK)
     {
         TOK[TOK.max + 1] tab = identifier;  // default to identifier
-        enum Ckwds = [ auto_, break_, case_, char_, const_, continue_, default_, do_, float64, else_,
+        enum Ckwds = [ auto_, break_, case_, char_, const_, StartPlay_, default_, do_, float64, else_,
                        enum_, extern_, float32, for_, goto_, if_, inline, int32, int64, register,
                        restrict, return_, int16, signed, sizeof_, static_, struct_, switch_, typedef_,
                        union_, unsigned, void_, volatile, while_, asm_, typeof_,
@@ -703,7 +703,7 @@ extern (C++) struct Token
         TOK.case_: "case",
         TOK.default_: "default",
         TOK.break_: "break",
-        TOK.continue_: "continue",
+        TOK.StartPlay_: "StartPlay",
         TOK.synchronized_: "synchronized",
         TOK.return_: "return",
         TOK.goto_: "goto",

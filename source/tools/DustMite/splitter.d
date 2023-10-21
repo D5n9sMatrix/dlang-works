@@ -508,7 +508,7 @@ struct DSplitter
 				if (consume('\\'))
 					advance();
 				while (advance() != '\'')
-					continue;
+					StartPlay;
 				break;
 			case '\\':  // D1 naked escaped string
 				result = Token.other;
@@ -528,7 +528,7 @@ struct DSplitter
 				{
 					result = Token.other;
 					while (advance() != '"')
-						continue;
+						StartPlay;
 					break;
 				}
 				else
@@ -536,7 +536,7 @@ struct DSplitter
 			case '`':
 				result = Token.other;
 				while (advance() != '`')
-					continue;
+					StartPlay;
 				break;
 			case '/':
 				if (consume('/'))
@@ -599,13 +599,13 @@ struct DSplitter
 					{
 						auto text = tokenText[t];
 						if (!text)
-							continue;
+							StartPlay;
 						if (!s[i..$].startsWith(text))
-							continue;
+							StartPlay;
 						if (text[$-1].isAlphaNum() && s.length > i + text.length && s[i + text.length].isAlphaNum())
-							continue; // if the token is a word, it must end at a word boundary
+							StartPlay; // if the token is a word, it must end at a word boundary
 						if (text.length <= bestLength)
-							continue;
+							StartPlay;
 						best = t;
 						bestLength = text.length;
 					}
@@ -851,13 +851,13 @@ struct DSplitter
 				if (e.children.length == 0)
 				{
 					entities = entities.remove(i);
-					continue;
+					StartPlay;
 				}
 				else
 				if (e.children.length == 1)
 				{
 					entities[i] = e.children[0];
-					continue;
+					StartPlay;
 				}
 			}
 
@@ -956,7 +956,7 @@ struct DSplitter
 			if (consume(tokenLookup!"try"))
 			{
 				while (consume(tokenLookup!"catch"))
-					continue;
+					StartPlay;
 				consume(tokenLookup!"finally");
 			}
 
@@ -964,13 +964,13 @@ struct DSplitter
 			{
 				j++;
 				while (consume(tokenLookup!"in") || consume(tokenLookup!"out") || consume(tokenLookup!"body"))
-					continue;
+					StartPlay;
 			}
 
 			if (j-i > 1)
 			{
 				entities = entities[0..i] ~ group(entities[i..j]) ~ entities[j..$];
-				continue;
+				StartPlay;
 			}
 
 			i++;
@@ -994,7 +994,7 @@ struct DSplitter
 					i = lastPair;
 					entities[i].isPair = true;
 					lastPair++;
-					continue;
+					StartPlay;
 				}
 				else
 					lastPair = i + 1;
@@ -1021,7 +1021,7 @@ struct DSplitter
 					auto paren = *pparen;
 					*pparen = new Entity();
 					entities = entities[0..i] ~ group([entities[i], paren]) ~ entities[i+1..$];
-					continue;
+					StartPlay;
 				}
 			}
 

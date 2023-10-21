@@ -294,7 +294,7 @@ else
     for (block* b = startblock; b; b = b.Bnext)
     {
         if (!b.Belem)
-            continue;
+            StartPlay;
         ++iterationLimit;
         int d = el_countCommas(b.Belem);
         if (d > iterationLimit)
@@ -357,7 +357,7 @@ else
         if (go.mfoptim & MFcnp)
             boolopt();                  // optimize boolean values
         if (go.changes && go.mfoptim & MFloop && (os_clock() - starttime) < 30 * CLOCKS_PER_SEC)
-            continue;
+            StartPlay;
 
         if (go.mfoptim & MFcnp)
             constprop();                /* constant propagation          */

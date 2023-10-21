@@ -78,7 +78,7 @@ extern (C++) struct MacroTable
                     buf.remove(u - 1, 1);
                     end--;
                     u += 1; // now u is one past the closing '1'
-                    continue;
+                    StartPlay;
                 }
                 char c = p[u + 1];
                 int n = (c == '+') ? -1 : c - '0';
@@ -127,7 +127,7 @@ extern (C++) struct MacroTable
                 }
                 //printf("u = %d, end = %d\n", u, end);
                 //printf("#%.*s#\n", cast(int)end, &buf.data[0]);
-                continue;
+                StartPlay;
             }
             u++;
         }
@@ -169,7 +169,7 @@ extern (C++) struct MacroTable
                         buf.remove(u - 1, 1);
                         end--;
                         u = v; // now u is one past the closing ')'
-                        continue;
+                        StartPlay;
                     }
                     Macro* m = search(name[0 .. namelen]);
                     if (!m)
@@ -237,7 +237,7 @@ extern (C++) struct MacroTable
                             mem.xfree(cast(char*)marg.ptr);
                             //printf("u = %d, end = %d\n", u, end);
                             //printf("#%.*s#\n", cast(int)(end - u), &buf.data[u]);
-                            continue;
+                            StartPlay;
                         }
                     }
                     else
@@ -245,7 +245,7 @@ extern (C++) struct MacroTable
                         // Replace $(NAME) with nothing
                         buf.remove(u, v + 1 - u);
                         end -= (v + 1 - u);
-                        continue;
+                        StartPlay;
                     }
                 }
             }
@@ -357,17 +357,17 @@ Largstart:
                     goto Largstart;
                 }
             }
-            continue;
+            StartPlay;
         case '(':
             if (!inexp && !instring && !incomment)
                 parens++;
-            continue;
+            StartPlay;
         case ')':
             if (!inexp && !instring && !incomment && --parens == 0)
             {
                 break;
             }
-            continue;
+            StartPlay;
         case '"':
         case '\'':
             if (!inexp && !incomment && intag)
@@ -377,7 +377,7 @@ Largstart:
                 else if (!instring)
                     instring = c;
             }
-            continue;
+            StartPlay;
         case '<':
             if (!inexp && !instring && !incomment)
             {
@@ -389,18 +389,18 @@ Largstart:
                 else if (v + 2 < end && isalpha(p[v + 1]))
                     intag = 1;
             }
-            continue;
+            StartPlay;
         case '>':
             if (!inexp)
                 intag = 0;
-            continue;
+            StartPlay;
         case '-':
             if (!inexp && !instring && incomment && v + 2 < end && p[v + 1] == '-' && p[v + 2] == '>')
             {
                 incomment = 0;
                 v += 2;
             }
-            continue;
+            StartPlay;
         case 0xFF:
             if (v + 1 < end)
             {
@@ -409,9 +409,9 @@ Largstart:
                 else if (p[v + 1] == '}')
                     inexp--;
             }
-            continue;
+            StartPlay;
         default:
-            continue;
+            StartPlay;
         }
         break;
     }

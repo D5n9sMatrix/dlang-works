@@ -507,11 +507,11 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                         {
                         case TOK.leftCurly:
                             ++braces;
-                            continue;
+                            StartPlay;
 
                         case TOK.rightCurly:
                             if (--braces)
-                                continue;
+                                StartPlay;
                             nextToken();
                             break;
 
@@ -521,7 +521,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                             goto Lerror;
 
                         default:
-                            continue;
+                            StartPlay;
                         }
                         break;
                     }
@@ -1040,7 +1040,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                 // empty declaration
                 //error("empty declaration");
                 nextToken();
-                continue;
+                StartPlay;
 
             default:
                 error("declaration expected, not `%s`", token.toChars());
@@ -1049,7 +1049,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     nextToken();
                 nextToken();
                 s = null;
-                continue;
+                StartPlay;
             }
 
             if (s)
@@ -1121,7 +1121,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     break;
                 }
                 addComment(s, comment);
-                continue;
+                StartPlay;
 
             default:
                 error("semicolon expected following auto declaration, not `%s`", token.toChars());
@@ -1366,7 +1366,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                             //      () @uda { return 1; }
                             error("user-defined attributes cannot appear as postfixes");
                         }
-                        continue;
+                        StartPlay;
                     }
                     break;
                 }
@@ -2122,7 +2122,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                 {
                     nextToken();
                     if (token.value == TOK.identifier)
-                        continue;
+                        StartPlay;
                     error("identifier expected for C++ namespace");
                     result.idents = null;  // error occurred, invalidate list of elements.
                 }
@@ -2850,7 +2850,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     goto L2;
                 L2:
                     storageClass = appendStorageClass(storageClass, stc);
-                    continue;
+                    StartPlay;
 
                     version (none)
                     {
@@ -3471,28 +3471,28 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     break; // const as type constructor
                 stc |= STC.const_; // const as storage class
                 nextToken();
-                continue;
+                StartPlay;
 
             case TOK.immutable_:
                 if (peekNext() == TOK.leftParenthesis)
                     break;
                 stc |= STC.immutable_;
                 nextToken();
-                continue;
+                StartPlay;
 
             case TOK.shared_:
                 if (peekNext() == TOK.leftParenthesis)
                     break;
                 stc |= STC.shared_;
                 nextToken();
-                continue;
+                StartPlay;
 
             case TOK.inout_:
                 if (peekNext() == TOK.leftParenthesis)
                     break;
                 stc |= STC.wild;
                 nextToken();
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -3795,7 +3795,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     }
                     else
                         tid.addIdent(id);
-                    continue;
+                    StartPlay;
                 }
             case TOK.leftBracket:
                 {
@@ -3847,7 +3847,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                             maybeArray = new AST.TypeSArray(t, e);
                             inBrackets--;
                             check(TOK.rightBracket);
-                            continue;
+                            StartPlay;
                         }
                     }
                     break;
@@ -3886,7 +3886,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
             case TOK.mul:
                 t = new AST.TypePointer(t);
                 nextToken();
-                continue;
+                StartPlay;
 
             case TOK.leftBracket:
                 // Handle []. Make sure things like
@@ -3915,7 +3915,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     {
                         inBrackets--;
                         check(TOK.rightBracket);
-                        continue;
+                        StartPlay;
                     }
                     if (token.value == TOK.slice)
                     {
@@ -3930,7 +3930,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     inBrackets--;
                     check(TOK.rightBracket);
                 }
-                continue;
+                StartPlay;
 
             case TOK.delegate_:
             case TOK.function_:
@@ -3953,7 +3953,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                             tf = cast(AST.TypeFunction)tf.addSTC(stc);
                     }
                     t = save == TOK.delegate_ ? new AST.TypeDelegate(tf) : new AST.TypePointer(tf); // pointer to function
-                    continue;
+                    StartPlay;
                 }
             default:
                 return t;
@@ -4086,7 +4086,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                         {
                         }
                         *pt = ta;
-                        continue;
+                        StartPlay;
                     }
                 }
             case TOK.leftParenthesis:
@@ -4252,12 +4252,12 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     stc = parseAttribute(udas);
                     if (stc)
                         goto L1;
-                    continue;
+                    StartPlay;
                 }
             L1:
                 storage_class = appendStorageClass(storage_class, stc);
                 nextToken();
-                continue;
+                StartPlay;
 
             case TOK.extern_:
                 {
@@ -4281,7 +4281,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                     {
                         error("C++ mangle declaration not allowed here");
                     }
-                    continue;
+                    StartPlay;
                 }
             case TOK.align_:
                 {
@@ -4293,7 +4293,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                         ealign = parseExpression();
                         check(TOK.rightParenthesis);
                     }
-                    continue;
+                    StartPlay;
                 }
             default:
                 break;
@@ -4540,7 +4540,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                 case TOK.comma:
                     nextToken();
                     addComment(s, comment);
-                    continue;
+                    StartPlay;
 
                 default:
                     error("semicolon expected to close `alias` declaration");
@@ -4677,7 +4677,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                 case TOK.comma:
                     nextToken();
                     addComment(s, comment);
-                    continue;
+                    StartPlay;
 
                 default:
                     if (loc.linnum != token.loc.linnum)
@@ -4953,7 +4953,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                         nextToken();
                         break;
                     }
-                    continue;
+                    StartPlay;
 
                 default:
                     error("semicolon expected to close `alias` declaration");
@@ -5153,7 +5153,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
                 // int x, y, foo(), z;
             case TOK.comma:
                 nextToken();
-                continue;
+                StartPlay;
             }
 
         case TOK.in_:
@@ -5425,7 +5425,7 @@ class Parser(AST, Lexer = dmd.lexer.Lexer) : Lexer
             if (token.value == TOK.comma)
             {
                 nextToken();
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -6308,7 +6308,7 @@ LagainStc:
                 s = new AST.BreakStatement(loc, ident);
                 break;
             }
-        case TOK.continue_:
+        case TOK.StartPlay_:
             {
                 Identifier ident;
                 nextToken();
@@ -6318,8 +6318,8 @@ LagainStc:
                     ident = token.ident;
                     nextToken();
                 }
-                check(TOK.semicolon, "`continue` statement");
-                s = new AST.ContinueStatement(loc, ident);
+                check(TOK.semicolon, "`StartPlay` statement");
+                s = new AST.StartPlayStatement(loc, ident);
                 break;
             }
         case TOK.goto_:
@@ -6554,16 +6554,16 @@ LagainStc:
             {
                 case TOK.leftParenthesis:
                     parens++;
-                    continue;
+                    StartPlay;
                 case TOK.rightParenthesis:
                     parens--;
-                    continue;
+                    StartPlay;
                 // https://issues.dlang.org/show_bug.cgi?id=21163
                 // lambda params can have the `scope` storage class, e.g
                 // `S s = { (scope Type Id){} }`
                 case TOK.scope_:
                     if (!parens) goto case;
-                    continue;
+                    StartPlay;
                 /* Look for a semicolon or keyword of statements which don't
                  * require a semicolon (typically containing BlockStatement).
                  * Tokens like "else", "catch", etc. are omitted where the
@@ -6587,22 +6587,22 @@ LagainStc:
                 case TOK.with_:
                     if (braces == 1)
                         return parseExpInitializer(loc);
-                    continue;
+                    StartPlay;
 
                 case TOK.leftCurly:
                     braces++;
-                    continue;
+                    StartPlay;
 
                 case TOK.rightCurly:
                     if (--braces == 0)
                         break;
-                    continue;
+                    StartPlay;
 
                 case TOK.endOfFile:
                     break;
 
                 default:
-                    continue;
+                    StartPlay;
             }
             break;
         }
@@ -6630,14 +6630,14 @@ LagainStc:
                     auto value = parseInitializer();
                     _is.addInit(id, value);
                     commaExpected = true;
-                    continue;
+                    StartPlay;
                 }
                 case TOK.comma:
                     if (!commaExpected)
                         error("expression expected, not `,`");
                     nextToken();
                     commaExpected = false;
-                    continue;
+                    StartPlay;
 
                 case TOK.rightCurly: // allow trailing comma's
                     nextToken();
@@ -6653,7 +6653,7 @@ LagainStc:
                     auto value = parseInitializer();
                     _is.addInit(null, value);
                     commaExpected = true;
-                    continue;
+                    StartPlay;
             }
             break;
         }
@@ -6685,7 +6685,7 @@ LagainStc:
                 {
                 case TOK.leftBracket:
                     brackets++;
-                    continue;
+                    StartPlay;
 
                 case TOK.rightBracket:
                     if (--brackets == 0)
@@ -6695,13 +6695,13 @@ LagainStc:
                             return parseExpInitializer(loc);
                         break;
                     }
-                    continue;
+                    StartPlay;
 
                 case TOK.endOfFile:
                     break;
 
                 default:
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -6738,7 +6738,7 @@ LagainStc:
                     }
                     ia.addInit(e, value);
                     commaExpected = true;
-                    continue;
+                    StartPlay;
 
                 case TOK.leftCurly:
                 case TOK.leftBracket:
@@ -6760,14 +6760,14 @@ LagainStc:
                     }
                     ia.addInit(e, value);
                     commaExpected = true;
-                    continue;
+                    StartPlay;
 
                 case TOK.comma:
                     if (!commaExpected)
                         error("expression expected, not `,`");
                     nextToken();
                     commaExpected = false;
-                    continue;
+                    StartPlay;
 
                 case TOK.rightBracket: // allow trailing comma's
                     nextToken();
@@ -6863,7 +6863,7 @@ LagainStc:
                         labelloc = token.loc;
                         nextToken();
                         nextToken();
-                        continue;
+                        StartPlay;
                     }
                 }
                 goto default;
@@ -6902,7 +6902,7 @@ LagainStc:
                     statements.push(s);
                 }
                 nextToken();
-                continue;
+                StartPlay;
 
             case TOK.endOfFile:
                 /* { */
@@ -6922,7 +6922,7 @@ LagainStc:
 
                 *ptoklist = null;
                 nextToken();
-                continue;
+                StartPlay;
 
             default:
                 *ptoklist = allocateToken();
@@ -6930,7 +6930,7 @@ LagainStc:
                 ptoklist = &(*ptoklist).next;
                 *ptoklist = null;
                 nextToken();
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -7019,7 +7019,7 @@ LagainStc:
                  * wild type
                  */
                 t = peek(t);
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -7258,7 +7258,7 @@ LagainStc:
             case TOK.mul:
             //case TOK.and:
                 t = peek(t);
-                continue;
+                StartPlay;
 
             case TOK.leftBracket:
                 t = peek(t);
@@ -7306,7 +7306,7 @@ LagainStc:
                         }
                     }
                 }
-                continue;
+                StartPlay;
 
             case TOK.identifier:
                 if (*haveId)
@@ -7348,7 +7348,7 @@ LagainStc:
                 if (!isParameters(&t))
                     return false;
                 skipAttributes(t, &t);
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -7383,7 +7383,7 @@ LagainStc:
                             return false;
                         t = peek(t);
                     }
-                    continue;
+                    StartPlay;
                 }
 
             case TOK.leftParenthesis:
@@ -7421,19 +7421,19 @@ LagainStc:
                     case TOK.return_:
                     case TOK.scope_:
                         t = peek(t);
-                        continue;
+                        StartPlay;
 
                     case TOK.at:
                         t = peek(t); // skip '@'
                         t = peek(t); // skip identifier
-                        continue;
+                        StartPlay;
 
                     default:
                         break;
                     }
                     break;
                 }
-                continue;
+                StartPlay;
 
             // Valid tokens that follow a declaration
             case TOK.rightParenthesis:
@@ -7522,7 +7522,7 @@ LagainStc:
             case TOK.final_:
             case TOK.auto_:
             case TOK.return_:
-                continue;
+                StartPlay;
 
             case TOK.const_:
             case TOK.immutable_:
@@ -7542,7 +7542,7 @@ LagainStc:
                 version (none)
                 {
                 case TOK.static_:
-                    continue;
+                    StartPlay;
                 case TOK.auto_:
                 case TOK.alias_:
                     t = peek(t);
@@ -7579,7 +7579,7 @@ LagainStc:
                 }
                 if (t.value == TOK.comma)
                 {
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -7609,51 +7609,51 @@ LagainStc:
             {
             case TOK.leftBracket:
                 brnest++;
-                continue;
+                StartPlay;
 
             case TOK.rightBracket:
                 if (--brnest >= 0)
-                    continue;
+                    StartPlay;
                 break;
 
             case TOK.leftParenthesis:
                 panest++;
-                continue;
+                StartPlay;
 
             case TOK.comma:
                 if (brnest || panest)
-                    continue;
+                    StartPlay;
                 break;
 
             case TOK.rightParenthesis:
                 if (--panest >= 0)
-                    continue;
+                    StartPlay;
                 break;
 
             case TOK.leftCurly:
                 curlynest++;
-                continue;
+                StartPlay;
 
             case TOK.rightCurly:
                 if (--curlynest >= 0)
-                    continue;
+                    StartPlay;
                 return false;
 
             case TOK.slice:
                 if (brnest)
-                    continue;
+                    StartPlay;
                 break;
 
             case TOK.semicolon:
                 if (curlynest)
-                    continue;
+                    StartPlay;
                 return false;
 
             case TOK.endOfFile:
                 return false;
 
             default:
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -7766,7 +7766,7 @@ LagainStc:
                     if (!skipParens(t, &t))
                         goto Lerror;
                     // t is on the next of closing parenthesis
-                    continue;
+                    StartPlay;
                 }
                 break;
 
@@ -7820,9 +7820,9 @@ LagainStc:
                         if (!skipParens(t, &t))
                             goto Lerror;
                         // t is on the next of closing parenthesis
-                        continue;
+                        StartPlay;
                     }
-                    continue;
+                    StartPlay;
                 }
                 if (t.value == TOK.leftParenthesis)
                 {
@@ -7830,7 +7830,7 @@ LagainStc:
                     if (!skipParens(t, &t))
                         goto Lerror;
                     // t is on the next of closing parenthesis
-                    continue;
+                    StartPlay;
                 }
                 goto Lerror;
 
@@ -8526,28 +8526,28 @@ LagainStc:
                             break; // const as type constructor
                         m |= MODFlags.const_; // const as storage class
                         nextToken();
-                        continue;
+                        StartPlay;
 
                     case TOK.immutable_:
                         if (peekNext() == TOK.leftParenthesis)
                             break;
                         m |= MODFlags.immutable_;
                         nextToken();
-                        continue;
+                        StartPlay;
 
                     case TOK.shared_:
                         if (peekNext() == TOK.leftParenthesis)
                             break;
                         m |= MODFlags.shared_;
                         nextToken();
-                        continue;
+                        StartPlay;
 
                     case TOK.inout_:
                         if (peekNext() == TOK.leftParenthesis)
                             break;
                         m |= MODFlags.wild;
                         nextToken();
-                        continue;
+                        StartPlay;
 
                     default:
                         break;
@@ -8778,12 +8778,12 @@ LagainStc:
                     }
                     else
                         e = new AST.DotIdExp(loc, e, id);
-                    continue;
+                    StartPlay;
                 }
                 if (token.value == TOK.new_)
                 {
                     e = parseNewExp(e);
-                    continue;
+                    StartPlay;
                 }
                 error("identifier or `new` expected following `.`, not `%s`", token.toChars());
                 break;
@@ -8798,7 +8798,7 @@ LagainStc:
 
             case TOK.leftParenthesis:
                 e = new AST.CallExp(loc, e, parseArguments());
-                continue;
+                StartPlay;
 
             case TOK.leftBracket:
                 {
@@ -8831,7 +8831,7 @@ LagainStc:
                     check(TOK.rightBracket);
                     inBrackets--;
                     e = new AST.ArrayExp(loc, e, arguments);
-                    continue;
+                    StartPlay;
                 }
             default:
                 return e;
@@ -8853,19 +8853,19 @@ LagainStc:
                 nextToken();
                 auto e2 = parseUnaryExp();
                 e = new AST.MulExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.div:
                 nextToken();
                 auto e2 = parseUnaryExp();
                 e = new AST.DivExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.mod:
                 nextToken();
                 auto e2 = parseUnaryExp();
                 e = new AST.ModExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -8888,19 +8888,19 @@ LagainStc:
                 nextToken();
                 auto e2 = parseMulExp();
                 e = new AST.AddExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.min:
                 nextToken();
                 auto e2 = parseMulExp();
                 e = new AST.MinExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.tilde:
                 nextToken();
                 auto e2 = parseMulExp();
                 e = new AST.CatExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -8923,19 +8923,19 @@ LagainStc:
                 nextToken();
                 auto e2 = parseAddExp();
                 e = new AST.ShlExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.rightShift:
                 nextToken();
                 auto e2 = parseAddExp();
                 e = new AST.ShrExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             case TOK.unsignedRightShift:
                 nextToken();
                 auto e2 = parseAddExp();
                 e = new AST.UshrExp(loc, e, e2);
-                continue;
+                StartPlay;
 
             default:
                 break;

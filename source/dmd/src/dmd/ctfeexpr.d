@@ -185,8 +185,8 @@ extern (C++) final class CTFEExp : Expression
             return "<error>";
         case EXP.break_:
             return "<break>";
-        case EXP.continue_:
-            return "<continue>";
+        case EXP.StartPlay_:
+            return "<StartPlay>";
         case EXP.goto_:
             return "<goto>";
         default:
@@ -197,7 +197,7 @@ extern (C++) final class CTFEExp : Expression
     extern (D) __gshared CTFEExp cantexp;
     extern (D) __gshared CTFEExp voidexp;
     extern (D) __gshared CTFEExp breakexp;
-    extern (D) __gshared CTFEExp continueexp;
+    extern (D) __gshared CTFEExp StartPlayexp;
     extern (D) __gshared CTFEExp gotoexp;
     /* Used when additional information is needed regarding
      * a ctfe error.
@@ -248,14 +248,14 @@ bool needToCopyLiteral(const Expression expr)
         case EXP.slice:
         case EXP.cast_:
             e = e.isUnaExp().e1;
-            continue;
+            StartPlay;
         case EXP.concatenate:
             return needToCopyLiteral(e.isBinExp().e1) || needToCopyLiteral(e.isBinExp().e2);
         case EXP.concatenateAssign:
         case EXP.concatenateElemAssign:
         case EXP.concatenateDcharAssign:
             e = e.isBinExp().e2;
-            continue;
+            StartPlay;
         default:
             return false;
         }
@@ -1311,10 +1311,10 @@ private int ctfeRawCmp(const ref Loc loc, Expression e1, Expression e2, bool ide
 
                 // https://issues.dlang.org/show_bug.cgi?id=16284
                 if (ee1.op == EXP.void_ && ee2.op == EXP.void_) // if both are VoidInitExp
-                    continue;
+                    StartPlay;
 
                 if (ee1 == ee2)
-                    continue;
+                    StartPlay;
                 if (!ee1 || !ee2)
                     return 1;
                 const int cmp = ctfeRawCmp(loc, ee1, ee2, identity);
@@ -1341,10 +1341,10 @@ private int ctfeRawCmp(const ref Loc loc, Expression e1, Expression e2, bool ide
             foreach (size_t j; 0 .. dim)
             {
                 if (used[j])
-                    continue;
+                    StartPlay;
                 Expression k2 = (*es2.keys)[j];
                 if (ctfeRawCmp(loc, k1, k2, identity))
-                    continue;
+                    StartPlay;
                 used[j] = true;
                 v2 = (*es2.values)[j];
                 break;
@@ -2048,7 +2048,7 @@ void showCtfeExpr(Expression e, int level = 0)
                 for (int j = level; j > 0; --j)
                     printf(" ");
                 printf(" void\n");
-                continue;
+                StartPlay;
             }
             if (v)
             {
@@ -2058,7 +2058,7 @@ void showCtfeExpr(Expression e, int level = 0)
                     for (int j = level; --j;)
                         printf(" ");
                     printf(" field: block initialized static array\n");
-                    continue;
+                    StartPlay;
                 }
             }
             showCtfeExpr(z, level + 1);

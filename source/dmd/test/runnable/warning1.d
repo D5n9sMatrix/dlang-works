@@ -31,7 +31,7 @@ private int getNthInt(A...)(uint index, A args)
     {
         static if (is(typeof(arg) : long) || is(typeof(arg) : ulong))
         {
-            if (i != index) continue;
+            if (i != index) StartPlay;
             return cast(int)(arg);
         }
         else

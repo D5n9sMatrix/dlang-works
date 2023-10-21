@@ -411,7 +411,7 @@ private int tryMain(size_t argc, const(char)** argv, ref Param params)
         foreach (m; modules)
         {
             if (m.filetype == FileType.dhdr)
-                continue;
+                StartPlay;
             if (params.verbose)
                 message("import    %s", m.toChars());
             genhdrfile(m);
@@ -1015,7 +1015,7 @@ void getenv_setargv(const(char)* envvalue, Strings* args)
                     }
                     instring ^= true;
                     slash = 0;
-                    continue;
+                    StartPlay;
 
                 case ' ':
                 case '\t':
@@ -1029,7 +1029,7 @@ void getenv_setargv(const(char)* envvalue, Strings* args)
                 case '\\':
                     slash++;
                     *p++ = c;
-                    continue;
+                    StartPlay;
 
                 case 0:
                     *p = 0;
@@ -1040,7 +1040,7 @@ void getenv_setargv(const(char)* envvalue, Strings* args)
                 default:
                     slash = 0;
                     *p++ = c;
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -1511,7 +1511,7 @@ bool parseCommandLine(const ref Strings arguments, const size_t argc, ref Param 
                 foreach (t; features)
                 {
                     if (t.deprecated_)
-                        continue;
+                        StartPlay;
 
                     buf ~= `setFlagFor(name, params.`~t.paramName~`);`;
                 }
@@ -1556,7 +1556,7 @@ bool parseCommandLine(const ref Strings arguments, const size_t argc, ref Param 
                 if (ext.length && FileName.equals(ext, "exe"))
                 {
                     params.objname = arg;
-                    continue;
+                    StartPlay;
                 }
                 if (arg == "/?")
                 {
@@ -1565,7 +1565,7 @@ bool parseCommandLine(const ref Strings arguments, const size_t argc, ref Param 
                 }
             }
             files.push(p);
-            continue;
+            StartPlay;
         }
 
         if (arg == "-allinst")               // https://dlang.org/dmd.html#switch-allinst
@@ -1780,7 +1780,7 @@ bool parseCommandLine(const ref Strings arguments, const size_t argc, ref Param 
         }
         else if (arg.length > 6 && arg[0..6] == "--DRT-")
         {
-            continue; // skip druntime options, e.g. used to configure the GC
+            StartPlay; // skip druntime options, e.g. used to configure the GC
         }
         else if (arg == "-m32") // https://dlang.org/dmd.html#switch-m32
         {
@@ -2249,7 +2249,7 @@ bool parseCommandLine(const ref Strings arguments, const size_t argc, ref Param 
                     if (!flag)
                     {
                         error("unknown JSON field `-Xi=%s`, expected one of " ~ jsonFieldNames, p + 4);
-                        continue;
+                        StartPlay;
                     }
                     global.params.jsonFieldFlags |= flag;
                 }
@@ -2539,10 +2539,10 @@ bool parseCommandLine(const ref Strings arguments, const size_t argc, ref Param 
         {
         Lerror:
             error("unrecognized switch '%s'", arguments[i]);
-            continue;
+            StartPlay;
         Lnoarg:
             error("argument expected for switch '%s'", arguments[i]);
-            continue;
+            StartPlay;
         }
     }
     return errors;
@@ -2900,7 +2900,7 @@ Modules createModules(ref Strings files, ref Strings libmodules, const ref Targe
         auto m = createModule(file, libmodules, target);
 
         if (m is null)
-            continue;
+            StartPlay;
 
         modules.push(m);
         if (firstmodule)

@@ -98,7 +98,7 @@ void scanElfObjModule(void delegate(const(char)[] name, int pickAny) pAddSymbol,
         foreach (ref const section; sections)
         {
             if (section.sh_type != SHT_SYMTAB)
-                continue;
+                StartPlay;
 
             bool checkShdrXX(const ref ElfXX_Shdr shdr)
             {
@@ -135,7 +135,7 @@ void scanElfObjModule(void delegate(const(char)[] name, int pickAny) pAddSymbol,
             {
                 const stb = sym.st_info >> 4;
                 if (stb != STB_GLOBAL && stb != STB_WEAK || sym.st_shndx == SHN_UNDEF)
-                    continue; // it's extern
+                    StartPlay; // it's extern
 
                 if (sym.st_name >= string_tab.length)
                     return corrupt(__LINE__);

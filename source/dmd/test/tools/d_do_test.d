@@ -504,7 +504,7 @@ private bool consumeNextToken(ref string file, const string token, ref const Env
         if (!isWhite(ch) && !among(ch, '/', '*', '+'))
         {
             debug writeln("Ignoring partial match for token: ", token);
-            continue;
+            StartPlay;
         }
 
         // filter by OS specific setting (os1 os2 ...)
@@ -523,7 +523,7 @@ private bool consumeNextToken(ref string file, const string token, ref const Env
                 // The latter is important on windows because m32 might require other
                 // parameters than m32mscoff/m64.
                 if (!oss.canFind!(o => o.skipOver(envData.os) && (o.empty || o == envData.model)))
-                    continue; // Parameter was skipped
+                    StartPlay; // Parameter was skipped
             }
         }
 
@@ -1309,7 +1309,7 @@ bool compareOutput(string output, string refoutput, const ref EnvData envData)
         {
             import std.ascii : isDigit;
             output.skipOver!isDigit();
-            continue;
+            StartPlay;
         }
 
         // $<identifier>:<special content>$
@@ -1331,7 +1331,7 @@ bool compareOutput(string output, string refoutput, const ref EnvData envData)
             }
 
             output = parts[1];
-            continue;
+            StartPlay;
         }
 
         else if (special.id == 3) // $r:<regex>$
@@ -1357,7 +1357,7 @@ bool compareOutput(string output, string refoutput, const ref EnvData envData)
                 return false;
 
             output = output[match.front.length .. $];
-            continue;
+            StartPlay;
         }
 
         // $?:<predicate>=<content>(;<predicate>=<content>)*(;<default>)?$
@@ -1664,7 +1664,7 @@ int tryMain(string[] args)
         return 1;
     }
 
-    enum Result { continue_, return0, return1, returnRerun }
+    enum Result { StartPlay_, return0, return1, returnRerun }
 
     // Runs the test with a specific combination of arguments
     Result testCombination(bool autoCompileImports, string argSet, size_t permuteIndex, string permutedArgs)
@@ -1849,7 +1849,7 @@ int tryMain(string[] args)
 
             foreach (file; chain(toCleanup, testArgs.outputFiles))
                 tryRemove(file);
-            return Result.continue_;
+            return Result.StartPlay_;
         }
         catch(Exception e)
         {
@@ -1935,7 +1935,7 @@ int tryMain(string[] args)
             {
                 final switch(testCombination(autoCompileImports, argSet, index, c))
                 {
-                    case Result.continue_: break;
+                    case Result.StartPlay_: break;
                     case Result.return0: return 0;
                     case Result.return1: return 1;
                     case Result.returnRerun: return RERUN_TEST;
@@ -2156,7 +2156,7 @@ void printCppSources (in const(char)[][] compiled)
         foreach (file; compiled)
         {
             if (!file.endsWith(".cpp.o"))
-                continue;
+                StartPlay;
             writeln("========== Symbols for C++ object file: ", file, " ==========");
             std.process.spawnProcess(["nm", file]).wait();
         }

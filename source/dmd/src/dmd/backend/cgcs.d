@@ -97,7 +97,7 @@ void comsubs2(block* startblock, ref CGCS cgcs)
     {
         bln = bl.Bnext;
         if (!bl.Belem)
-            continue;                   /* if no expression or no parents       */
+            StartPlay;                   /* if no expression or no parents       */
 
         // Count up n, the number of blocks in this extended basic block (EBB)
         int n = 1;                      // always at least one block in EBB
@@ -536,9 +536,9 @@ void ecom(ref CGCS cgcs, ref elem* pe)
                     if (!OTleaf(op))
                     {
                         if (!e.EV.E1.Ecount)
-                            continue;
+                            StartPlay;
                         if (OTbinary(op) && !e.EV.E2.Ecount)
-                            continue;
+                            StartPlay;
                     }
                     ehash.Ecount++;
                     pe = ehash;
@@ -672,14 +672,14 @@ void touchfunc(ref CGCS cgcs, int flag)
     {
         const he = pe.Helem;
         if (!he)
-            continue;
+            StartPlay;
         switch (he.Eoper)
         {
             case OPvar:
                 if (Symbol_isAffected(*he.EV.Vsym))
                 {
                     pe.Helem = null;
-                    continue;
+                    StartPlay;
                 }
                 break;
 

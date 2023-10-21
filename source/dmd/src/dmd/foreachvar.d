@@ -291,7 +291,7 @@ void foreachExpAndVar(Statement s,
             case STMT.GccAsm:
 
             case STMT.Break:
-            case STMT.Continue:
+            case STMT.StartPlay:
             case STMT.GotoDefault:
             case STMT.GotoCase:
             case STMT.SwitchError:

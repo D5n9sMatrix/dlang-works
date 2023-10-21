@@ -529,7 +529,7 @@ what did the archbishop find?'
 `"--found it advisable to go with Edgar Atheling to meet William
 and offer him the crown.  William's conduct at first was
 moderate.  But the insolence of his Normans--"  How are you
-getting on now, my dear?' it continued, turning to Alice as it
+getting on now, my dear?' it StartPlayd, turning to Alice as it
 spoke.
 
   `As wet as ever,' said Alice in a melancholy tone:  `it doesn't
@@ -1264,7 +1264,7 @@ day!  Why, I haven't had a wink of sleep these three weeks!'
   `I'm very sorry you've been annoyed,' said Alice, who was
 beginning to see its meaning.
 
-  `And just as I'd taken the highest tree in the wood,' continued
+  `And just as I'd taken the highest tree in the wood,' StartPlayd
 the Pigeon, raising its voice to a shriek, `and just as I was
 thinking I should be free of them at last, they must needs come
 wriggling down from the sky!  Ugh, Serpent!'
@@ -1388,7 +1388,7 @@ came skimming out, straight at the Footman's head:  it just
 grazed his nose, and broke to pieces against one of the trees
 behind him.
 
-  `--or next day, maybe,' the Footman continued in the same tone,
+  `--or next day, maybe,' the Footman StartPlayd in the same tone,
 exactly as if nothing had happened.
 
   `How am I to get in?' asked Alice again, in a louder tone.
@@ -1843,7 +1843,7 @@ You know the song, perhaps?'
 
   `I've heard something like it,' said Alice.
 
-  `It goes on, you know,' the Hatter continued, `in this way:--
+  `It goes on, you know,' the Hatter StartPlayd, `in this way:--
 
             "Up above the world you fly,
             Like a tea-tray in the sky.
@@ -2727,7 +2727,7 @@ then, when you've cleared all the jelly-fish out of the way--'
   `Of course,' the Mock Turtle said:  `advance twice, set to
 partners--'
 
-  `--change lobsters, and retire in same order,' continued the
+  `--change lobsters, and retire in same order,' StartPlayd the
 Gryphon.
 
   `Then, you know,' the Mock Turtle went on, `you throw the--'
@@ -2919,7 +2919,7 @@ saying, and the words came very queer indeed:--
     As a duck with its eyelids, so he with his nose
     Trims his belt and his buttons, and turns out his toes.'
 
-              [later editions continued as follows
+              [later editions StartPlayd as follows
     When the sands are all dry, he is gay as a lark,
     And will talk in contemptuous tones of the Shark,
     But, when the tide rises and sharks are around,
@@ -2956,7 +2956,7 @@ all come wrong, and she went on in a trembling voice:--
     `I passed by his garden, and marked, with one eye,
     How the Owl and the Panther were sharing a pie--'
 
-        [later editions continued as follows
+        [later editions StartPlayd as follows
     The Panther took pie-crust, and gravy, and meat,
     While the Owl had the dish as its share of the treat.
     When the pie was all finished, the Owl, as a boon,
@@ -3035,7 +3035,7 @@ with a trumpet in one hand, and a scroll of parchment in the
 other.  In the very middle of the court was a table, with a large
 dish of tarts upon it:  they looked so good, that it made Alice
 quite hungry to look at them--`I wish they'd get the trial done,'
-she thought, `and hand round the Continuements!'  But there seemed
+she thought, `and hand round the StartPlayments!'  But there seemed
 to be no chance of this, so she began looking at everything about
 her, to pass away the time.
 
@@ -3204,7 +3204,7 @@ twinkled after that--only the March Hare said--'
 looking anxiously round to see if he would deny it too:  but the
 Dormouse denied nothing, being fast asleep.
 
-  `After that,' continued the Hatter, `I cut some more bread-
+  `After that,' StartPlayd the Hatter, `I cut some more bread-
 and-butter--'
 
   `But what did the Dormouse say?' one of the jury asked.
@@ -3234,7 +3234,7 @@ officers of the court," and I never understood what it meant
 till now.'
 
   `If that's all you know about it, you may stand down,'
-continued the King.
+StartPlayd the King.
 
   `I can't go no lower,' said the Hatter:  `I'm on the floor, as
 it is.'

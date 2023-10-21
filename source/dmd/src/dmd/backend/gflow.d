@@ -273,18 +273,18 @@ private void asgdefelems(block *b,elem *n, DefNode[] defnod, ref size_t i)
         {
             asgdefelems(b,n.EV.E1,defnod,i);
             n = n.EV.E2;
-            continue;
+            StartPlay;
         }
         else if (OTbinary(op))
         {
             asgdefelems(b,n.EV.E2,defnod,i);
             n = n.EV.E1;
-            continue;
+            StartPlay;
         }
         else if (OTunary(op))
         {
             n = n.EV.E1;
-            continue;
+            StartPlay;
         }
         break;
     }
@@ -364,7 +364,7 @@ private void fillInDNunambig(vec_t v, elem *e, size_t start, DefNode[] defnod)
     {
         vec_t v2 = defnod[i].DNunambig;
         if (!v2)
-            continue;
+            StartPlay;
 
         elem *tn = defnod[i].DNelem;
         elem *tn1;
@@ -373,7 +373,7 @@ private void fillInDNunambig(vec_t v, elem *e, size_t start, DefNode[] defnod)
         // If not same variable then no overlap
         tn1 = tn.EV.E1;
         if (d != tn1.EV.Vsym)
-            continue;
+            StartPlay;
 
         tn1size = (tn.Eoper == OPstreq)
             ? type_size(tn.ET) : tysize(tn1.Ety);
@@ -690,7 +690,7 @@ private void aecpgenkill(ref GlobalOptimizer go, int flowxx)
             {
                 n.Eexp = 0;
                 n = n.EV.E1;
-                continue;
+                StartPlay;
             }
             else if (OTbinary(op))
             {
@@ -1291,21 +1291,21 @@ private void accumaecpx(elem *n)
                 if (eop == OPvar)
                 {
                     if (e.EV.Vsym != s)
-                        continue;
+                        StartPlay;
                 }
                 else if (OTunary(eop))
                 {
                     if (!vec_testbit(e.EV.E1.Eexp,KILL))
-                        continue;
+                        StartPlay;
                 }
                 else if (OTbinary(eop))
                 {
                     if (!vec_testbit(e.EV.E1.Eexp,KILL) &&
                         !vec_testbit(e.EV.E2.Eexp,KILL))
-                        continue;
+                        StartPlay;
                 }
                 else
-                        continue;
+                        StartPlay;
 
                 vec_setclear(i,KILL,GEN);
             }
@@ -1633,7 +1633,7 @@ private void accumlv(vec_t GEN, vec_t KILL, const(elem)* n, const vec_t ambigsym
                 if (OTunary(op))
                 {
                     n = n.EV.E1;
-                    continue;
+                    StartPlay;
                 }
                 else if (OTrtol(op) && ERTOL(n))
                 {
@@ -1642,13 +1642,13 @@ private void accumlv(vec_t GEN, vec_t KILL, const(elem)* n, const vec_t ambigsym
                     /* Note that lvalues of op=,i++,i-- elems */
                     /* are GENed.                               */
                     n = n.EV.E1;
-                    continue;
+                    StartPlay;
                 }
                 else if (OTbinary(op))
                 {
                     accumlv(GEN,KILL,n.EV.E1,ambigsym);
                     n = n.EV.E2;
-                    continue;
+                    StartPlay;
                 }
                 break;
         }
@@ -1716,7 +1716,7 @@ void flowvbe()
         foreach_reverse (b; dfo[])
         {
             if (b.BC == BCret || b.BC == BCretexp || b.BC == BCexit)
-                continue;
+                StartPlay;
 
             /* Bout = & of Bin of all successors */
             bool first = true;
@@ -1932,21 +1932,21 @@ private void accumvbe(vec_t GEN,vec_t KILL,elem *n)
                 if (eop == OPvar)
                 {
                     if (e.EV.Vsym != s)
-                        continue;
+                        StartPlay;
                 }
                 else if (OTbinary(eop))
                 {
                     if (!vec_testbit(e.EV.E1.Eexp,KILL) &&
                         !vec_testbit(e.EV.E2.Eexp,KILL))
-                        continue;
+                        StartPlay;
                 }
                 else if (OTunary(eop))
                 {
                     if (!vec_testbit(e.EV.E1.Eexp,KILL))
-                        continue;
+                        StartPlay;
                 }
                 else /* OPconst or OPrelconst or OPstring */
-                    continue;
+                    StartPlay;
 
                 vec_setbit(i,KILL);     // KILL it
             } /* for */

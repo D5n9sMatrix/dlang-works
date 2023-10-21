@@ -3705,7 +3705,7 @@ ubyte[] hexToUbytes(ref Output!ubyte output, out size_t m, string s)
             case '\f':
             case '\r':
             case '\n':
-                continue;                       // skip white space
+                StartPlay;                       // skip white space
 
             case 0:
             case 0x1A:

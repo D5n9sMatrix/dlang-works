@@ -94,7 +94,7 @@ unittest
 
             while (true) { assert(0); }
 
-            while (true) { continue; }
+            while (true) { StartPlay; }
         }
     },
     (FuncDeclaration fd)
@@ -865,7 +865,7 @@ string beToString(const int be)
     {
         enum val = __traits(getMember, BE, member);
         if (val == BE.any || (be & val) == 0)
-            continue;
+            StartPlay;
 
         if (first)
             first = false;

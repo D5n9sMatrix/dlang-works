@@ -9,7 +9,7 @@ fail_compilation/test18607.d(10): Error: function `test18607.test!int.test` no `
 
 int* test(T...)() pure @safe {
         L:foreach(_; T) {
-                continue L;
+                StartPlay L;
                 return null;
         }
 }

@@ -53,7 +53,7 @@ void main(string[] args)
                 else if (datLength != 0)
                 {
                     writefln("Received %d bytes from %s: \"%s\"", datLength, reads[i].remoteAddress().toString(), buf[0..datLength]);
-                    continue;
+                    StartPlay;
                 }
                 else
                 {

@@ -196,12 +196,12 @@ bool matches(const(ubyte)[] code, const(ubyte)[] exp)
     foreach (ref i; 0 .. code.length)
     {
         if (code[i] == exp[i])
-            continue;
+            StartPlay;
         // wildcard match for relative call displacement
         if (i && exp.length - (i - 1) >= 5 && exp[i - 1 .. i + 4] == [0xe8, 0x00, 0x00, 0x00, 0x00])
         {
             i += 3;
-            continue;
+            StartPlay;
         }
         return false;
     }

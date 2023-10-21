@@ -54,7 +54,7 @@ enum BE : int32_t
     BEgoto =     8,
     BEhalt =     0x10,
     BEbreak =    0x20,
-    BEcontinue = 0x40,
+    BEStartPlay = 0x40,
     BEerrthrow = 0x80,
     BEany = (BEfallthru | BEthrow | BEreturn | BEgoto | BEhalt)
 };
@@ -89,7 +89,7 @@ enum
     STMTswitchError,
     STMTreturn,
     STMTbreak,
-    STMTcontinue,
+    STMTStartPlay,
     STMTsynchronized,
     STMTwith,
     STMTtryCatch,
@@ -118,7 +118,7 @@ public:
     void deprecation(const char *format, ...);
     virtual Statement *getRelatedLabeled() { return this; }
     virtual bool hasBreak() const;
-    virtual bool hasContinue() const;
+    virtual bool hasStartPlay() const;
     bool usesEH();
     bool comeFrom();
     bool hasCode();
@@ -147,7 +147,7 @@ public:
     ForStatement         *isForStatement()         { return stmt == STMTfor         ? (ForStatement*)this         : NULL; }
     ForeachStatement     *isForeachStatement()     { return stmt == STMTforeach     ? (ForeachStatement*)this     : NULL; }
     SwitchStatement      *isSwitchStatement()      { return stmt == STMTswitch      ? (SwitchStatement*)this      : NULL; }
-    ContinueStatement    *isContinueStatement()    { return stmt == STMTcontinue    ? (ContinueStatement*)this    : NULL; }
+    StartPlayStatement    *isStartPlayStatement()    { return stmt == STMTStartPlay    ? (StartPlayStatement*)this    : NULL; }
     WithStatement        *isWithStatement()        { return stmt == STMTwith        ? (WithStatement*)this        : NULL; }
     TryCatchStatement    *isTryCatchStatement()    { return stmt == STMTtryCatch    ? (TryCatchStatement*)this    : NULL; }
     ThrowStatement       *isThrowStatement()       { return stmt == STMTthrow       ? (ThrowStatement*)this       : NULL; }
@@ -233,7 +233,7 @@ public:
     void accept(Visitor *v) { v->visit(this); }
 };
 
-/* The purpose of this is so that continue will go to the next
+/* The purpose of this is so that StartPlay will go to the next
  * of the statements, and break will go to the end of the statements.
  */
 class UnrolledLoopStatement : public Statement
@@ -243,7 +243,7 @@ public:
 
     UnrolledLoopStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -257,7 +257,7 @@ public:
     ScopeStatement *syntaxCopy();
     ReturnStatement *endsWithReturnStatement();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -282,7 +282,7 @@ public:
 
     WhileStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -296,7 +296,7 @@ public:
 
     DoStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -311,14 +311,14 @@ public:
     Loc endloc;                 // location of closing curly bracket
 
     // When wrapped in try/finally clauses, this points to the outermost one,
-    // which may have an associated label. Internal break/continue statements
+    // which may have an associated label. Internal break/StartPlay statements
     // treat that label as referring to this loop.
     Statement *relatedLabeled;
 
     ForStatement *syntaxCopy();
     Statement *getRelatedLabeled() { return relatedLabeled ? relatedLabeled : this; }
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -337,12 +337,12 @@ public:
 
     FuncDeclaration *func;      // function we're lexically in
 
-    Statements *cases;          // put breaks, continues, gotos and returns here
+    Statements *cases;          // put breaks, StartPlays, gotos and returns here
     ScopeStatements *gotos;     // forward referenced goto's go here
 
     ForeachStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -361,7 +361,7 @@ public:
 
     ForeachRangeStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -537,12 +537,12 @@ public:
     void accept(Visitor *v) { v->visit(this); }
 };
 
-class ContinueStatement : public Statement
+class StartPlayStatement : public Statement
 {
 public:
     Identifier *ident;
 
-    ContinueStatement *syntaxCopy();
+    StartPlayStatement *syntaxCopy();
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -555,7 +555,7 @@ public:
 
     SynchronizedStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };
@@ -618,7 +618,7 @@ public:
     static TryFinallyStatement *create(const Loc &loc, Statement *body, Statement *finalbody);
     TryFinallyStatement *syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
 
     void accept(Visitor *v) { v->visit(this); }
 };

@@ -892,12 +892,12 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
         foreach (i, field; ad.fields)
         {
             if (elements && !(*elements)[firstFieldIndex + i])
-                continue;       // no element for this field
+                StartPlay;       // no element for this field
 
             if (!elements || !(*elements)[firstFieldIndex + i])
             {
                 if (field._init && field._init.isVoidInitializer())
-                    continue;   // void initializer for this field
+                    StartPlay;   // void initializer for this field
             }
 
             VarDeclaration vd = field;
@@ -913,13 +913,13 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
     {
         // skip if no element for this field
         if (elements && !(*elements)[firstFieldIndex + i])
-            continue;
+            StartPlay;
 
         // If void initializer
         if (!elements || !(*elements)[firstFieldIndex + i])
         {
             if (field._init && field._init.isVoidInitializer())
-                continue;
+                StartPlay;
         }
 
         /* This loop finds vd, the closest field that starts at `offset + bitOffset` or later
@@ -933,15 +933,15 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
         {
             VarDeclaration v2 = ad.fields[j];
             if (v2.offset < offset)
-                continue;
+                StartPlay;
 
             if (elements && !(*elements)[firstFieldIndex + j])
-                continue;
+                StartPlay;
 
             if (!elements || !(*elements)[firstFieldIndex + j])
             {
                 if (v2._init && v2._init.isVoidInitializer())
-                    continue;
+                    StartPlay;
             }
             //printf(" checking v2 %s %d\n", v2.toChars(), v2.offset);
 
@@ -949,7 +949,7 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
             uint v2BitOffset = bf2 ? bf2.bitOffset : 0;
 
             if (v2.offset * 8 + v2BitOffset < offset * 8 + vdBitOffset)
-                continue;
+                StartPlay;
 
             // find the nearest field
             if (!vd ||
@@ -965,7 +965,7 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
         }
         if (!vd)
         {
-            continue;
+            StartPlay;
         }
 
         if (!bf || bf.offset != offset)
@@ -993,7 +993,7 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
 
         //printf("offset: %u, vd: %s vd.offset: %u\n", offset, vd.toChars(), vd.offset);
         if (vd.offset < offset)
-            continue;           // a union field
+            StartPlay;           // a union field
         if (offset < vd.offset)
         {
             dtb.nzeros(vd.offset - offset);
@@ -1026,7 +1026,7 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
             {
                 //printf("\t\t%s has initializer %s\n", vd.toChars(), init.toChars());
                 if (init.isVoidInitializer())
-                    continue;
+                    StartPlay;
 
                 assert(vd.semanticRun >= PASS.semantic2done);
 
@@ -1043,7 +1043,7 @@ private void membersToDt(AggregateDeclaration ad, ref DtBuilder dtb,
                 Type_toDt(vd.type, dtbx);
             }
             if (dtbx.isZeroLength())
-                continue;
+                StartPlay;
         }
 
         if (!dtbx.isZeroLength())

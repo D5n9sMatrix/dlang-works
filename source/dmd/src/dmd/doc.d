@@ -184,7 +184,7 @@ private final class ParamSection : Section
                 case ' ':
                 case '\t':
                     p++;
-                    continue;
+                    StartPlay;
                 case '\n':
                     p++;
                     goto Lcont;
@@ -284,7 +284,7 @@ private final class ParamSection : Section
             textlen = p - textstart;
             p++;
         Lcont:
-            continue;
+            StartPlay;
         Lskipline:
             // Ignore this line
             while (*p++ != '\n')
@@ -473,7 +473,7 @@ extern(C++) void gendocfile(Module m)
                 if (c == 0xFF && j + 1 < slice.length)
                 {
                     j++;
-                    continue;
+                    StartPlay;
                 }
                 if (c == '\n')
                     buf.writeByte('\r');
@@ -484,7 +484,7 @@ extern(C++) void gendocfile(Module m)
                     {
                         j++;
                     }
-                    continue;
+                    StartPlay;
                 }
                 buf.writeByte(c);
             }
@@ -503,7 +503,7 @@ extern(C++) void gendocfile(Module m)
                 if (p[j] == 0xFF && j + 1 < buf2.length)
                 {
                     j++;
-                    continue;
+                    StartPlay;
                 }
                 p[i] = p[j];
                 i++;
@@ -1017,7 +1017,7 @@ private void emitComment(Dsymbol s, ref OutBuffer buf, Scope* sc)
                         toDocBuffer(sx, *buf, sc);
                         highlightCode(sc, sx, *buf, o);
                         buf.writestring("$(DDOC_OVERLOAD_SEPARATOR)");
-                        continue;
+                        StartPlay;
                     }
                     buf.writestring("$(DDOC_DITTO ");
                     {
@@ -1484,7 +1484,7 @@ private void toDocBuffer(Dsymbol s, ref OutBuffer buf, Scope* sc)
             {
                 BaseClass* bc = (*cd.baseclasses)[i];
                 if (bc.sym && bc.sym.ident == Id.Object)
-                    continue;
+                    StartPlay;
                 if (any)
                     buf.writestring(", ");
                 else
@@ -1599,7 +1599,7 @@ struct DocComment
                 case ' ':
                 case '\t':
                     p++;
-                    continue;
+                    StartPlay;
                 case '\r':
                 case '\n':
                     p++;
@@ -1665,7 +1665,7 @@ struct DocComment
             p++;
             //printf("p = %p, pend = %p\n", p, pend);
         Lcont:
-            continue;
+            StartPlay;
         Lskipline:
             // Ignore this line
             while (p < pend && *p != '\r' && *p != '\n')
@@ -1884,7 +1884,7 @@ struct DocComment
         {
             Section sec = sections[i];
             if (sec.nooutput)
-                continue;
+                StartPlay;
             //printf("Section: '%.*s' = '%.*s'\n", cast(int)sec.namelen, sec.name, cast(int)sec.bodylen, sec.body);
             if (!sec.name.length && i == 0)
             {
@@ -1906,7 +1906,7 @@ struct DocComment
             for (UnitTestDeclaration utd = s.ddocUnittest; utd; utd = utd.ddocUnittest)
             {
                 if (utd.visibility.kind == Visibility.Kind.private_ || !utd.comment || !utd.fbody)
-                    continue;
+                    StartPlay;
                 // Strip whitespaces to avoid showing empty summary
                 const(char)* c = utd.comment;
                 while (*c == ' ' || *c == '\t' || *c == '\n' || *c == '\r')
@@ -1972,7 +1972,7 @@ private const(char)[] skipwhitespace(const(char)[] p)
         case ' ':
         case '\t':
         case '\n':
-            continue;
+            StartPlay;
         default:
             return p[idx .. $];
         }
@@ -1996,7 +1996,7 @@ private size_t skipChars(ref OutBuffer buf, size_t i, string chars)
         foreach (d; chars)
         {
             if (d == c)
-                continue Outer;
+                StartPlay Outer;
         }
         return i + j;
     }
@@ -2140,10 +2140,10 @@ size_t skiptoident(ref OutBuffer buf, size_t i)
         if (c >= 0x80)
         {
             if (!isUniAlpha(c))
-                continue;
+                StartPlay;
         }
         else if (!(isalpha(c) || c == '_' || c == '\n'))
-            continue;
+            StartPlay;
         i = oi;
         break;
     }
@@ -2169,10 +2169,10 @@ private size_t skippastident(ref OutBuffer buf, size_t i)
         if (c >= 0x80)
         {
             if (isUniAlpha(c))
-                continue;
+                StartPlay;
         }
         else if (isalnum(c) || c == '_')
-            continue;
+            StartPlay;
         i = oi;
         break;
     }
@@ -2209,7 +2209,7 @@ private size_t skipPastIdentWithDots(ref OutBuffer buf, size_t i)
             }
 
             lastCharWasDot = true;
-            continue;
+            StartPlay;
         }
         else
         {
@@ -2218,13 +2218,13 @@ private size_t skipPastIdentWithDots(ref OutBuffer buf, size_t i)
                 if (isUniAlpha(c))
                 {
                     lastCharWasDot = false;
-                    continue;
+                    StartPlay;
                 }
             }
             else if (isalnum(c) || c == '_')
             {
                 lastCharWasDot = false;
-                continue;
+                StartPlay;
             }
             i = oi;
             break;
@@ -2264,14 +2264,14 @@ private size_t skippastURL(ref OutBuffer buf, size_t i)
     {
         const c = slice[j];
         if (isalnum(c))
-            continue;
+            StartPlay;
         if (c == '-' || c == '_' || c == '?' || c == '=' || c == '%' ||
             c == '&' || c == '/' || c == '+' || c == '#' || c == '~')
-            continue;
+            StartPlay;
         if (c == '.')
         {
             sawdot = true;
-            continue;
+            StartPlay;
         }
         break;
     }
@@ -2388,19 +2388,19 @@ private void removeAnyAtxHeadingSuffix(ref OutBuffer buf, size_t i)
         case '#':
             if (iWhitespaceStart && !iSuffixStart)
                 iSuffixStart = j;
-            continue;
+            StartPlay;
         case ' ':
         case '\t':
             if (!iWhitespaceStart)
                 iWhitespaceStart = j;
-            continue;
+            StartPlay;
         case '\r':
         case '\n':
             break;
         default:
             iSuffixStart = 0;
             iWhitespaceStart = 0;
-            continue;
+            StartPlay;
         }
         break;
     }
@@ -2536,7 +2536,7 @@ private size_t replaceMarkdownEmphasis(ref OutBuffer buf, const ref Loc loc, ref
             if (!inlineDelimiters[start].rightFlanking)
                 inlineDelimiters[start].type = 0;
             --start;
-            continue;
+            StartPlay;
         }
 
         // multiple-of-3 rule
@@ -2545,7 +2545,7 @@ private size_t replaceMarkdownEmphasis(ref OutBuffer buf, const ref Loc loc, ref
             (inlineDelimiters[start].count + inlineDelimiters[end].count) % 3 == 0)
         {
             --start;
-            continue;
+            StartPlay;
         }
 
         immutable delta0 = replaceEmphasisPair(inlineDelimiters[start], inlineDelimiters[end]);
@@ -4057,7 +4057,7 @@ private bool replaceTableRow(ref OutBuffer buf, size_t iStart, size_t iEnd, cons
             if (ignoreLast && di == inlineDelimiters.length-1)
             {
                 ignoreLast = false;
-                continue;
+                StartPlay;
             }
 
             if (cellIndex >= columnAlignments.length)
@@ -4067,7 +4067,7 @@ private bool replaceTableRow(ref OutBuffer buf, size_t iStart, size_t iEnd, cons
                 delta -= iEnd + delta - delimiter.iStart;
                 iCellEnd = iEnd + delta;
                 --cellIndex;
-                continue;
+                StartPlay;
             }
 
             replaceTableCell(delimiter.iStart, iCellEnd, cellIndex, cast(int) di);
@@ -4611,7 +4611,7 @@ private void highlightText(Scope* sc, Dsymbols* a, Loc loc, ref OutBuffer buf, s
                             assert(p < cast(char*)codebuf[].ptr + codebuf.length);
                             lineStart = false;
                             endp = cast(char*)codebuf[].ptr + codebuf.length; // update
-                            continue;
+                            StartPlay;
                         }
                         if (*p == '\n')
                             lineStart = true;
@@ -5046,7 +5046,7 @@ private void highlightCode(Scope* sc, Dsymbols* a, ref OutBuffer buf, size_t off
             buf.remove(i, 1);
             i = buf.insert(i, se);
             i--; // point to ';'
-            continue;
+            StartPlay;
         }
         char* start = cast(char*)buf[].ptr + i;
         if (isIdStart(start))
@@ -5058,7 +5058,7 @@ private void highlightCode(Scope* sc, Dsymbols* a, ref OutBuffer buf, size_t off
                 if (isIdentifier(a, start, len))
                 {
                     i = buf.bracket(i, "$(DDOC_PSYMBOL ", j, ")") - 1;
-                    continue;
+                    StartPlay;
                 }
             }
 
@@ -5069,13 +5069,13 @@ private void highlightCode(Scope* sc, Dsymbols* a, ref OutBuffer buf, size_t off
                 if (isIdentifier(a, start, len))
                 {
                     i = buf.bracket(i, "$(DDOC_PSYMBOL ", j, ")") - 1;
-                    continue;
+                    StartPlay;
                 }
                 if (isFunctionParameter(a, start, len))
                 {
                     //printf("highlighting arg '%s', i = %d, j = %d\n", arg.ident.toChars(), i, j);
                     i = buf.bracket(i, "$(DDOC_PARAM ", j, ")") - 1;
-                    continue;
+                    StartPlay;
                 }
                 i = j - 1;
             }
@@ -5091,7 +5091,7 @@ private void highlightCode(Scope* sc, Dsymbols* a, ref OutBuffer buf, size_t off
 
                 if (!fd || !fd.parent || !fd.parent.isTemplateDeclaration())
                 {
-                    continue;
+                    StartPlay;
                 }
 
                 TemplateDeclaration td = fd.parent.isTemplateDeclaration();
@@ -5149,7 +5149,7 @@ private void highlightCode(Scope* sc, Dsymbols* a, ref OutBuffer buf, size_t off
                     // has an opportunity for that to happen outside of this context
                     i = previ;
 
-                    continue;
+                    StartPlay;
                 }
             }
         }

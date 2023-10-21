@@ -3643,7 +3643,7 @@ static if (0)
                     if (LARGEDATA)
                         flags |= CFseg;
                 }
-                continue;
+                StartPlay;
             case CFoff:
                 if (I32)
                 {

@@ -154,16 +154,16 @@ void scanMSCoffObjModule(void delegate(const(char)[] name, int pickAny) pAddSymb
         switch (n.SectionNumber)
         {
         case IMAGE_SYM_DEBUG:
-            continue;
+            StartPlay;
         case IMAGE_SYM_ABSOLUTE:
             if (strcmp(p, "@comp.id") == 0)
-                continue;
+                StartPlay;
             break;
         case IMAGE_SYM_UNDEFINED:
             // A non-zero value indicates a common block
             if (n.Value)
                 break;
-            continue;
+            StartPlay;
         default:
             break;
         }
@@ -173,14 +173,14 @@ void scanMSCoffObjModule(void delegate(const(char)[] name, int pickAny) pAddSymb
             break;
         case IMAGE_SYM_CLASS_STATIC:
             if (n.Value == 0) // if it's a section name
-                continue;
-            continue;
+                StartPlay;
+            StartPlay;
         case IMAGE_SYM_CLASS_FUNCTION:
         case IMAGE_SYM_CLASS_FILE:
         case IMAGE_SYM_CLASS_LABEL:
-            continue;
+            StartPlay;
         default:
-            continue;
+            StartPlay;
         }
         pAddSymbol(p.toDString(), 1);
     }

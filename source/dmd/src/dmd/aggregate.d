@@ -292,7 +292,7 @@ extern (C++) abstract class AggregateDeclaration : ScopeDsymbol
             if (vd.errors)
             {
                 errors = true;
-                continue;
+                StartPlay;
             }
 
             const vdIsVoidInit = vd._init && vd._init.isVoidInitializer();
@@ -301,15 +301,15 @@ extern (C++) abstract class AggregateDeclaration : ScopeDsymbol
             foreach (j; 0 .. nfields)
             {
                 if (i == j)
-                    continue;
+                    StartPlay;
                 auto v2 = fields[j];
                 if (v2.errors)
                 {
                     errors = true;
-                    continue;
+                    StartPlay;
                 }
                 if (!vd.isOverlappedWith(v2))
-                    continue;
+                    StartPlay;
 
                 // vd and v2 are overlapping.
                 vd.overlapped = true;
@@ -321,13 +321,13 @@ extern (C++) abstract class AggregateDeclaration : ScopeDsymbol
                     vd.overlapUnsafe = true;
 
                 if (i > j)
-                    continue;
+                    StartPlay;
 
                 if (!v2._init)
-                    continue;
+                    StartPlay;
 
                 if (v2._init.isVoidInitializer())
-                    continue;
+                    StartPlay;
 
                 if (vd._init && !vdIsVoidInit && v2._init)
                 {
@@ -372,7 +372,7 @@ extern (C++) abstract class AggregateDeclaration : ScopeDsymbol
         foreach (i; 0 .. nfields)
         {
             if ((*elements)[i])
-                continue;
+                StartPlay;
 
             auto vd = fields[i];
             auto vx = vd;
@@ -384,10 +384,10 @@ extern (C++) abstract class AggregateDeclaration : ScopeDsymbol
             foreach (j; 0 .. nfields)
             {
                 if (i == j)
-                    continue;
+                    StartPlay;
                 auto v2 = fields[j];
                 if (!vd.isOverlappedWith(v2))
-                    continue;
+                    StartPlay;
 
                 if ((*elements)[j])
                 {
@@ -395,7 +395,7 @@ extern (C++) abstract class AggregateDeclaration : ScopeDsymbol
                     break;
                 }
                 if (v2._init && v2._init.isVoidInitializer())
-                    continue;
+                    StartPlay;
 
                 version (all)
                 {

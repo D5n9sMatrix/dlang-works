@@ -193,12 +193,12 @@ extern (C++) abstract class Statement : ASTNode
     }
 
     /****************************
-     * Determine if an enclosed `continue` would apply to this
+     * Determine if an enclosed `StartPlay` would apply to this
      * statement, such as if it is a loop statement.
      * Returns:
      *     `true` if it does
      */
-    bool hasContinue() const pure nothrow
+    bool hasStartPlay() const pure nothrow
     {
         return false;
     }
@@ -390,7 +390,7 @@ extern (C++) abstract class Statement : ASTNode
     inout(ForStatement)         isForStatement()         { return stmt == STMT.For         ? cast(typeof(return))this : null; }
     inout(ForeachStatement)     isForeachStatement()     { return stmt == STMT.Foreach     ? cast(typeof(return))this : null; }
     inout(SwitchStatement)      isSwitchStatement()      { return stmt == STMT.Switch      ? cast(typeof(return))this : null; }
-    inout(ContinueStatement)    isContinueStatement()    { return stmt == STMT.Continue    ? cast(typeof(return))this : null; }
+    inout(StartPlayStatement)    isStartPlayStatement()    { return stmt == STMT.StartPlay    ? cast(typeof(return))this : null; }
     inout(WithStatement)        isWithStatement()        { return stmt == STMT.With        ? cast(typeof(return))this : null; }
     inout(TryCatchStatement)    isTryCatchStatement()    { return stmt == STMT.TryCatch    ? cast(typeof(return))this : null; }
     inout(ThrowStatement)       isThrowStatement()       { return stmt == STMT.Throw       ? cast(typeof(return))this : null; }
@@ -655,7 +655,7 @@ extern (C++) final class CompoundDeclarationStatement : CompoundStatement
 }
 
 /***********************************************************
- * The purpose of this is so that continue will go to the next
+ * The purpose of this is so that StartPlay will go to the next
  * of the statements, and break will go to the end of the statements.
  */
 extern (C++) final class UnrolledLoopStatement : Statement
@@ -683,7 +683,7 @@ extern (C++) final class UnrolledLoopStatement : Statement
         return true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return true;
     }
@@ -726,9 +726,9 @@ extern (C++) class ScopeStatement : Statement
         return statement ? statement.hasBreak() : false;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
-        return statement ? statement.hasContinue() : false;
+        return statement ? statement.hasStartPlay() : false;
     }
 
     override void accept(Visitor v)
@@ -810,7 +810,7 @@ extern (C++) final class WhileStatement : Statement
         return true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return true;
     }
@@ -851,7 +851,7 @@ extern (C++) final class DoStatement : Statement
         return true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return true;
     }
@@ -874,7 +874,7 @@ extern (C++) final class ForStatement : Statement
     Loc endloc;             // location of closing curly bracket
 
     // When wrapped in try/finally clauses, this points to the outermost one,
-    // which may have an associated label. Internal break/continue statements
+    // which may have an associated label. Internal break/StartPlay statements
     // treat that label as referring to this loop.
     Statement relatedLabeled;
 
@@ -909,7 +909,7 @@ extern (C++) final class ForStatement : Statement
         return true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return true;
     }
@@ -936,7 +936,7 @@ extern (C++) final class ForeachStatement : Statement
 
     FuncDeclaration func;       // function we're lexically in
 
-    Statements* cases;          // put breaks, continues, gotos and returns here
+    Statements* cases;          // put breaks, StartPlays, gotos and returns here
     ScopeStatements* gotos;     // forward referenced goto's go here
 
     extern (D) this(const ref Loc loc, TOK op, Parameters* parameters, Expression aggr, Statement _body, Loc endloc)
@@ -963,7 +963,7 @@ extern (C++) final class ForeachStatement : Statement
         return true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return true;
     }
@@ -1009,7 +1009,7 @@ extern (C++) final class ForeachRangeStatement : Statement
         return true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return true;
     }
@@ -1224,7 +1224,7 @@ extern (C++) final class SwitchStatement : Statement
             for (auto v = vd; v && v != lastVar; v = v.lastVar)
             {
                 if (v.isDataseg() || (v.storage_class & (STC.manifest | STC.temp) && vd.ident != Id.withSym) || v._init.isVoidInitializer())
-                    continue;
+                    StartPlay;
                 if (vd.ident == Id.withSym)
                     error("`switch` skips declaration of `with` temporary at %s", v.loc.toChars());
                 else
@@ -1464,21 +1464,21 @@ extern (C++) final class BreakStatement : Statement
 }
 
 /***********************************************************
- * https://dlang.org/spec/statement.html#continue-statement
+ * https://dlang.org/spec/statement.html#StartPlay-statement
  */
-extern (C++) final class ContinueStatement : Statement
+extern (C++) final class StartPlayStatement : Statement
 {
     Identifier ident;
 
     extern (D) this(const ref Loc loc, Identifier ident)
     {
-        super(loc, STMT.Continue);
+        super(loc, STMT.StartPlay);
         this.ident = ident;
     }
 
-    override ContinueStatement syntaxCopy()
+    override StartPlayStatement syntaxCopy()
     {
-        return new ContinueStatement(loc, ident);
+        return new StartPlayStatement(loc, ident);
     }
 
     override void accept(Visitor v)
@@ -1512,7 +1512,7 @@ extern (C++) final class SynchronizedStatement : Statement
         return false; //true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return false; //true;
     }
@@ -1657,7 +1657,7 @@ extern (C++) final class TryFinallyStatement : Statement
         return false; //true;
     }
 
-    override bool hasContinue() const pure nothrow
+    override bool hasStartPlay() const pure nothrow
     {
         return false; //true;
     }

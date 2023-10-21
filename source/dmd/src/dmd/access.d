@@ -151,7 +151,7 @@ private bool hasProtectedAccess(Scope *sc, Dsymbol s)
         for (auto scx = sc; scx; scx = scx.enclosing)
         {
             if (!scx.scopesym)
-                continue;
+                StartPlay;
             auto cd2 = scx.scopesym.isClassDeclaration();
             if (cd2 && cd.isBaseOf(cd2, null))
                 return true;

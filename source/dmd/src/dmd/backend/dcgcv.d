@@ -814,9 +814,9 @@ private int cv4_methodlist(Symbol *sf,int *pcount)
     for (s = sf; s; s = s.Sfunc.Foversym)
     {
         if (s.Sclass == SCtypedef || s.Sclass == SCfunctempl)
-            continue;
+            StartPlay;
         if (s.Sfunc.Fflags & Fnodebug)
-            continue;
+            StartPlay;
         if (s.Sfunc.Fflags & Fintro)
             mlen += 4;
         mlen += cgcv.sz_idx * 2;
@@ -834,9 +834,9 @@ private int cv4_methodlist(Symbol *sf,int *pcount)
     for (s = sf; s; s = s.Sfunc.Foversym)
     {
         if (s.Sclass == SCtypedef || s.Sclass == SCfunctempl)
-            continue;
+            StartPlay;
         if (s.Sfunc.Fflags & Fnodebug)
-            continue;
+            StartPlay;
         attribute = cast(ushort)SFLtoATTR(s.Sflags);
         // Make sure no overlapping bits
         assert((Fvirtual | Fpure | Fintro | Fstatic) == (Fvirtual ^ Fpure ^ Fintro ^ Fstatic));
@@ -1178,7 +1178,7 @@ version (SCPP)
     for (b = st.Sbase; b; b = b.BCnext)
     {
         if (b.BCflags & BCFvirtual)    // skip virtual base classes
-            continue;
+            StartPlay;
         nfields++;
         fnamelen += ((config.fulltypes == CV4) ? 6 : 8) +
                     cv4_numericbytes(b.BCoffset);
@@ -1204,7 +1204,7 @@ version (SCPP)
 
         symbol_debug(sf);
         if (sf.Sclass == SCfunctempl)
-            continue;
+            StartPlay;
         nfields++;
         fnamelen += ((config.fulltypes == CV4) ? 4 : 6) +
                     cv_stringbytes(cpp_unmangleident(sf.Sident.ptr));
@@ -1235,7 +1235,7 @@ version (SCPP)
 {
             case SCstruct:
                 if (sf.Sstruct.Sflags & STRanonymous)
-                    continue;
+                    StartPlay;
                 if (sf.Sstruct.Sflags & STRnotagname)
                     sfid = cpp_name_none.ptr;
                 property |= 0x10;       // class contains nested classes
@@ -1270,11 +1270,11 @@ version (SCPP)
                         if (so.Sclass == SCtypedef ||
                             so.Sclass == SCfunctempl ||
                             so.Sfunc.Fflags & Fnodebug)       // if compiler generated
-                            continue;                   // skip it
+                            StartPlay;                   // skip it
                         nfuncs++;
                     }
                     if (nfuncs == 0)
-                        continue;
+                        StartPlay;
 
                     if (nfuncs > 1)
                         count += nfuncs - 1;
@@ -1287,7 +1287,7 @@ version (SCPP)
 }
 
             default:
-                continue;
+                StartPlay;
         }
         nfields++;
         count++;
@@ -1315,7 +1315,7 @@ version (SCPP)
     {   targ_size_t offset;
 
         if (b.BCflags & BCFvirtual)    // skip virtual base classes
-            continue;
+            StartPlay;
         offset = b.BCoffset;
         typidx = cv4_symtypidx(b.BCbase);
 
@@ -1352,11 +1352,11 @@ version (SCPP)
 
             if (baseclass_find(st.Sbase,b.BCbase))    // if direct vbase
             {   if (i == LF_IVBCLASS)
-                    continue;
+                    StartPlay;
             }
             else
             {   if (i == LF_VBCLASS)
-                    continue;
+                    StartPlay;
             }
 
             typidx = cv4_symtypidx(b.BCbase);
@@ -1424,7 +1424,7 @@ version (SCPP)
 
         symbol_debug(sf);
         if (sf.Sclass == SCfunctempl)
-            continue;
+            StartPlay;
         typidx = cv4_symtypidx(sf);
         TOWORD(p,LF_FRIENDFCN);
         if (config.fulltypes == CV4)
@@ -1518,7 +1518,7 @@ version (SCPP)
 {
             case SCstruct:
                 if (sf.Sstruct.Sflags & STRanonymous)
-                    continue;
+                    StartPlay;
                 if (sf.Sstruct.Sflags & STRnotagname)
                     sfid = cpp_name_none.ptr;
                 goto Lnest;
@@ -1587,7 +1587,7 @@ version (SCPP)
 }
 
             default:
-                continue;
+                StartPlay;
         }
     }
     //printf("fnamelen = %d, p-dt.data = %d\n",fnamelen,p-dt.data);

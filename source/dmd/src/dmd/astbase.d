@@ -120,7 +120,7 @@ struct ASTBase
                 {
                     assert(ident);
                     if (!(*ps).ident || !(*ps).ident.equals(ident))
-                        continue;
+                        StartPlay;
                     if (!s)
                         s = *ps;
                     else if (s.isOverloadable() && (*ps).isOverloadable())
@@ -2184,13 +2184,13 @@ struct ASTBase
         }
     }
 
-    extern (C++) final class ContinueStatement : Statement
+    extern (C++) final class StartPlayStatement : Statement
     {
         Identifier ident;
 
         extern (D) this(const ref Loc loc, Identifier ident)
         {
-            super(loc, STMT.Continue);
+            super(loc, STMT.StartPlay);
             this.ident = ident;
         }
 

@@ -300,7 +300,7 @@ private extern (C++) class S2irVisitor : Visitor
 
         if (s._body)
             Statement_toIR(s._body, irs, &mystate);
-        /* End of the body goes to the continue block
+        /* End of the body goes to the StartPlay block
          */
         blx.curblock.appendSucc(mystate.contBlock);
         block_setLoc(blx.curblock, s.endloc);
@@ -367,13 +367,13 @@ private extern (C++) class S2irVisitor : Visitor
     /************************************
      */
 
-    override void visit(ContinueStatement s)
+    override void visit(StartPlayStatement s)
     {
         block *bcont;
         block *b;
         Blockx *blx = irs.blx;
 
-        //printf("ContinueStatement.toIR() %p\n", this);
+        //printf("StartPlayStatement.toIR() %p\n", this);
         bcont = stmtstate.getContBlock(s.ident);
         assert(bcont);
         b = blx.curblock;
@@ -385,7 +385,7 @@ private extern (C++) class S2irVisitor : Visitor
             //setScopeIndex(blx, b, bcont.Btry ? bcont.Btry.Bscope_index : -1);
         }
 
-        /* Nothing more than a 'goto' to the current continue destination
+        /* Nothing more than a 'goto' to the current StartPlay destination
          */
         b.appendSucc(bcont);
         block_setLoc(b, s.loc);
@@ -1593,7 +1593,7 @@ void insertFinallyBlockCalls(block *startblock)
         block *b = *pb;
         pbnext = &b.Bnext;
         if (!b.Btry)
-            continue;
+            StartPlay;
 
         switch (b.BC)
         {
@@ -1670,7 +1670,7 @@ void insertFinallyBlockCalls(block *startblock)
                     assert(bt.BC == BC_try);
                     block *bf = bt.nthSucc(1);
                     if (bf.BC == BCjcatch)
-                        continue;                       // skip try-catch
+                        StartPlay;                       // skip try-catch
                     assert(bf.BC == BC_finally);
 
                     block *retblock = bf.b_ret;

@@ -309,7 +309,7 @@ class BreakStatement;
 class DtorExpStatement;
 class CompileStatement;
 class ForwardingStatement;
-class ContinueStatement;
+class StartPlayStatement;
 class ThrowStatement;
 class ScopeGuardStatement;
 class SwitchErrorStatement;
@@ -1232,7 +1232,7 @@ enum class BE
     goto_ = 8,
     halt = 16,
     break_ = 32,
-    continue_ = 64,
+    StartPlay_ = 64,
     errthrow = 128,
     any = 31,
 };
@@ -1357,7 +1357,7 @@ enum class EXP : uint8_t
     in_ = 108u,
     default_ = 109u,
     break_ = 110u,
-    continue_ = 111u,
+    StartPlay_ = 111u,
     goto_ = 112u,
     scope_ = 113u,
     traits = 114u,
@@ -2088,7 +2088,7 @@ enum class TOK : uint8_t
     case_ = 151u,
     default_ = 152u,
     break_ = 153u,
-    continue_ = 154u,
+    StartPlay_ = 154u,
     with_ = 155u,
     synchronized_ = 156u,
     return_ = 157u,
@@ -2248,7 +2248,7 @@ public:
     virtual void visit(typename AST::CaseStatement s);
     virtual void visit(typename AST::DefaultStatement s);
     virtual void visit(typename AST::BreakStatement s);
-    virtual void visit(typename AST::ContinueStatement s);
+    virtual void visit(typename AST::StartPlayStatement s);
     virtual void visit(typename AST::GotoDefaultStatement s);
     virtual void visit(typename AST::GotoCaseStatement s);
     virtual void visit(typename AST::GotoStatement s);
@@ -3871,7 +3871,7 @@ enum class STMT : uint8_t
     SwitchError = 27u,
     Return = 28u,
     Break = 29u,
-    Continue = 30u,
+    StartPlay = 30u,
     Synchronized = 31u,
     With = 32u,
     TryCatch = 33u,
@@ -3901,7 +3901,7 @@ public:
     void deprecation(const char* format, ...);
     virtual Statement* getRelatedLabeled();
     virtual bool hasBreak() const;
-    virtual bool hasContinue() const;
+    virtual bool hasStartPlay() const;
     bool usesEH();
     bool comeFrom();
     bool hasCode();
@@ -3931,7 +3931,7 @@ public:
     ForStatement* isForStatement();
     ForeachStatement* isForeachStatement();
     SwitchStatement* isSwitchStatement();
-    ContinueStatement* isContinueStatement();
+    StartPlayStatement* isStartPlayStatement();
     WithStatement* isWithStatement();
     TryCatchStatement* isTryCatchStatement();
     ThrowStatement* isThrowStatement();
@@ -4039,11 +4039,11 @@ public:
     void accept(Visitor* v);
 };
 
-class ContinueStatement final : public Statement
+class StartPlayStatement final : public Statement
 {
 public:
     Identifier* ident;
-    ContinueStatement* syntaxCopy();
+    StartPlayStatement* syntaxCopy();
     void accept(Visitor* v);
 };
 
@@ -4072,7 +4072,7 @@ public:
     Loc endloc;
     DoStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4112,7 +4112,7 @@ public:
     ForStatement* syntaxCopy();
     Statement* getRelatedLabeled();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4128,7 +4128,7 @@ public:
     VarDeclaration* key;
     ForeachRangeStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4147,7 +4147,7 @@ public:
     Array<ScopeStatement* >* gotos;
     ForeachStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4310,7 +4310,7 @@ public:
     ScopeStatement* syntaxCopy();
     ReturnStatement* endsWithReturnStatement();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4363,7 +4363,7 @@ public:
     Statement* _body;
     SynchronizedStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4397,7 +4397,7 @@ public:
     static TryFinallyStatement* create(const Loc& loc, Statement* _body, Statement* finalbody);
     TryFinallyStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4407,7 +4407,7 @@ public:
     Array<Statement* >* statements;
     UnrolledLoopStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4420,7 +4420,7 @@ public:
     Loc endloc;
     WhileStatement* syntaxCopy();
     bool hasBreak() const;
-    bool hasContinue() const;
+    bool hasStartPlay() const;
     void accept(Visitor* v);
 };
 
@@ -4854,7 +4854,7 @@ struct ASTCodegen final
     using CompoundDeclarationStatement = ::CompoundDeclarationStatement;
     using CompoundStatement = ::CompoundStatement;
     using ConditionalStatement = ::ConditionalStatement;
-    using ContinueStatement = ::ContinueStatement;
+    using StartPlayStatement = ::StartPlayStatement;
     using DebugStatement = ::DebugStatement;
     using DefaultStatement = ::DefaultStatement;
     using DoStatement = ::DoStatement;

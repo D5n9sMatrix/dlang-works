@@ -143,7 +143,7 @@ Expression resolveAliasThis(Scope* sc, Expression e, bool gag = false, bool find
         if ((!e || !ad.aliasthis) && cd && cd.baseClass && cd.baseClass != ClassDeclaration.object)
         {
             ad = cd.baseClass;
-            continue;
+            StartPlay;
         }
         break;
     }

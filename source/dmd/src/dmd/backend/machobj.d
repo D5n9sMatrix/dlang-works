@@ -872,7 +872,7 @@ version (SCPP)
 
                 // Do zero-fill the second time through this loop
                 if (i ^ (psechdr.flags == S_ZEROFILL || psechdr.flags == S_THREAD_LOCAL_ZEROFILL))
-                    continue;
+                    StartPlay;
 
                 int align_ = 1 << psechdr._align;
                 while (psechdr._align > 0 && align_ < pseg.SDalignment)
@@ -910,7 +910,7 @@ version (SCPP)
 
                 // Do zero-fill the second time through this loop
                 if (i ^ (psechdr.flags == S_ZEROFILL || psechdr.flags == S_THREAD_LOCAL_ZEROFILL))
-                    continue;
+                    StartPlay;
 
                 int align_ = 1 << psechdr._align;
                 while (psechdr._align > 0 && align_ < pseg.SDalignment)
@@ -1022,7 +1022,7 @@ version (SCPP)
                             // patch with fdesym.Soffset - offset
                             int64_t *p = cast(int64_t *)patchAddr64(seg, r.offset);
                             *p += r.funcsym.Soffset - r.offset;
-                            continue;
+                            StartPlay;
                         }
                         else
                         {
@@ -1049,7 +1049,7 @@ version (SCPP)
 
                             int32_t *p = patchAddr(seg, r.offset);
                             *p += targ_address - fixup_address;
-                            continue;
+                            StartPlay;
                         }
                     }
                     else if (pseg.isCode())
@@ -1091,7 +1091,7 @@ version (SCPP)
                                 fobjbuf.write(&rel, rel.sizeof);
                                 foffset += rel.sizeof;
                                 nreloc++;
-                                continue;
+                                StartPlay;
                             }
                             else
                             {
@@ -1112,7 +1112,7 @@ version (SCPP)
                                 *p += s.Soffset;
                                 *p -= SecHdrTab64[pseg.SDshtidx].addr + r.offset + 4;
                                 //patch(pseg, r.offset, s.Sseg, s.Soffset);
-                                continue;
+                                StartPlay;
                             }
                         }
                     }
@@ -1136,7 +1136,7 @@ version (SCPP)
                             fobjbuf.write(&rel, rel.sizeof);
                             foffset += rel.sizeof;
                             nreloc++;
-                            continue;
+                            StartPlay;
                         }
                         else
                         {
@@ -1171,7 +1171,7 @@ version (SCPP)
                                 *p += SecHdrTab[SegData[s.Sseg].SDshtidx].addr + s.Soffset;
                                 //patch(pseg, r.offset, s.Sseg, s.Soffset);
                             }
-                            continue;
+                            StartPlay;
                         }
                     }
                 }
@@ -1244,7 +1244,7 @@ version (SCPP)
                             *p += SecHdrTab[SegData[r.targseg].SDshtidx].addr -
                                   (psechdr.addr + r.offset);
                     }
-                    continue;
+                    StartPlay;
                 }
                 else
                 {
@@ -1292,7 +1292,7 @@ version (SCPP)
                             *p += SecHdrTab[SegData[r.targseg].SDshtidx].addr;
                         //printf("%d:x%04x before = x%04x, after = x%04x pcrel = %d\n", seg, r.offset, before, *p, rel.r_pcrel);
                     }
-                    continue;
+                    StartPlay;
                 }
             }
         }

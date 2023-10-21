@@ -373,12 +373,12 @@ if (1)
         Symbol *s = symtab[si];
         if (log) printf("slice1 [%d]: %s\n", cast(int)si, s.Sident.ptr);
 
-        //if (strcmp(s.Sident.ptr, "__inlineretval3".ptr) == 0) { printf("can't\n"); sia[si].canSlice = false; continue; }
+        //if (strcmp(s.Sident.ptr, "__inlineretval3".ptr) == 0) { printf("can't\n"); sia[si].canSlice = false; StartPlay; }
         if (!(s.Sflags & SFLunambig))   // if somebody took the address of s
         {
             if (log) printf(" can't because SFLunambig\n");
             sia[si].canSlice = false;
-            continue;
+            StartPlay;
         }
 
         const sz = type_size(s.Stype);
@@ -388,7 +388,7 @@ if (1)
         {
             if (log) printf(" can't because size or pointer type\n");
             sia[si].canSlice = false;
-            continue;
+            StartPlay;
         }
 
         switch (s.Sclass)
@@ -448,7 +448,7 @@ if (1)
                 {
                     if (log) printf(" can't slice %s because no accessSlice\n", symtab[si].Sident.ptr);
                     sia[si].canSlice = false;
-                    continue;
+                    StartPlay;
                 }
 
                 /* Split slice-able symbol sold into two symbols,

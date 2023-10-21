@@ -86,7 +86,7 @@ package mixin template ParseVisitMethods(AST)
         foreach (sx; *s.statements)
         {
             if (!sx)
-                continue;
+                StartPlay;
             if (auto ds = sx.isExpStatement())
             {
                 if (auto de = ds.exp.isDeclarationExp())
@@ -762,7 +762,7 @@ package mixin template ParseVisitMethods(AST)
         foreach (em; *d.members)
         {
             if (!em)
-                continue;
+                StartPlay;
             em.accept(this);
         }
     }

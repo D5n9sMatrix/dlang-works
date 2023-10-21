@@ -2482,7 +2482,7 @@ elem* toElem(Expression e, IRState *irs)
                         if (!e ||
                             e.op == EXP.int64 && e.isIntegerExp().toInteger() == 0 ||
                             e.op == EXP.null_)
-                            continue;
+                            StartPlay;
                         return false;
                     }
                     return true;
@@ -4262,7 +4262,7 @@ elem *ExpressionsToStaticArray(IRState* irs, const ref Loc loc, Expressions *exp
                 e = el_combine(e, ex);
             }
             i++;
-            continue;
+            StartPlay;
         }
 
         size_t j = i + 1;
@@ -4595,7 +4595,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
                 {
                     e = el_bin(OPand, TYuchar, e, el_long(TYuchar, 1));
                     fty = Tuns8;
-                    continue;
+                    StartPlay;
                 }
 
             case X(Tbool,Tint64):
@@ -4610,7 +4610,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tbool,Tcomplex80):
                 e = el_bin(OPand, TYuchar, e, el_long(TYuchar, 1));
                 fty = Tuns8;
-                continue;
+                StartPlay;
 
             case X(Tbool,Timaginary32):
             case X(Tbool,Timaginary64):
@@ -4636,7 +4636,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint8,Tcomplex80):
                 e = el_una(OPs8_16, TYint, e);
                 fty = Tint32;
-                continue;
+                StartPlay;
             case X(Tint8,Timaginary32):
             case X(Tint8,Timaginary64):
             case X(Tint8,Timaginary80): return Lzero(ce, e, ttym);
@@ -4660,7 +4660,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns8,Tcomplex80):
                 e = el_una(OPu8_16, TYuint, e);
                 fty = Tuns32;
-                continue;
+                StartPlay;
             case X(Tuns8,Timaginary32):
             case X(Tuns8,Timaginary64):
             case X(Tuns8,Timaginary80): return Lzero(ce, e, ttym);
@@ -4678,7 +4678,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint16,Tuns128):
                 e = el_una(OPs16_32, TYint, e);
                 fty = Tint32;
-                continue;
+                StartPlay;
             case X(Tint16,Tfloat32):
             case X(Tint16,Tfloat64):
             case X(Tint16,Tfloat80):
@@ -4687,7 +4687,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint16,Tcomplex80):
                 e = el_una(OPs16_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tint16,Timaginary32):
             case X(Tint16,Timaginary64):
             case X(Tint16,Timaginary80): return Lzero(ce, e, ttym);
@@ -4711,7 +4711,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns16,Tcomplex80):
                 e = el_una(OPu16_32, TYuint, e);
                 fty = Tuns32;
-                continue;
+                StartPlay;
             case X(Tuns16,Timaginary32):
             case X(Tuns16,Timaginary64):
             case X(Tuns16,Timaginary80): return Lzero(ce, e, ttym);
@@ -4721,7 +4721,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint32,Tint8):
             case X(Tint32,Tuns8):   e = el_una(OP32_16, TYshort, e);
                 fty = Tint16;
-                continue;
+                StartPlay;
             case X(Tint32,Tint16):
             case X(Tint32,Tuns16):  eop = OP32_16;  return Leop(ce, e, eop, ttym);
             case X(Tint32,Tuns32):  return Lpaint(ce, e, ttym);
@@ -4731,7 +4731,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint32,Tuns128):
                 e = el_una(OPs32_64, TYullong, e);
                 fty = Tint64;
-                continue;
+                StartPlay;
             case X(Tint32,Tfloat32):
             case X(Tint32,Tfloat64):
             case X(Tint32,Tfloat80):
@@ -4740,7 +4740,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint32,Tcomplex80):
                 e = el_una(OPs32_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tint32,Timaginary32):
             case X(Tint32,Timaginary64):
             case X(Tint32,Timaginary80): return Lzero(ce, e, ttym);
@@ -4750,7 +4750,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns32,Tint8):
             case X(Tuns32,Tuns8):   e = el_una(OP32_16, TYshort, e);
                 fty = Tuns16;
-                continue;
+                StartPlay;
             case X(Tuns32,Tint16):
             case X(Tuns32,Tuns16):  eop = OP32_16;  return Leop(ce, e, eop, ttym);
             case X(Tuns32,Tint32):  return Lpaint(ce, e, ttym);
@@ -4760,7 +4760,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns32,Tuns128):
                 e = el_una(OPs32_64, TYullong, e);
                 fty = Tuns64;
-                continue;
+                StartPlay;
             case X(Tuns32,Tfloat32):
             case X(Tuns32,Tfloat64):
             case X(Tuns32,Tfloat80):
@@ -4769,7 +4769,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns32,Tcomplex80):
                 e = el_una(OPu32_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tuns32,Timaginary32):
             case X(Tuns32,Timaginary64):
             case X(Tuns32,Timaginary80): return Lzero(ce, e, ttym);
@@ -4781,7 +4781,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint64,Tint16):
             case X(Tint64,Tuns16):  e = el_una(OP64_32, TYint, e);
                 fty = Tint32;
-                continue;
+                StartPlay;
             case X(Tint64,Tint32):
             case X(Tint64,Tuns32):  eop = OP64_32; return Leop(ce, e, eop, ttym);
             case X(Tint64,Tuns64):  return Lpaint(ce, e, ttym);
@@ -4795,7 +4795,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint64,Tcomplex80):
                 e = el_una(OPs64_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tint64,Timaginary32):
             case X(Tint64,Timaginary64):
             case X(Tint64,Timaginary80): return Lzero(ce, e, ttym);
@@ -4807,7 +4807,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns64,Tint16):
             case X(Tuns64,Tuns16):  e = el_una(OP64_32, TYint, e);
                 fty = Tint32;
-                continue;
+                StartPlay;
             case X(Tuns64,Tint32):
             case X(Tuns64,Tuns32):  eop = OP64_32;  return Leop(ce, e, eop, ttym);
             case X(Tuns64,Tint64):  return Lpaint(ce, e, ttym);
@@ -4821,7 +4821,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns64,Tcomplex80):
                 e = el_una(OPu64_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tuns64,Timaginary32):
             case X(Tuns64,Timaginary64):
             case X(Tuns64,Timaginary80): return Lzero(ce, e, ttym);
@@ -4836,7 +4836,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint128,Tuns32):
                 e = el_una(OP128_64, TYllong, e);
                 fty = Tint64;
-                continue;
+                StartPlay;
             case X(Tint128,Tint64):
             case X(Tint128,Tuns64):  eop = OP128_64; return Leop(ce, e, eop, ttym);
             case X(Tint128,Tuns128): return Lpaint(ce, e, ttym);
@@ -4850,7 +4850,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tint128,Tcomplex80):
                 e = el_una(OPs64_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
         }
             case X(Tint128,Timaginary32):
             case X(Tint128,Timaginary64):
@@ -4866,7 +4866,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns128,Tuns32):
                 e = el_una(OP128_64, TYllong, e);
                 fty = Tint64;
-                continue;
+                StartPlay;
             case X(Tuns128,Tint64):
             case X(Tuns128,Tuns64):  eop = OP128_64;  return Leop(ce, e, eop, ttym);
             case X(Tuns128,Tint128):  return Lpaint(ce, e, ttym);
@@ -4880,7 +4880,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tuns128,Tcomplex80):
                 e = el_una(OPu64_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
         }
             case X(Tuns128,Timaginary32):
             case X(Tuns128,Timaginary64):
@@ -4904,7 +4904,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tfloat32,Tfloat80):
                 e = el_una(OPf_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tfloat32,Tfloat64): eop = OPf_d; return Leop(ce, e, eop, ttym);
             case X(Tfloat32,Timaginary32):
             case X(Tfloat32,Timaginary64):
@@ -4914,14 +4914,14 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tfloat32,Tcomplex80):
                 e = el_bin(OPadd,TYcfloat,el_long(TYifloat,0),e);
                 fty = Tcomplex32;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
             case X(Tfloat64,Tint8):
             case X(Tfloat64,Tuns8):    e = el_una(OPd_s16, TYshort, e);
                 fty = Tint16;
-                continue;
+                StartPlay;
             case X(Tfloat64,Tint16):   eop = OPd_s16; return Leop(ce, e, eop, ttym);
             case X(Tfloat64,Tuns16):   eop = OPd_u16; return Leop(ce, e, eop, ttym);
             case X(Tfloat64,Tint32):   eop = OPd_s32; return Leop(ce, e, eop, ttym);
@@ -4943,7 +4943,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tfloat64,Tcomplex80):
                 e = el_bin(OPadd,TYcdouble,el_long(TYidouble,0),e);
                 fty = Tcomplex64;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -4961,7 +4961,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
         }
             case X(Tfloat80,Tfloat32): e = el_una(OPld_d, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tfloat80,Tuns64):
                 eop = OPld_u64; return Leop(ce, e, eop, ttym);
             case X(Tfloat80,Tfloat64): eop = OPld_d; return Leop(ce, e, eop, ttym);
@@ -4973,7 +4973,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tfloat80,Tcomplex80):
                 e = el_bin(OPadd,TYcldouble,e,el_long(TYildouble,0));
                 fty = Tcomplex80;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -4997,13 +4997,13 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Timaginary32,Timaginary80):
                 e = el_una(OPf_d, TYidouble, e);
                 fty = Timaginary64;
-                continue;
+                StartPlay;
             case X(Timaginary32,Tcomplex32):
             case X(Timaginary32,Tcomplex64):
             case X(Timaginary32,Tcomplex80):
                 e = el_bin(OPadd,TYcfloat,el_long(TYfloat,0),e);
                 fty = Tcomplex32;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -5030,7 +5030,7 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Timaginary64,Tcomplex80):
                 e = el_bin(OPadd,TYcdouble,el_long(TYdouble,0),e);
                 fty = Tcomplex64;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -5052,14 +5052,14 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Timaginary80,Tfloat80):  return Lzero(ce, e, ttym);
             case X(Timaginary80,Timaginary32): e = el_una(OPld_d, TYidouble, e);
                 fty = Timaginary64;
-                continue;
+                StartPlay;
             case X(Timaginary80,Timaginary64): eop = OPld_d; return Leop(ce, e, eop, ttym);
             case X(Timaginary80,Tcomplex32):
             case X(Timaginary80,Tcomplex64):
             case X(Timaginary80,Tcomplex80):
                 e = el_bin(OPadd,TYcldouble,el_long(TYldouble,0),e);
                 fty = Tcomplex80;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -5081,18 +5081,18 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tcomplex32,Tfloat80):
                 e = el_una(OPc_r, TYfloat, e);
                 fty = Tfloat32;
-                continue;
+                StartPlay;
             case X(Tcomplex32,Timaginary32):
             case X(Tcomplex32,Timaginary64):
             case X(Tcomplex32,Timaginary80):
                 e = el_una(OPc_i, TYifloat, e);
                 fty = Timaginary32;
-                continue;
+                StartPlay;
             case X(Tcomplex32,Tcomplex64):
             case X(Tcomplex32,Tcomplex80):
                 e = el_una(OPf_d, TYcdouble, e);
                 fty = Tcomplex64;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -5114,13 +5114,13 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tcomplex64,Tfloat80):
                 e = el_una(OPc_r, TYdouble, e);
                 fty = Tfloat64;
-                continue;
+                StartPlay;
             case X(Tcomplex64,Timaginary32):
             case X(Tcomplex64,Timaginary64):
             case X(Tcomplex64,Timaginary80):
                 e = el_una(OPc_i, TYidouble, e);
                 fty = Timaginary64;
-                continue;
+                StartPlay;
             case X(Tcomplex64,Tcomplex32):   eop = OPd_f;   return Leop(ce, e, eop, ttym);
             case X(Tcomplex64,Tcomplex80):   eop = OPd_ld;  return Leop(ce, e, eop, ttym);
 
@@ -5144,18 +5144,18 @@ elem *toElemCast(CastExp ce, elem *e, bool isLvalue)
             case X(Tcomplex80,Tfloat80):
                 e = el_una(OPc_r, TYldouble, e);
                 fty = Tfloat80;
-                continue;
+                StartPlay;
             case X(Tcomplex80,Timaginary32):
             case X(Tcomplex80,Timaginary64):
             case X(Tcomplex80,Timaginary80):
                 e = el_una(OPc_i, TYildouble, e);
                 fty = Timaginary80;
-                continue;
+                StartPlay;
             case X(Tcomplex80,Tcomplex32):
             case X(Tcomplex80,Tcomplex64):
                 e = el_una(OPld_d, TYcdouble, e);
                 fty = Tcomplex64;
-                continue;
+                StartPlay;
 
                 /* ============================= */
 
@@ -5299,7 +5299,7 @@ elem *callfunc(const ref Loc loc,
                  * corresponding argument to a pointer
                  */
                 elems[i] = addressElem(ea, arg.type.pointerTo());
-                continue;
+                StartPlay;
             }
 
             if (ISX64REF(irs, arg) && op == NotIntrinsic)
@@ -5314,7 +5314,7 @@ elem *callfunc(const ref Loc loc,
                                                     // then assume the frontend took care of the copying and pass it by ref
 
                 elems[i] = addressElem(ea, arg.type, copy);
-                continue;
+                StartPlay;
             }
 
             if (irs.target.os == Target.OS.Windows && irs.target.is64bit && tybasic(ea.Ety) == TYcfloat)
@@ -5696,7 +5696,7 @@ extern (D) elem *fixArgumentEvaluationOrder(elem*[] elems)
             case OPconst:
             case OPrelconst:
             case OPstring:
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -5740,7 +5740,7 @@ extern (D) elem *fixArgumentEvaluationOrder(elem*[] elems)
             case OPconst:
             case OPrelconst:
             case OPstring:
-                continue;
+                StartPlay;
 
             default:
                 break;
@@ -6315,12 +6315,12 @@ elem *toElemStructLit(StructLiteralExp sle, IRState *irs, EXP op, Symbol *sym, b
                 e = el_combine(e, fillHole(stmp, &offset, v.offset, structsize));
                 offset = cast(uint)(v.offset + v.type.size());
                 i++;
-                continue;
+                StartPlay;
             }
             if (!v.overlapped)
             {
                 i++;
-                continue;
+                StartPlay;
             }
 
             /* AggregateDeclaration.fields holds the fields by the lexical order.
@@ -6358,7 +6358,7 @@ elem *toElemStructLit(StructLiteralExp sle, IRState *irs, EXP op, Symbol *sym, b
                 //if (offset != holeEnd) printf("  2 fillHole, %d .. %d\n", offset, holeEnd);
                 e = el_combine(e, fillHole(stmp, &offset, holeEnd, structsize));
                 offset = offset2;
-                continue;
+                StartPlay;
             }
             i = vend;
         }
@@ -6372,7 +6372,7 @@ elem *toElemStructLit(StructLiteralExp sle, IRState *irs, EXP op, Symbol *sym, b
         foreach (i, el; *sle.elements)
         {
             if (!el)
-                continue;
+                StartPlay;
 
             VarDeclaration v = sle.sd.fields[i];
             assert(!v.isThisDeclaration() || el.op == EXP.null_);

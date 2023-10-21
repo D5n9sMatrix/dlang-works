@@ -150,7 +150,7 @@ bool modifyFieldVar(Loc loc, Scope* sc, VarDeclaration var, Expression e1)
                     foreach (j, v; ad.fields)
                     {
                         if (v is var || !var.isOverlappedWith(v))
-                            continue;
+                            StartPlay;
                         v.ctorinit = true;
                         sc.ctorflow.fieldinit[j].csx = CSX.this_ctor;
                     }
@@ -187,7 +187,7 @@ bool modifyFieldVar(Loc loc, Scope* sc, VarDeclaration var, Expression e1)
             if (s)
             {
                 s = s.toParentP(var.toParent2());
-                continue;
+                StartPlay;
             }
         }
         break;
@@ -300,13 +300,13 @@ extern (C++) abstract class Declaration : Dsymbol
                     {
                         auto structField = sd.fields[i];
                         if (structField.overlapped)
-                            continue;
+                            StartPlay;
                         Type tv = structField.type.baseElemOf();
                         if (tv.ty != Tstruct)
-                            continue;
+                            StartPlay;
                         auto sdv = (cast(TypeStruct)tv).sym;
                         if (!sdv.postblit)
-                            continue;
+                            StartPlay;
                         if (sdv.postblit.isDisabled())
                         {
                             p.error(loc, "is not copyable because field `%s` is not copyable", structField.toChars());

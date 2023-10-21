@@ -159,7 +159,7 @@ uint cv4_Denum(EnumDeclaration e)
         {
             EnumMember sf = (*e.members)[i].isEnumMember();
             if (!sf)
-                continue;
+                StartPlay;
             const value = sf.value().toInteger();
 
             // store only member's simple name
@@ -216,7 +216,7 @@ uint cv4_Denum(EnumDeclaration e)
         {
             EnumMember sf = (*e.members)[i].isEnumMember();
             if (!sf)
-                continue;
+                StartPlay;
 
             ubyte* p = mc.writePtr();
             dinteger_t value = sf.value().toInteger();

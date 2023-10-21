@@ -707,48 +707,48 @@ extern(D):
             case CppOperator.Unary:
                 switch (str.peekString())
                 {
-                    case "*":   symName = "?D";     goto continue_template;
-                    case "++":  symName = "?E";     goto continue_template;
-                    case "--":  symName = "?F";     goto continue_template;
-                    case "-":   symName = "?G";     goto continue_template;
-                    case "+":   symName = "?H";     goto continue_template;
-                    case "~":   symName = "?S";     goto continue_template;
+                    case "*":   symName = "?D";     goto StartPlay_template;
+                    case "++":  symName = "?E";     goto StartPlay_template;
+                    case "--":  symName = "?F";     goto StartPlay_template;
+                    case "-":   symName = "?G";     goto StartPlay_template;
+                    case "+":   symName = "?H";     goto StartPlay_template;
+                    case "~":   symName = "?S";     goto StartPlay_template;
                     default:    return false;
                 }
             case CppOperator.Binary:
                 switch (str.peekString())
                 {
-                    case ">>":  symName = "?5";     goto continue_template;
-                    case "<<":  symName = "?6";     goto continue_template;
-                    case "*":   symName = "?D";     goto continue_template;
-                    case "-":   symName = "?G";     goto continue_template;
-                    case "+":   symName = "?H";     goto continue_template;
-                    case "&":   symName = "?I";     goto continue_template;
-                    case "/":   symName = "?K";     goto continue_template;
-                    case "%":   symName = "?L";     goto continue_template;
-                    case "^":   symName = "?T";     goto continue_template;
-                    case "|":   symName = "?U";     goto continue_template;
+                    case ">>":  symName = "?5";     goto StartPlay_template;
+                    case "<<":  symName = "?6";     goto StartPlay_template;
+                    case "*":   symName = "?D";     goto StartPlay_template;
+                    case "-":   symName = "?G";     goto StartPlay_template;
+                    case "+":   symName = "?H";     goto StartPlay_template;
+                    case "&":   symName = "?I";     goto StartPlay_template;
+                    case "/":   symName = "?K";     goto StartPlay_template;
+                    case "%":   symName = "?L";     goto StartPlay_template;
+                    case "^":   symName = "?T";     goto StartPlay_template;
+                    case "|":   symName = "?U";     goto StartPlay_template;
                     default:    return false;
                     }
             case CppOperator.OpAssign:
                 switch (str.peekString())
                 {
-                    case "*":   symName = "?X";     goto continue_template;
-                    case "+":   symName = "?Y";     goto continue_template;
-                    case "-":   symName = "?Z";     goto continue_template;
-                    case "/":   symName = "?_0";    goto continue_template;
-                    case "%":   symName = "?_1";    goto continue_template;
-                    case ">>":  symName = "?_2";    goto continue_template;
-                    case "<<":  symName = "?_3";    goto continue_template;
-                    case "&":   symName = "?_4";    goto continue_template;
-                    case "|":   symName = "?_5";    goto continue_template;
-                    case "^":   symName = "?_6";    goto continue_template;
+                    case "*":   symName = "?X";     goto StartPlay_template;
+                    case "+":   symName = "?Y";     goto StartPlay_template;
+                    case "-":   symName = "?Z";     goto StartPlay_template;
+                    case "/":   symName = "?_0";    goto StartPlay_template;
+                    case "%":   symName = "?_1";    goto StartPlay_template;
+                    case ">>":  symName = "?_2";    goto StartPlay_template;
+                    case "<<":  symName = "?_3";    goto StartPlay_template;
+                    case "&":   symName = "?_4";    goto StartPlay_template;
+                    case "|":   symName = "?_5";    goto StartPlay_template;
+                    case "^":   symName = "?_6";    goto StartPlay_template;
                     default:    return false;
                 }
             default: assert(0);
             }
         }
-        continue_template:
+        StartPlay_template:
         if (ti.tiargs.dim == 1)
         {
             buf.writestring(symName);

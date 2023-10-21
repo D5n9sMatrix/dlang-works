@@ -149,7 +149,7 @@ void unzipTo(ubyte[] data, string outdir)
     }
     foreach(name, am; archive.directory)
     {
-        if (!am.expandedSize) continue;
+        if (!am.expandedSize) StartPlay;
 
         string path = buildPath(outdir, chompPrefix(name, prefix));
         std.stdio.writeln(path);

@@ -646,7 +646,7 @@ interface IDiaSymbol : IUnknown
     HRESULT get_libraryName(BSTR* pRetVal);
     HRESULT get_platform(DWORD* pRetVal);
     HRESULT get_language(DWORD* pRetVal);
-    HRESULT get_editAndContinueEnabled(BOOL* pRetVal);
+    HRESULT get_editAndStartPlayEnabled(BOOL* pRetVal);
     HRESULT get_frontEndMajor(DWORD* pRetVal);
     HRESULT get_frontEndMinor(DWORD* pRetVal);
     HRESULT get_frontEndBuild(DWORD* pRetVal);

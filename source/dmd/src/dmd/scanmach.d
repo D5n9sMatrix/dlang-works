@@ -128,7 +128,7 @@ void scanMachObjModule(void delegate(const(char)[] name, int pickAny) pAddSymbol
             {
                 // values in /usr/include/mach-o/stab.h
                 //printf(" N_STAB");
-                continue;
+                StartPlay;
             }
 
             version (none)
@@ -179,7 +179,7 @@ void scanMachObjModule(void delegate(const(char)[] name, int pickAny) pAddSymbol
             {
                 // values in /usr/include/mach-o/stab.h
                 //printf(" N_STAB");
-                continue;
+                StartPlay;
             }
 
             version (none)

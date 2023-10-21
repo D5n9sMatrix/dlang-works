@@ -120,7 +120,7 @@ void cgreg_init()
             }
 
             s.Sflags &= ~GTregcand;
-            continue;
+            StartPlay;
         }
 
         switch (s.Sclass)
@@ -133,7 +133,7 @@ void cgreg_init()
                     debug if (debugr)
                         printf("parameter '%s' weight %d is not enough\n",s.Sident.ptr,s.Sweight);
                     s.Sflags &= ~GTregcand;
-                    continue;
+                    StartPlay;
                 }
                 break;
 
@@ -354,7 +354,7 @@ static if (1) // causes assert failure in std.range(4488) from std.parallelism's
             block *bp = list_block(bl);
             int bpi = bp.Bdfoidx;
             if (!vec_testbit(bpi,s.Srange))
-                continue;
+                StartPlay;
             if (gotoepilog && bp.BC == BCgoto)
             {
                 if (vec_testbit(bpi,s.Slvreg))
@@ -473,7 +473,7 @@ int cgreg_gotoepilog(block *b,Symbol *s)
         block *bp = list_block(bl);
         int bpi = bp.Bdfoidx;
         if (!vec_testbit(bpi,s.Srange))
-            continue;
+            StartPlay;
         if (vec_testbit(bpi,s.Slvreg))
         {
             switch (inoutp)
@@ -589,7 +589,7 @@ void cgreg_spillreg_prolog(block *b,Symbol *s,ref CodeBuilder cdbstore,ref CodeB
         const bpi = list_block(bl).Bdfoidx;
 
         if (!vec_testbit(bpi,s.Srange))
-            continue;
+            StartPlay;
         if (vec_testbit(bpi,s.Slvreg))
         {
             if (!live)
@@ -633,7 +633,7 @@ void cgreg_spillreg_epilog(block *b,Symbol *s,ref CodeBuilder cdbstore, ref Code
     {
         const bpi = list_block(bl).Bdfoidx;
         if (!vec_testbit(bpi,s.Srange))
-            continue;
+            StartPlay;
         if (vec_testbit(bpi,s.Slvreg))
         {
             if (!live)
@@ -899,7 +899,7 @@ int cgreg_assign(Symbol *retsym)
                     printf("symbol '%s' is not a candidate\n",s.Sident.ptr);
             }
 
-            continue;
+            StartPlay;
         }
 
         tym_t ty = s.ty();
@@ -926,24 +926,24 @@ int cgreg_assign(Symbol *retsym)
 
             // Symbols used as return values should only be mapped into return value registers
             if (s == retsym && !(reg == dst_integer_reg || reg == dst_float_reg))
-                continue;
+                StartPlay;
 
             // If BP isn't available, can't assign to it
             if (reg == BP && !(allregs & mBP))
-                continue;
+                StartPlay;
 
 static if (0 && TARGET_LINUX)
 {
             // Need EBX for static pointer
             if (reg == BX && !(allregs & mBX))
-                continue;
+                StartPlay;
 }
             /* Don't enregister any parameters to variadicPrologRegs
              */
             if (variadicPrologRegs & (1 << reg))
             {
                 if (s.Sclass == SCparameter || s.Sclass == SCfastpar)
-                    continue;
+                    StartPlay;
                 /* Win64 doesn't use the Posix variadic scheme, so we can skip SCshadowreg
                  */
             }
@@ -953,11 +953,11 @@ static if (0 && TARGET_LINUX)
             if ((s.Sclass == SCfastpar || s.Sclass == SCshadowreg) &&
                 (1 << reg) & regparams &&
                 reg != s.Spreg)
-                continue;
+                StartPlay;
 
             if (s.Sflags & GTbyte &&
                 !((1 << reg) & BYTEREGS))
-                    continue;
+                    StartPlay;
 
             int benefit = cgreg_benefit(s,reg,retsym);
 
@@ -980,11 +980,11 @@ static if (0 && TARGET_LINUX)
                         if (regmsw == NOREG)
                             goto Ltried;                // tried and failed to assign MSW
                         if (regmsw == reg)              // can't assign msw and lsw to same reg
-                            continue;
+                            StartPlay;
                         if ((s.Sclass == SCfastpar || s.Sclass == SCshadowreg) &&
                             (1 << regmsw) & regparams &&
                             regmsw != s.Spreg2)
-                            continue;
+                            StartPlay;
 
                         debug if (debugr)
                         {   printf(".%s",regstring[regmsw]);

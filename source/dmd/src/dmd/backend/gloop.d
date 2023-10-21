@@ -232,7 +232,7 @@ bool blockinit()
             {
                 foreach (bls; ListRange(list_block(blp).Bsucc))
                     if (list_block(bls) == b)
-                        continue L1;
+                        StartPlay L1;
                 assert(0);
             }
 
@@ -286,7 +286,7 @@ private extern (D) void compdom(block*[] dfo)
         foreach (i, b; dfo)              // for each block in dfo[]
         {
             if (i == 0)
-                continue;                // except startblock
+                StartPlay;                // except startblock
             if (b.Bpred)                 // if there are predecessors
             {
                 vec_set(t1);
@@ -726,7 +726,7 @@ restart:
                 blockinit();
                 compdom();
                 findloops(dfo[], startloop);
-                continue L3;
+                StartPlay L3;
             }
         }
         break;
@@ -823,7 +823,7 @@ restart:
                     compdom();
                     findloops(dfo[], startloop);    // recompute block info
                     doflow = true;
-                    continue L2;
+                    StartPlay L2;
                 }
             }
             break;
@@ -1367,12 +1367,12 @@ void updaterd(elem *n,vec_t GEN,vec_t KILL)
                         ni = i;
 
                     if (!OTassign(tn.Eoper))
-                        continue;
+                        StartPlay;
 
                     // If def of same variable, kill that def
                     tn1 = tn.EV.E1;
                     if (tn1.Eoper != OPind || t.Ejty != tn1.Ejty)
-                        continue;
+                        StartPlay;
 
                     if (KILL)
                         vec_setbit(i,KILL);
@@ -1398,11 +1398,11 @@ private void unmarkall(elem *e)
         assert(e);
         e.Nflags &= ~NFLli;            /* unmark this elem             */
         if (OTunary(e.Eoper))
-            continue;
+            StartPlay;
         else if (OTbinary(e.Eoper))
         {
             unmarkall(e.EV.E2);
-            continue;
+            StartPlay;
         }
         return;
     }
@@ -1587,7 +1587,7 @@ Lnextlis:
                 for (i = 0; (i = cast(uint) vec_index(i, l.Lloop)) < dfo.length; ++i)  // for each block in loop
                 {
                     if (dfo[i] == b)        // except this one
-                        continue;
+                        StartPlay;
 
                     //<if there are any RDs of v in Binrd other than n>
                     //    <if there are any refs of v in that block>
@@ -1599,7 +1599,7 @@ Lnextlis:
                     for (j = 0; (j = cast(uint) vec_index(j, tmp)) < go.defnod.length; ++j)  // for each RD of v in Binrd
                     {
                         if (go.defnod[j].DNelem == n)
-                            continue;
+                            StartPlay;
                         if (dfo[i].Belem &&
                             refs(v,dfo[i].Belem,cast(elem *)null)) //if refs of v
                         {
@@ -1621,7 +1621,7 @@ Lnextlis:
                 for (j = 0; (j = cast(uint) vec_index(j, tmp)) < go.defnod.length; ++j)  // for each RD of v in Binrd
                 {
                     if (go.defnod[j].DNelem == n)
-                        continue;
+                        StartPlay;
                     if (b.Belem && refs(v,b.Belem,n))
                     {
                         vec_free(tmp);
@@ -2064,7 +2064,7 @@ private void findbasivs(ref Loop l)
     foreach (const i; 0 .. go.defnod.length)
     {
         if (!vec_testbit(go.defnod[i].DNblock.Bdfoidx,l.Lloop))
-            continue;               /* def is not in the loop       */
+            StartPlay;               /* def is not in the loop       */
 
         n = go.defnod[i].DNelem;
         elem_debug(n);
@@ -2129,18 +2129,18 @@ private void findbasivs(ref Loop l)
         s = globsym[i];
         assert(symbol_isintab(s));
         if (s.Sflags & SFLnotbasiciv)
-            continue;
+            StartPlay;
 
         // Do not use aggregates as basic IVs. This is because the other loop
         // code doesn't check offsets into symbols, (assuming everything
         // is at offset 0). We could perhaps amend this by allowing basic IVs
         // if the struct consists of only one data member.
         if (tyaggregate(s.ty()))
-            continue;
+            StartPlay;
 
         // Do not use complex types as basic IVs, as the code gen isn't up to it
         if (tycomplex(s.ty()))
-                continue;
+                StartPlay;
 
         auto biv = l.Livlist.push();
         biv.IVbasic = s;               // symbol of basic IV
@@ -2204,7 +2204,7 @@ private void findopeqs(ref Loop l)
     foreach (i; 0 .. go.defnod.length)
     {
         if (!vec_testbit(go.defnod[i].DNblock.Bdfoidx,l.Lloop))
-            continue;               // def is not in the loop
+            StartPlay;               // def is not in the loop
 
         n = go.defnod[i].DNelem;
         elem_debug(n);
@@ -2276,7 +2276,7 @@ private void findopeqs(ref Loop l)
         // is at offset 0). We could perhaps amend this by allowing basic IVs
         // if the struct consists of only one data member.
         if (tyaggregate(s.ty()))
-            continue;
+            StartPlay;
 
         auto biv = l.Lopeqlist.push();
         biv.IVbasic = s;               // symbol of basic IV
@@ -2479,7 +2479,7 @@ private void ivfamelems(Iv *biv,elem **pn)
         foreach (ref fl; biv.IVfamily)
         {
             if (*fl.FLpelem != n1)          /* not it               */
-                continue;
+                StartPlay;
 
             /* Look for (fl op constant)     */
             if (op == OPneg)
@@ -2604,12 +2604,12 @@ private void intronvars(ref Loop l)
         foreach (ref fl; biv.IVfamily)
         {                               /* for each IV in family of biv  */
             if (fl.FLtemp == FLELIM)   /* if already eliminated         */
-                continue;
+                StartPlay;
 
             /* If induction variable can be written as a simple function */
             /* of a previous induction variable, skip it.                */
             if (funcprev(biv,fl))
-                continue;
+                StartPlay;
 
             ty = fl.FLty;
             T = el_alloctmp(ty);        /* allocate temporary T          */
@@ -2698,19 +2698,19 @@ private bool funcprev(ref Iv biv, ref famlist fl)
     foreach (ref fls; biv.IVfamily)
     {
         if (!fls.FLtemp)                // haven't generated a temporary yet
-            continue;
+            StartPlay;
         if (fls.FLtemp == FLELIM)      /* no iv we can use here        */
-            continue;
+            StartPlay;
 
         /* The multipliers must match   */
         if (!el_match(fls.c1,fl.c1))
-            continue;
+            StartPlay;
 
         /* If the c2's match also, we got it easy */
         if (el_match(fls.c2,fl.c2))
         {
             if (tysize(fl.FLty) > tysize(fls.FLtemp.ty()))
-                continue;              /* can't increase size of var   */
+                StartPlay;              /* can't increase size of var   */
             flse1 = el_var(fls.FLtemp);
             flse1.Ety = fl.FLty;
             goto L2;
@@ -2730,7 +2730,7 @@ private bool funcprev(ref Iv biv, ref famlist fl)
                 !(fl.c2.Eoper == OPrelconst &&
                   fl.c2.EV.Vsym == fls.c2.EV.Vsym)
                )
-                continue;
+                StartPlay;
         }
         flse1 = el_var(fls.FLtemp);
         e2 = flse1;                             /* assume case 1        */
@@ -2763,7 +2763,7 @@ private bool funcprev(ref Iv biv, ref famlist fl)
             {
                L1:
                 el_free(flse1);
-                continue;
+                StartPlay;
             }
         }
 
@@ -2831,7 +2831,7 @@ private void elimbasivs(ref Loop l)
         // Be careful about Nflags being in a union...
         elem* einc = *biv.IVincr;
         if (!(einc.Nflags & NFLnogoal))
-            continue;
+            StartPlay;
 
         Symbol* X = biv.IVbasic;
         assert(symbol_isintab(X));
@@ -2843,10 +2843,10 @@ private void elimbasivs(ref Loop l)
         if (pref != null && refcount <= 1)
         {
             if (!biv.IVfamily.length)
-                continue;
+                StartPlay;
 
             if (catchRef(X, l))
-                continue;
+                StartPlay;
 
             elem* ref_ = *pref;
 
@@ -2856,7 +2856,7 @@ private void elimbasivs(ref Loop l)
 
             const fi = simfl(biv.IVfamily, ty); // find simplest elem in family
             if (fi == biv.IVfamily.length)
-                continue;
+                StartPlay;
             famlist* fl = &biv.IVfamily[fi];
 
             // Don't do the replacement if we would replace a
@@ -2868,7 +2868,7 @@ private void elimbasivs(ref Loop l)
             if (ref_.Eoper >= OPle && ref_.Eoper <= OPge &&
                 !(tyuns(ref_.EV.E1.Ety) | tyuns(ref_.EV.E2.Ety)) &&
                  tyuns(flty))
-                    continue;
+                    StartPlay;
 
             /* if we have (e relop X), replace it with (X relop e)  */
             if (ref_.EV.E2.Eoper == OPvar && ref_.EV.E2.EV.Vsym == X)
@@ -2890,20 +2890,20 @@ private void elimbasivs(ref Loop l)
                     c1 * el_tolong(ref_.EV.E2) & ~0x7FFFL) ||
                      c1 & ~0x7FFFL)
                    )
-                    continue;
+                    StartPlay;
 
                 if (sz == LONGSIZE &&
                     ((ref_.EV.E2.Eoper == OPconst &&
                     c1 * el_tolong(ref_.EV.E2) & ~0x7FFFFFFFL) ||
                      c1 & ~0x7FFFFFFFL)
                    )
-                    continue;
+                    StartPlay;
                 if (sz == LLONGSIZE &&
                     ((ref_.EV.E2.Eoper == OPconst &&
                     c1 * el_tolong(ref_.EV.E2) & ~0x7FFFFFFFFFFFFFFFL) ||
                      c1 & ~0x7FFFFFFFFFFFFFFFL)
                    )
-                    continue;
+                    StartPlay;
             }
 
             /* If the incr is a decrement, and the relational is < or <=,
@@ -2913,7 +2913,7 @@ private void elimbasivs(ref Loop l)
             if ((einc.Eoper == OPminass || einc.EV.E2.Eoper == OPconst && el_tolong(einc.EV.E2) < 0) &&
                 (ref_.Eoper == OPlt || ref_.Eoper == OPle) &&
                 (tyuns(ref_.EV.E1.Ety) | tyuns(ref_.EV.E2.Ety)))
-                continue;
+                StartPlay;
 
             /* If loop started out with a signed conditional that was
              * replaced with an unsigned one, don't do it if c2
@@ -2923,7 +2923,7 @@ private void elimbasivs(ref Loop l)
             {
                 targ_llong c2 = el_tolong(fl.c2);
                 if (c2 < 0)
-                    continue;
+                    StartPlay;
             }
 
             elem *refE2 = el_copytree(ref_.EV.E2);
@@ -2962,7 +2962,7 @@ private void elimbasivs(ref Loop l)
                  * an unsigned T>=0 which will be an infinite loop.
                  */
                 el_free(fofe);
-                continue;
+                StartPlay;
             }
 
             if (debugc) printf("Eliminating basic IV '%s'\n",X.Sident.ptr);
@@ -3037,9 +3037,9 @@ private void elimbasivs(ref Loop l)
                 {   /* for each successor   */
                     b = list_block(bl);
                     if (vec_testbit(b.Bdfoidx,l.Lloop))
-                        continue;       /* inside loop  */
+                        StartPlay;       /* inside loop  */
                     if (!vec_testbit(X.Ssymnum,b.Binlv))
-                        continue;       /* not live     */
+                        StartPlay;       /* not live     */
 
                     C2 = el_copytree(fl.c2);
                     ne = el_bin(OPmin,ty,
@@ -3113,7 +3113,7 @@ private void elimbasivs(ref Loop l)
                 {   /* for each successor   */
                     block *b = list_block(bl);
                     if (vec_testbit(b.Bdfoidx,l.Lloop))
-                        continue;       /* inside loop  */
+                        StartPlay;       /* inside loop  */
                     if (vec_testbit(X.Ssymnum,b.Binlv))
                         goto L1;        /* live         */
                 }
@@ -3160,7 +3160,7 @@ private void elimopeqs(ref Loop l)
         // increment elem.
         // Be careful about Nflags being in a union...
         if (!((*biv.IVincr).Nflags & NFLnogoal))
-            continue;
+            StartPlay;
 
         X = biv.IVbasic;
         assert(symbol_isintab(X));
@@ -3178,7 +3178,7 @@ private void elimopeqs(ref Loop l)
                 {   // for each successor
                     block *b = list_block(bl);
                     if (vec_testbit(b.Bdfoidx,l.Lloop))
-                        continue;       // inside loop
+                        StartPlay;       // inside loop
                     if (vec_testbit(X.Ssymnum,b.Binlv))
                         goto L1;        // live
                 }
@@ -3222,11 +3222,11 @@ private size_t simfl(famlist[] fams, tym_t tym)
     foreach (i, ref fl; fams)
     {
         if (fl.FLtemp == FLELIM)       /* no variable, so skip it      */
-            continue;
+            StartPlay;
         /* If size of replacement is less than size of biv, we could    */
         /* be in trouble due to loss of precision.                      */
         if (size(fl.FLtemp.ty()) < size(tym))
-            continue;
+            StartPlay;
 
         // pick simplest
         sofar = sofar == fams.length ? i
@@ -3366,7 +3366,7 @@ private bool catchRef(Symbol* x, ref Loop l)
     foreach (i, b; dfo[])
     {
         if (vec_testbit(b.Bdfoidx, l.Lloop))
-            continue;
+            StartPlay;
         /* this is conservative, just checking if x is used outside the loop.
          * A better check would see if the body of the loop throws, and would
          * check the enclosing catch/finally blocks and their exit blocks.
@@ -3626,7 +3626,7 @@ private void elimspecwalk(elem **pn)
 /********
  * Walk e in execution order.
  * When eincrement is found, remove it.
- * Continue, replacing instances of `v` with `v+increment`
+ * StartPlay, replacing instances of `v` with `v+increment`
  * When second eincrement is found, stop.
  * Params:
  *      e = expression to walk
@@ -3870,7 +3870,7 @@ bool loopunroll(ref Loop l)
 
     /* Walk e in execution order.
      * When eincrement is found, remove it.
-     * Continue, replacing instances of `v` with `v+increment`
+     * StartPlay, replacing instances of `v` with `v+increment`
      * When last eincrement is found, stop.
      */
     unrollWalker(e, eincrement.Edef, v, increment, unrolls);

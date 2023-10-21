@@ -784,7 +784,7 @@ dmd -cov -unittest myprog.d
             `Enable $(LINK2 $(ROOT_DIR)articles/warnings.html, warnings)`
         ),
         Option("wi",
-            "warnings as messages (compilation will continue)",
+            "warnings as messages (compilation will StartPlay)",
             `Enable $(LINK2 $(ROOT_DIR)articles/warnings.html, informational warnings (i.e. compilation
             still proceeds normally))`,
         ),
@@ -925,7 +925,7 @@ struct CLIUsage
         foreach (t; allTransitions)
         {
             if (!t.documented)
-                continue;
+                StartPlay;
             buf ~= "  =";
             buf ~= t.name;
             buf ~= " "; // at least one separating space

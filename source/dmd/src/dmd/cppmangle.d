@@ -1236,50 +1236,50 @@ private final class CppMangleVisitor : Visitor
             case CppOperator.Unary:
                 switch (str.peekString())
                 {
-                case "*":   symName = "de"; goto continue_template;
-                case "++":  symName = "pp"; goto continue_template;
-                case "--":  symName = "mm"; goto continue_template;
-                case "-":   symName = "ng"; goto continue_template;
-                case "+":   symName = "ps"; goto continue_template;
-                case "~":   symName = "co"; goto continue_template;
+                case "*":   symName = "de"; goto StartPlay_template;
+                case "++":  symName = "pp"; goto StartPlay_template;
+                case "--":  symName = "mm"; goto StartPlay_template;
+                case "-":   symName = "ng"; goto StartPlay_template;
+                case "+":   symName = "ps"; goto StartPlay_template;
+                case "~":   symName = "co"; goto StartPlay_template;
                 default:    break;
                 }
                 break;
             case CppOperator.Binary:
                 switch (str.peekString())
                 {
-                case ">>":  symName = "rs"; goto continue_template;
-                case "<<":  symName = "ls"; goto continue_template;
-                case "*":   symName = "ml"; goto continue_template;
-                case "-":   symName = "mi"; goto continue_template;
-                case "+":   symName = "pl"; goto continue_template;
-                case "&":   symName = "an"; goto continue_template;
-                case "/":   symName = "dv"; goto continue_template;
-                case "%":   symName = "rm"; goto continue_template;
-                case "^":   symName = "eo"; goto continue_template;
-                case "|":   symName = "or"; goto continue_template;
+                case ">>":  symName = "rs"; goto StartPlay_template;
+                case "<<":  symName = "ls"; goto StartPlay_template;
+                case "*":   symName = "ml"; goto StartPlay_template;
+                case "-":   symName = "mi"; goto StartPlay_template;
+                case "+":   symName = "pl"; goto StartPlay_template;
+                case "&":   symName = "an"; goto StartPlay_template;
+                case "/":   symName = "dv"; goto StartPlay_template;
+                case "%":   symName = "rm"; goto StartPlay_template;
+                case "^":   symName = "eo"; goto StartPlay_template;
+                case "|":   symName = "or"; goto StartPlay_template;
                 default:    break;
                 }
                 break;
             case CppOperator.OpAssign:
                 switch (str.peekString())
                 {
-                case "*":   symName = "mL"; goto continue_template;
-                case "+":   symName = "pL"; goto continue_template;
-                case "-":   symName = "mI"; goto continue_template;
-                case "/":   symName = "dV"; goto continue_template;
-                case "%":   symName = "rM"; goto continue_template;
-                case ">>":  symName = "rS"; goto continue_template;
-                case "<<":  symName = "lS"; goto continue_template;
-                case "&":   symName = "aN"; goto continue_template;
-                case "|":   symName = "oR"; goto continue_template;
-                case "^":   symName = "eO"; goto continue_template;
+                case "*":   symName = "mL"; goto StartPlay_template;
+                case "+":   symName = "pL"; goto StartPlay_template;
+                case "-":   symName = "mI"; goto StartPlay_template;
+                case "/":   symName = "dV"; goto StartPlay_template;
+                case "%":   symName = "rM"; goto StartPlay_template;
+                case ">>":  symName = "rS"; goto StartPlay_template;
+                case "<<":  symName = "lS"; goto StartPlay_template;
+                case "&":   symName = "aN"; goto StartPlay_template;
+                case "|":   symName = "oR"; goto StartPlay_template;
+                case "^":   symName = "eO"; goto StartPlay_template;
                 default:    break;
                 }
                 break;
             default:
                 assert(0);
-            continue_template:
+            StartPlay_template:
                 firstTemplateArg = 1;
                 break;
             }
@@ -2551,7 +2551,7 @@ extern(C++) private final class LeftoverVisitor : Visitor
         {
             auto se = elem.toStringExp();
             closestIndex((*this.ignore)[], se, match);
-            if (match) continue;
+            if (match) StartPlay;
             auto idx = closestIndex(this.toWrite[], se, match);
             if (!match)
                 this.toWrite.insert(idx, se);

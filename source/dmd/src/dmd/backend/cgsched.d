@@ -2286,7 +2286,7 @@ code **assemble(code **pc)  // reassemble scheduled instructions
     {
         Cinfo* ci = stagelist[sli];
         if (!ci)
-            continue;
+            StartPlay;
         if (!insert(ci))
             break;
     }
@@ -2319,7 +2319,7 @@ code **assemble(code **pc)  // reassemble scheduled instructions
         }
 
         if (!ci)
-            continue;
+            StartPlay;
         fpustackused += ci.fpuadjust;
         //printf("stage()1: fpustackused = %d\n", fpustackused);
         c = ci.c;
@@ -2370,7 +2370,7 @@ code **assemble(code **pc)  // reassemble scheduled instructions
     foreach (ci; stagelist[sli .. stagelist.length])
     {
         if (!ci)
-            continue;
+            StartPlay;
 
         debug
         if (debugs) { printf("appending: "); ci.c.print(); }
@@ -2446,7 +2446,7 @@ int insert(Cinfo *ci)
     {
         Cinfo* cit = tbl[i];
         if (!cit)
-            continue;
+            StartPlay;
 
         // Look for special case swap
         if (movesp &&
@@ -2457,7 +2457,7 @@ int insert(Cinfo *ci)
         {
             c.IEV1.Vpointer += cit.spadjust;
             //printf("\t1, spadjust = %d, ptr = x%x\n",cit.spadjust,c.IEV1.Vpointer);
-            continue;
+            StartPlay;
         }
 
         if (movesp &&
@@ -2469,7 +2469,7 @@ int insert(Cinfo *ci)
         {
             //printf("\t2, spadjust = %d\n",cit.spadjust);
             c.IEV1.Vpointer += cit.spadjust;
-            continue;
+            StartPlay;
         }
 
         clocks = conflict(cit,ci,1);
@@ -2743,7 +2743,7 @@ bool stage(code *c)
     foreach (i, ref cs; stagelist[])
     {
         if (!cs)
-            continue;
+            StartPlay;
         if (conflict(cs,ci,0) &&                // if conflict
             !(cs.flags & ci.flags & CIFL.push))
         {
@@ -2845,7 +2845,7 @@ private code *schedule(code *c,regm_t scratch)
             c.next = null;
             pctail = &c.next;
             c = cn;
-            continue;
+            StartPlay;
         }
 
         //printf("init\n");
@@ -2994,7 +2994,7 @@ private code *peephole(code *cstart,regm_t scratch)
         if (!c1)
             break;
         if (c1.Iflags & (CFtarg | CFtarg2))
-            continue;
+            StartPlay;
 
         // Do:
         //      PUSH    reg
@@ -3007,7 +3007,7 @@ private code *peephole(code *cstart,regm_t scratch)
                 c1.Irm == modregrm(0,regx,4) &&
                 c1.Isib == modregrm(0,4,SP))
             {   c1.Iop = NOP;
-                continue;
+                StartPlay;
             }
 
             //  PUSH    [ESP]           =>      PUSH    regx
@@ -3015,7 +3015,7 @@ private code *peephole(code *cstart,regm_t scratch)
                 c1.Irm == modregrm(0,6,4) &&
                 c1.Isib == modregrm(0,4,SP))
             {   c1.Iop = 0x50 + regx;
-                continue;
+                StartPlay;
             }
 
             //  CMP     [ESP],imm       =>      CMP     regx,i,,
@@ -3028,7 +3028,7 @@ private code *peephole(code *cstart,regm_t scratch)
                     c1.Iop = (c1.Iop & 1) | 0x84;
                     c1.Irm = modregrm(3,regx,regx);
                 }
-                continue;
+                StartPlay;
             }
 
         }
@@ -3044,7 +3044,7 @@ private code *peephole(code *cstart,regm_t scratch)
             uint regx = (c.Irm >> 3) & 7;
             c.Iop = 0x58 + regx;
             c1.Iop = NOP;
-            continue;
+            StartPlay;
         }
 
         // Combine two SUBs of the same register
@@ -3074,7 +3074,7 @@ private code *peephole(code *cstart,regm_t scratch)
                     c1.Iop = NOP;
                     if (i == 0)
                         c.Iop = NOP;
-                    continue;
+                    StartPlay;
 
                 default:
                     break;
@@ -3091,7 +3091,7 @@ private code *peephole(code *cstart,regm_t scratch)
         }
         else
         {
-            continue;
+            StartPlay;
         }
 
         rmn = c1.Irm;
@@ -3196,7 +3196,7 @@ private code *peephole(code *cstart,regm_t scratch)
             default:
                 break;
         }
-        continue;
+        StartPlay;
 Lnop:
         c1.Iop = NOP;
         c1 = cnext(c1);
@@ -3231,7 +3231,7 @@ code *simpleops(code *c,regm_t scratch)
     {
         c = *pc;
         if (c.Iflags & (CFtarg | CFtarg2 | CFopsize))
-            continue;
+            StartPlay;
         if (c.Iop == 0x83 &&
             (c.Irm & modregrm(0,7,0)) == modregrm(0,7,0) &&
             (c.Irm & modregrm(3,0,0)) != modregrm(3,0,0)

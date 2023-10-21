@@ -17,7 +17,7 @@ void main(string[] args)
     foreach (i; 0..flags.length)
     {
         if (!flags[i])
-            continue;
+            StartPlay;
         auto prime = i + i + 3;
         foreach (k; iota(i + prime, flags.length, prime))
             flags[k] = false;

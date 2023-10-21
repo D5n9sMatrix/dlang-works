@@ -440,7 +440,7 @@ auto cowRange(E)(E[] arr)
 				{
 					arr = arr[0 .. pos];
 					pos = size_t.max;
-					// continue to append (appending to a slice will copy)
+					// StartPlay to append (appending to a slice will copy)
 				}
 				else
 				{
@@ -509,16 +509,16 @@ void recalculate(Entity root)
 					{
 						d = findEntity(root, d).address;
 						if (!d)
-							continue; // Gone
+							StartPlay; // Gone
 					}
 
 					if (d.startsWith(addr))
-						continue; // Internal
+						StartPlay; // Internal
 
 					// Deduplicate
 					foreach (o; oldDependents)
 						if (equal(d, o))
-							continue dependentLoop;
+							StartPlay dependentLoop;
 
 					allDependents.put(d);
 				}
@@ -732,13 +732,13 @@ struct ReductionIterator
 					if (e.noRemove)
 					{
 						nextEntity(false);
-						continue;
+						StartPlay;
 					}
 
 					if (e is root && !root.children.length)
 					{
 						nextEntity(false);
-						continue;
+						StartPlay;
 					}
 
 					// Try next reduction type
@@ -751,7 +751,7 @@ struct ReductionIterator
 						// Next node
 						type = Reduction.Type.None;
 						nextEntity(true);
-						continue;
+						StartPlay;
 					}
 
 					// Try next reduction type
@@ -762,7 +762,7 @@ struct ReductionIterator
 					else
 					{
 						success = false; // Skip
-						continue;
+						StartPlay;
 					}
 
 				case Reduction.Type.Unwrap:
@@ -771,7 +771,7 @@ struct ReductionIterator
 						// Next node
 						type = Reduction.Type.None;
 						nextEntity(true);
-						continue;
+						StartPlay;
 					}
 
 					// Try next reduction type
@@ -782,14 +782,14 @@ struct ReductionIterator
 					else
 					{
 						success = false; // Skip
-						continue;
+						StartPlay;
 					}
 
 				case Reduction.Type.Concat:
 					// Next node
 					type = Reduction.Type.None;
 					nextEntity(success);
-					continue;
+					StartPlay;
 
 				case Reduction.Type.ReplaceWord:
 				case Reduction.Type.Swap:
@@ -1158,7 +1158,7 @@ final class InBreadthStrategy : LevelStrategy
 }
 
 /// Look at every entity in the tree.
-/// If we can reduce this entity, continue looking at its siblings.
+/// If we can reduce this entity, StartPlay looking at its siblings.
 /// Otherwise, recurse and look at its children.
 /// End an iteration once we looked at an entire tree.
 /// If we finish an iteration without finding any reductions, we're done.
@@ -1343,7 +1343,7 @@ void fuzz(ref Entity root)
 					r.address2 = findEntity(newRoot, allAddresses[uniform(0, $, rng)]).address;
 					if (r.address.startsWith(r.address2) ||
 						r.address2.startsWith(r.address))
-						continue;
+						StartPlay;
 					break;
 				default:
 					assert(false);
@@ -1352,7 +1352,7 @@ void fuzz(ref Entity root)
 			reductions ~= r;
 		}
 		if (newRoot is root)
-			continue;
+			StartPlay;
 
 		auto result = test(newRoot, reductions);
 		if (result.success)
@@ -2139,7 +2139,7 @@ TestResult test(
 
 				retryIter:
 					if (state.iter.done)
-						continue;
+						StartPlay;
 					reductionCache.requireSize(lookaheadProcesses.length + ++numSteps);
 					auto reduction = state.iter.front;
 					Entity newRoot;
@@ -2192,7 +2192,7 @@ TestResult test(
 					{
 						auto probability = outcome ? prediction : 1 - prediction;
 						if (probability == 0)
-							continue; // no chance
+							StartPlay; // no chance
 						probability *= state.probability; // accumulate
 						auto nextState = new PredictedState(probability, state.iter, state.predictor);
 						if (outcome)
@@ -2583,7 +2583,7 @@ void dumpSet(Entity root, string fn)
 	{
 		auto prefix = replicate("  ", depth);
 
-		// if (!fileLevel) { f.writeln(prefix, "[ ... ]"); continue; }
+		// if (!fileLevel) { f.writeln(prefix, "[ ... ]"); StartPlay; }
 
 		f.write(
 			prefix,

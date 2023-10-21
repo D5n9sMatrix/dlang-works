@@ -1601,7 +1601,7 @@ static if (1)
             uint linestart = ~0;
 
             if (!sd.SDlinnum_data.length)
-                continue;
+                StartPlay;
 
             //printf("sd = %x, SDlinnum_count = %d\n", sd, sd.SDlinnum_count);
             for (int i = 0; i < sd.SDlinnum_data.length; i++)
@@ -1630,9 +1630,9 @@ static if (1)
 
                     //assert(addinc >= 0);
                     if (addinc < 0)
-                        continue;
+                        StartPlay;
                     if (j && lininc == 0 && !(addinc && j + 1 == ld.linoff.length))
-                        continue;
+                        StartPlay;
                     line += lininc;
                     if (line < linestart)
                         linestart = line;
@@ -1648,7 +1648,7 @@ static if (1)
                         if (opcode <= 255)
                         {
                             debug_line.buf.writeByte(opcode);
-                            continue;
+                            StartPlay;
                         }
                     }
                     if (lininc)
@@ -1824,7 +1824,7 @@ static if (1)
             Symbol *sa = globsym[si];
 
             version (MARS)
-                if (sa.Sflags & SFLnodebug) continue;
+                if (sa.Sflags & SFLnodebug) StartPlay;
 
             static immutable uint[14] formal_var_abbrev_suffix =
             [
@@ -1972,7 +1972,7 @@ static if (1)
 
                 version (MARS)
                     if (sa.Sflags & SFLnodebug)
-                        continue;
+                        StartPlay;
 
                 uint vcode;
 
@@ -2354,7 +2354,7 @@ static if (1)
                         : DWARFAbbrev.write!(abbrevTypeImmutableVoid);
                 }
                 else
-                    continue;
+                    StartPlay;
 
                 idx = cast(uint)debug_info.buf.length();
                 debug_info.buf.writeuLEB128(code);    // abbreviation code

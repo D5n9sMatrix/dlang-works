@@ -648,7 +648,7 @@ public:
             // Detect the assigned name for renamed import
             auto alias_ = i.aliases[idx];
             if (!alias_)
-                continue;
+                StartPlay;
 
             if (auto err = writeImport(sym, alias_))
                 ignored("renamed import `%s = %s` because `using` %s", alias_.toChars(), name.toChars(), err);
@@ -707,7 +707,7 @@ public:
         foreach (s; *m.members)
         {
             if (s.visible().kind < AST.Visibility.Kind.public_)
-                continue;
+                StartPlay;
             s.accept(this);
         }
     }
@@ -1271,16 +1271,16 @@ public:
                 if (auto vd = m.isVarDeclaration())
                 {
                     if (!memberField(vd))
-                        continue;
+                        StartPlay;
                     varCount++;
 
                     if (!vd._init && !vd.type.isTypeBasic() && !vd.type.isTypePointer && !vd.type.isTypeStruct &&
                         !vd.type.isTypeClass && !vd.type.isTypeDArray && !vd.type.isTypeSArray)
                     {
-                        continue;
+                        StartPlay;
                     }
                     if (vd._init && vd._init.isVoidInitializer())
-                        continue;
+                        StartPlay;
 
                     if (first)
                     {
@@ -1316,7 +1316,7 @@ public:
                     if (auto vd = m.isVarDeclaration())
                     {
                         if (!memberField(vd))
-                            continue;
+                            StartPlay;
                         if (!first)
                             buf.writestring(", ");
                         assert(vd.type);
@@ -1342,7 +1342,7 @@ public:
                     if (auto vd = m.isVarDeclaration())
                     {
                         if (!memberField(vd))
-                            continue;
+                            StartPlay;
 
                         if (first)
                             first = false;

@@ -158,7 +158,7 @@ while (1)
 
                         case Mangle.Timmutable:
                             mi++;
-                            continue;
+                            StartPlay;
 
                         default:
                             {}

@@ -356,7 +356,7 @@ extern (C++) final class ToClassesVisitor : Visitor
                 // Ignore noreturn members with sizeof = 0
                 // Potential custom alignment changes are factored in above
                 nfields--;
-                continue;
+                StartPlay;
             }
             else
             {

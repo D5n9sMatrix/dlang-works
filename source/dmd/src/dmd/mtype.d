@@ -4321,7 +4321,7 @@ extern (C++) final class TypeFunction : TypeNext
         {
             Type t = fparam.type;
             if (!t)
-                continue;
+                StartPlay;
 
             if (fparam.storageClass & (STC.lazy_ | STC.out_))
             {
@@ -4397,10 +4397,10 @@ extern (C++) final class TypeFunction : TypeNext
             foreach (i, fparam; parameterList)
             {
                 if (fparam == p)
-                    continue;
+                    StartPlay;
                 Type t = fparam.type;
                 if (!t)
-                    continue;
+                    StartPlay;
                 t = t.baseElemOf();
                 if (t.isMutable() && t.hasPointers())
                 {
@@ -4411,7 +4411,7 @@ extern (C++) final class TypeFunction : TypeNext
                     {
                         Type tn = t.nextOf().toBasetype();
                         if (!(tn.isMutable() && tn.hasPointers()))
-                            continue;
+                            StartPlay;
                     }
                     return stc;
                 }
@@ -4519,7 +4519,7 @@ extern (C++) final class TypeFunction : TypeNext
             Parameter p = (*params)[i];
             Type t = p.type.substWildTo(m);
             if (t == p.type)
-                continue;
+                StartPlay;
             if (params == parameterList.parameters)
                 params = parameterList.parameters.copy();
             (*params)[i] = new Parameter(p.storageClass, t, null, null, null);
@@ -4691,7 +4691,7 @@ extern (C++) final class TypeFunction : TypeNext
             if (u >= nargs)
             {
                 if (p.defaultArg)
-                    continue;
+                    StartPlay;
                 // try typesafe variadics
                 goto L1;
             }
@@ -5733,7 +5733,7 @@ extern (C++) final class TypeStruct : Type
                  * This is to support unsafe things like Rebindable templates.
                  */
                 if (assignable)
-                    continue;
+                    StartPlay;
             }
             else
             {
@@ -5860,7 +5860,7 @@ extern (C++) final class TypeStruct : Type
                         else if (v.offset == offset)
                         {
                             if (m > MATCH.nomatch)
-                                continue;
+                                StartPlay;
                         }
                         else
                         {

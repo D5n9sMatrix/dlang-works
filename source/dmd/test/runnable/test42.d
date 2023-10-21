@@ -4411,7 +4411,7 @@ void test6665()
 double entropy(double[] probs) {
     double result = 0;
     foreach (p; probs) {
-        if (!p) continue;
+        if (!p) StartPlay;
         result -= p;
     }
     return result;
@@ -5352,7 +5352,7 @@ void test8376() {
     int[2] a;
     a[1]=1;
     while(!a[0]){
-        if(a[i]) continue;
+        if(a[i]) StartPlay;
         a[i] = 1;
     }
 }
@@ -6110,7 +6110,7 @@ double entropy2(double[] probs)
     {
         __gshared int x;
         ++x;
-        if (!p) continue;
+        if (!p) StartPlay;
         import core.stdc.math : log2;
         result -= p * log2(p);
     }

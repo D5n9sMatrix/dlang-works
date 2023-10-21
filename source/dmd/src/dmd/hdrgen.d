@@ -609,9 +609,9 @@ public:
         buf.writenl();
     }
 
-    override void visit(ContinueStatement s)
+    override void visit(StartPlayStatement s)
     {
-        buf.writestring("continue");
+        buf.writestring("StartPlay");
         if (s.ident)
         {
             buf.writeByte(' ');
@@ -1350,7 +1350,7 @@ public:
         foreach (em; *d.members)
         {
             if (!em)
-                continue;
+                StartPlay;
             em.accept(this);
             buf.writeByte(',');
             buf.writenl();

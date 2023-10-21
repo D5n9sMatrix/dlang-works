@@ -114,7 +114,7 @@ private:
         foreach (attr; decl.attributes)
         {
             if (attr.atAttribute is null)
-                continue;
+                StartPlay;
 
             // check for @myArg
             if (config.attributes.canFind(attr.atAttribute.identifier.text))
@@ -167,13 +167,13 @@ private:
 
             const atAttribute = attr.atAttribute;
             if (atAttribute is null)
-                continue;
+                StartPlay;
 
             const atText = atAttribute.identifier.text;
 
             // ignore custom attributes (@myArg)
             if (!predefinedAttributes.canFind(atText))
-                continue;
+                StartPlay;
 
             outFile.write(text("@", atText, " "));
         }

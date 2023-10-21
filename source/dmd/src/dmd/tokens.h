@@ -205,7 +205,7 @@ enum class TOK : unsigned char
     case_,
     default_,
     break_,
-    continue_,
+    StartPlay_,
     with_,
     synchronized_,
     return_,
@@ -409,7 +409,7 @@ enum class EXP : unsigned char
     in_,
     default_,
     break_,
-    continue_,
+    StartPlay_,
     goto_,
     scope_,
 

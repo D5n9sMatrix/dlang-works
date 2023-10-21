@@ -138,7 +138,7 @@ class Lexer
                 case '\n':
                     break;
                 default:
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -273,7 +273,7 @@ class Lexer
                         return;
                     }
                 }
-                continue; // skip white space
+                StartPlay; // skip white space
             case '\t':
             case '\v':
             case '\f':
@@ -286,7 +286,7 @@ class Lexer
                         return;
                     }
                 }
-                continue; // skip white space
+                StartPlay; // skip white space
             case '\r':
                 p++;
                 if (*p != '\n') // if CR stands by itself
@@ -307,7 +307,7 @@ class Lexer
                         return;
                     }
                 }
-                continue; // skip white space
+                StartPlay; // skip white space
             case '\n':
                 p++;
                 endOfLine();
@@ -325,9 +325,9 @@ class Lexer
                         return;
                     }
                 }
-                continue; // skip white space
+                StartPlay; // skip white space
             case '0':
-                if (!isZeroSecond(p[1]))        // if numeric literal does not continue
+                if (!isZeroSecond(p[1]))        // if numeric literal does not StartPlay
                 {
                     ++p;
                     t.unsvalue = 0;
@@ -337,7 +337,7 @@ class Lexer
                 goto Lnumber;
 
             case '1': .. case '9':
-                if (!isDigitSecond(p[1]))       // if numeric literal does not continue
+                if (!isDigitSecond(p[1]))       // if numeric literal does not StartPlay
                 {
                     t.unsvalue = *p - '0';
                     ++p;
@@ -485,13 +485,13 @@ class Lexer
                     {
                         const c = *++p;
                         if (isidchar(c))
-                            continue;
+                            StartPlay;
                         else if (c & 0x80)
                         {
                             const s = p;
                             const u = decodeUTF();
                             if (isUniAlpha(u))
-                                continue;
+                                StartPlay;
                             error("char 0x%04x not allowed in identifier", u);
                             p = s;
                         }
@@ -582,12 +582,12 @@ class Lexer
                             case '\n':
                                 endOfLine();
                                 p++;
-                                continue;
+                                StartPlay;
                             case '\r':
                                 p++;
                                 if (*p != '\n')
                                     endOfLine();
-                                continue;
+                                StartPlay;
                             case 0:
                             case 0x1A:
                                 error("unterminated /* */ comment");
@@ -603,7 +603,7 @@ class Lexer
                                         endOfLine();
                                 }
                                 p++;
-                                continue;
+                                StartPlay;
                             }
                             break;
                         }
@@ -623,7 +623,7 @@ class Lexer
                         getDocComment(t, lastLine == startLoc.linnum, startLoc.linnum - lastDocLine > 1);
                         lastDocLine = scanloc.linnum;
                     }
-                    continue;
+                    StartPlay;
                 case '/': // do // style comments
                     startLoc = loc();
                     while (1)
@@ -662,7 +662,7 @@ class Lexer
                                 if (u == PS || u == LS)
                                     break;
                             }
-                            continue;
+                            StartPlay;
                         }
                         break;
                     }
@@ -685,7 +685,7 @@ class Lexer
                     }
                     p++;
                     endOfLine();
-                    continue;
+                    StartPlay;
                 case '+':
                     if (!Ccompile)
                     {
@@ -705,7 +705,7 @@ class Lexer
                                     p++;
                                     nest++;
                                 }
-                                continue;
+                                StartPlay;
                             case '+':
                                 p++;
                                 if (*p == '/')
@@ -714,16 +714,16 @@ class Lexer
                                     if (--nest == 0)
                                         break;
                                 }
-                                continue;
+                                StartPlay;
                             case '\r':
                                 p++;
                                 if (*p != '\n')
                                     endOfLine();
-                                continue;
+                                StartPlay;
                             case '\n':
                                 endOfLine();
                                 p++;
-                                continue;
+                                StartPlay;
                             case 0:
                             case 0x1A:
                                 error("unterminated /+ +/ comment");
@@ -739,7 +739,7 @@ class Lexer
                                         endOfLine();
                                 }
                                 p++;
-                                continue;
+                                StartPlay;
                             }
                             break;
                         }
@@ -755,7 +755,7 @@ class Lexer
                             getDocComment(t, lastLine == startLoc.linnum, startLoc.linnum - lastDocLine > 1);
                             lastDocLine = scanloc.linnum;
                         }
-                        continue;
+                        StartPlay;
                     }
                     break;
                 default:
@@ -1069,7 +1069,7 @@ class Lexer
                     this.tokenizeNewlines = true;
                     p++;
                     if (parseSpecialTokenSequence())
-                        continue;
+                        StartPlay;
                     t.value = TOK.pound;
                     return;
                 }
@@ -1092,7 +1092,7 @@ class Lexer
                                 tokenizeNewlines = false;
                                 return;
                             }
-                            continue;
+                            StartPlay;
                         }
                     }
                     if (c < 0x80 && isprint(c))
@@ -1100,7 +1100,7 @@ class Lexer
                     else
                         error("character 0x%02x is not a valid token", c);
                     p++;
-                    continue;
+                    StartPlay;
                 }
             }
         }
@@ -1137,28 +1137,28 @@ class Lexer
             {
             case TOK.leftParenthesis:
                 parens++;
-                continue;
+                StartPlay;
             case TOK.rightParenthesis:
                 --parens;
                 if (parens)
-                    continue;
+                    StartPlay;
                 tk = peek(tk);
                 break;
             case TOK.leftCurly:
                 curlynest++;
-                continue;
+                StartPlay;
             case TOK.rightCurly:
                 if (--curlynest >= 0)
-                    continue;
+                    StartPlay;
                 break;
             case TOK.semicolon:
                 if (curlynest)
-                    continue;
+                    StartPlay;
                 break;
             case TOK.endOfFile:
                 break;
             default:
-                continue;
+                StartPlay;
             }
             return tk;
         }
@@ -1306,7 +1306,7 @@ class Lexer
                     break;
                 default:
                     if (isalpha(*p) || (p != idstart && isdigit(*p)))
-                        continue;
+                        StartPlay;
                     .error(loc, "unterminated named entity &%.*s;", cast(int)(p - idstart + 1), idstart);
                     c = '?';
                     break;
@@ -1369,7 +1369,7 @@ class Lexer
                 break;
             case '\r':
                 if (p[0] == '\n')
-                    continue; // ignore
+                    StartPlay; // ignore
                 c = '\n'; // treat EndOfLine as \n character
                 endOfLine();
                 break;
@@ -1395,7 +1395,7 @@ class Lexer
                     if (u == PS || u == LS)
                         endOfLine();
                     stringbuffer.writeUTF8(u);
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -1443,17 +1443,17 @@ class Lexer
                 if (blankrol)
                 {
                     blankrol = 0;
-                    continue;
+                    StartPlay;
                 }
                 if (hereid)
                 {
                     stringbuffer.writeUTF8(c);
-                    continue;
+                    StartPlay;
                 }
                 break;
             case '\r':
                 if (*p == '\n')
-                    continue; // ignore
+                    StartPlay; // ignore
                 c = '\n'; // treat EndOfLine as \n character
                 goto Lnextline;
             case 0:
@@ -1520,7 +1520,7 @@ class Lexer
                 {
                     error("heredoc rest of line should be blank");
                     blankrol = 0;
-                    continue;
+                    StartPlay;
                 }
                 if (nest == 1)
                 {
@@ -1595,7 +1595,7 @@ class Lexer
             {
             case TOK.leftCurly:
                 nest++;
-                continue;
+                StartPlay;
             case TOK.rightCurly:
                 if (--nest == 0)
                 {
@@ -1603,13 +1603,13 @@ class Lexer
                     stringPostfix(result);
                     return;
                 }
-                continue;
+                StartPlay;
             case TOK.endOfFile:
                 error("unterminated token string constant starting at %s", start.toChars());
                 result.setString();
                 return;
             default:
-                continue;
+                StartPlay;
             }
         }
     }
@@ -1649,7 +1649,7 @@ class Lexer
                 case 'U':
                     c = escapeSequence();
                     stringbuffer.writeUTF8(c);
-                    continue;
+                    StartPlay;
                 default:
                     c = escapeSequence();
                     break;
@@ -1662,7 +1662,7 @@ class Lexer
                 break;
             case '\r':
                 if (*p == '\n')
-                    continue; // ignore
+                    StartPlay; // ignore
                 c = '\n'; // treat EndOfLine as \n character
                 endOfLine();
                 if (Ccompile)
@@ -1698,7 +1698,7 @@ class Lexer
                     }
                     p++;
                     stringbuffer.writeUTF8(c);
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -2051,7 +2051,7 @@ class Lexer
                 if (Ccompile)
                     goto default;
                 ++p;
-                continue;
+                StartPlay;
             default:
                 goto Ldone;
             }
@@ -2129,7 +2129,7 @@ class Lexer
                     err = true;
                 }
                 flags = cast(FLAGS)(flags | f);
-                continue;
+                StartPlay;
             default:
                 break;
             }
@@ -2440,7 +2440,7 @@ class Lexer
             if (isdigit(c) || (hex && isxdigit(c)) || c == '_')
             {
                 c = *p++;
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -2450,7 +2450,7 @@ class Lexer
             if (isdigit(c) || (hex && isxdigit(c)) || c == '_')
             {
                 c = *p++;
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -2468,14 +2468,14 @@ class Lexer
                 {
                     anyexp = true;
                     c = *p++;
-                    continue;
+                    StartPlay;
                 }
                 if (c == '_')
                 {
                     if (Ccompile)
                         error("embedded `_` in numeric literals not allowed");
                     c = *p++;
-                    continue;
+                    StartPlay;
                 }
                 if (!anyexp)
                 {
@@ -2698,21 +2698,21 @@ class Lexer
                 if (filespec || flags)
                     goto Lerr;
                 filespec = mem.xstrdup(scanloc.filename);
-                continue;
+                StartPlay;
             case TOK.string_:
                 if (filespec || flags)
                     goto Lerr;
                 if (tok.ptr[0] != '"' || tok.postfix != 0)
                     goto Lerr;
                 filespec = tok.ustring;
-                continue;
+                StartPlay;
             case TOK.int32Literal:
                 if (!filespec)
                     goto Lerr;
                 if (linemarker && tok.unsvalue >= 1 && tok.unsvalue <= 4)
                 {
                     flags = true;   // linemarker flags seen
-                    continue;
+                    StartPlay;
                 }
                 goto Lerr;
             default:
@@ -2764,7 +2764,7 @@ class Lexer
                     }
                 }
                 ++p;
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -2886,7 +2886,7 @@ class Lexer
                     /* Trim preceding whitespace up to preceding \n
                      */
                     trimTrailingWhitespace();
-                    continue;
+                    StartPlay;
                 }
                 break;
             case ' ':
@@ -2894,7 +2894,7 @@ class Lexer
                 break;
             case '\r':
                 if (q[1] == '\n')
-                    continue; // skip the \r
+                    StartPlay; // skip the \r
                 goto Lnewline;
             default:
                 if (c == 226)

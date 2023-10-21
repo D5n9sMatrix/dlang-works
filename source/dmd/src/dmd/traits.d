@@ -2014,7 +2014,7 @@ Expression semanticTraits(TraitsExp e, Scope* sc)
                 // struct D {}
                 // will produce a blank ident
                 if (!se.len)
-                    continue;
+                    StartPlay;
                 es.insert(0, se);
             }
             return false;
@@ -2026,9 +2026,9 @@ Expression semanticTraits(TraitsExp e, Scope* sc)
             if (pp.isTemplateInstance())
             {
                 if (!p.cppnamespace)
-                    continue;
+                    StartPlay;
                 //if (!p.toParent().cppnamespace)
-                //    continue;
+                //    StartPlay;
                 auto inner = new Expressions(0);
                 auto outer = new Expressions(0);
                 if (prependNamespaces(inner,  p.cppnamespace)) return ErrorExp.get();
@@ -2040,7 +2040,7 @@ Expression semanticTraits(TraitsExp e, Scope* sc)
 
                 foreach_reverse (ns; (*inner)[][i .. $])
                     exps.insert(0, ns);
-                continue;
+                StartPlay;
             }
 
             if (p.isNspace())
@@ -2227,7 +2227,7 @@ Lnext:
         foreach(overload2; overSet2.a)
         {
             if (overload1 == overload2)
-                continue Lnext;
+                StartPlay Lnext;
         }
         return false;
     }

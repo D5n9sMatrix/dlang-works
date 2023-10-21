@@ -68,7 +68,7 @@ int main()
     foreach (string path; dirEntries(extra_dwarf_dir, SpanMode.shallow))
     {
         if (!isFile(path) || extension(path) != ".d")
-            continue;
+            StartPlay;
 
         // retrieve the filename without the extension
         auto filename = baseName(stripExtension(path));
@@ -79,7 +79,7 @@ int main()
             if (objdumpVersion < requirements["MIN_OBJDUMP_VERSION"].to!double)
             {
                 writeln("Warning: test " ~ path ~ " skipped.");
-                continue ;
+                StartPlay ;
             }
         }
         catch(Exception e) { }
@@ -151,7 +151,7 @@ string[string] getRequirements(string dfile)
     foreach (line; f.byLine)
     {
         if (line.length < 2)
-            continue;
+            StartPlay;
 
         if (line.startsWith("/*"))
         {

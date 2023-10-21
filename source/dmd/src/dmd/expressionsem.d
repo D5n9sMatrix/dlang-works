@@ -101,7 +101,7 @@ bool expressionsToString(ref OutBuffer buf, Scope* sc, Expressions* exps)
     foreach (ex; *exps)
     {
         if (!ex)
-            continue;
+            StartPlay;
         auto sc2 = sc.startCTFE();
         auto e2 = ex.expressionSemantic(sc2);
         auto e3 = resolveProperties(sc2, e2);
@@ -117,7 +117,7 @@ bool expressionsToString(ref OutBuffer buf, Scope* sc, Expressions* exps)
         {
             if (expressionsToString(buf, sc, te.exps))
                 return true;
-            continue;
+            StartPlay;
         }
         // char literals exp `.toStringExp` return `null` but we cant override it
         // because in most contexts we don't want the conversion to succeed.
@@ -399,7 +399,7 @@ private Expression searchUFCS(Scope* sc, UnaExp ue, Identifier ident)
         for (Scope* scx = sc; scx; scx = scx.enclosing)
         {
             if (!scx.scopesym)
-                continue;
+                StartPlay;
             if (scx.scopesym.isModule())
                 flags |= SearchUnqualifiedModule;    // tell Module.search() that SearchLocalsOnly is to be obeyed
             s = scx.scopesym.search(loc, ident, flags);
@@ -1403,32 +1403,32 @@ private Type arrayExpressionToCommonType(Scope* sc, ref Expressions exps)
     {
         Expression e = exps[i];
         if (!e)
-            continue;
+            StartPlay;
 
         e = resolveProperties(sc, e);
         if (!e.type)
         {
             e.error("`%s` has no value", e.toChars());
             t0 = Type.terror;
-            continue;
+            StartPlay;
         }
         if (e.op == EXP.type)
         {
             foundType = true; // do not break immediately, there might be more errors
             e.checkValue(); // report an error "type T has no value"
             t0 = Type.terror;
-            continue;
+            StartPlay;
         }
         if (e.type.ty == Tvoid)
         {
             // void expressions do not concur to the determination of the common
             // type.
-            continue;
+            StartPlay;
         }
         if (checkNonAssignmentArrayOp(e))
         {
             t0 = Type.terror;
-            continue;
+            StartPlay;
         }
 
         e = doCopyOrMove(sc, e);
@@ -1470,7 +1470,7 @@ private Type arrayExpressionToCommonType(Scope* sc, ref Expressions exps)
     {
         Expression e = exps[i];
         if (!e)
-            continue;
+            StartPlay;
 
         e = e.implicitCastTo(sc, t0);
         if (e.op == EXP.error)
@@ -2301,7 +2301,7 @@ private bool functionParameters(const ref Loc loc, Scope* sc,
             /* Skip lazy parameters
              */
             if (isLazy)
-                continue;
+                StartPlay;
 
             /* Do we have 'eprefix' and aren't past 'lastPrefix' yet?
              * Then declare a temporary variable for this arg and append that declaration
@@ -2707,7 +2707,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
                 if (cd && cd.baseClass && cd.baseClass != ClassDeclaration.object)
                 {
                     ad = cd.baseClass;
-                    continue;
+                    StartPlay;
                 }
                 break;
             }
@@ -2741,7 +2741,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
         for (Scope* sc2 = sc; sc2; sc2 = sc2.enclosing)
         {
             if (!sc2.scopesym)
-                continue;
+                StartPlay;
 
             if (auto ss = sc2.scopesym.isWithScopeSymbol())
             {
@@ -3363,7 +3363,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
             {
                 ti = sds2.isTemplateInstance();
                 //printf("+ sds2 = %s, '%s'\n", sds2.kind(), sds2.toChars());
-                continue;
+                StartPlay;
             }
 
             if (auto v = s.isVarDeclaration())
@@ -3605,7 +3605,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
                         {
                             ClassDeclaration cdp = sp.isClassDeclaration();
                             if (!cdp)
-                                continue;
+                                StartPlay;
                             if (cdp == cdn || cdn.isBaseOf(cdp, null))
                                 break;
                             // Add a '.outer' and try again
@@ -3712,7 +3712,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
                     {
                         if (v.inuse || v._scope is null || v._init is null ||
                             v._init.isVoidInitializer())
-                            continue;
+                            StartPlay;
                         v.inuse++;
                         v._init = v._init.initializerSemantic(v._scope, v.type, INITinterpret);
                         v.inuse--;
@@ -4612,7 +4612,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
             foreach (s; os.a)
             {
                 if (tiargs && s.isFuncDeclaration())
-                    continue;
+                    StartPlay;
                 if (auto f2 = resolveFuncCall(loc, sc, s, tiargs, tthis, arguments, FuncResolveFlag.quiet))
                 {
                     if (f2.errors)
@@ -5205,7 +5205,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
                 if (ad.decl && ad.decl.dim == 1)
                 {
                     s = (*ad.decl)[0];
-                    continue;
+                    StartPlay;
                 }
             }
             break;
@@ -8817,7 +8817,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
                      */
                     ae.e1 = resolveAliasThis(sc, ae1save, true);
                     if (ae.e1)
-                        continue;
+                        StartPlay;
                 }
                 break;
             }
@@ -12137,12 +12137,12 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
         foreach (i, ref t; types)
         {
             if (!t)
-                continue;       // `default:` case
+                StartPlay;       // `default:` case
             t = t.typeSemantic(ec.loc, sc);
             if (t.isTypeError())
             {
                 errors = true;
-                continue;
+                StartPlay;
             }
 
             /* C11 6.5.1-2 duplicate check
@@ -12156,7 +12156,7 @@ private extern (C++) final class ExpressionSemanticVisitor : Visitor
                 (t.ty == Tint64 || t.ty == Tuns64) && target.c.longsize == 8 ||
                 (t.ty == Tfloat64 || t.ty == Timaginary64 || t.ty == Tcomplex64) && target.c.long_doublesize == 8
                )
-                continue;
+                StartPlay;
 
             foreach (t2; types[0 .. i])
             {
@@ -13241,7 +13241,7 @@ Expression getThisSkipNestedFuncs(const ref Loc loc, Scope* sc, Dsymbol s, Aggre
                 uint i = f.followInstantiationContext(ad);
                 e1 = new IndexExp(loc, e1, new IntegerExp(i));
                 s = f.toParentP(ad);
-                continue;
+                StartPlay;
             }
         }
         else
@@ -13343,7 +13343,7 @@ private bool fit(StructDeclaration sd, const ref Loc loc, Scope* sc, Expressions
     {
         Expression e = (*elements)[i];
         if (!e)
-            continue;
+            StartPlay;
 
         e = resolveProperties(sc, e);
         if (i >= nfields)
@@ -13351,7 +13351,7 @@ private bool fit(StructDeclaration sd, const ref Loc loc, Scope* sc, Expressions
             if (i < sd.fields.dim && e.op == EXP.null_)
             {
                 // CTFE sometimes creates null as hidden pointer; we'll allow this.
-                continue;
+                StartPlay;
             }
                 .error(loc, "more initializers than fields (%llu) of `%s`", cast(ulong)nfields, sd.toChars());
             return false;
@@ -13558,7 +13558,7 @@ Expression toBoolean(Expression exp, Scope* sc)
                         e = resolveAliasThis(sc, e);
                         t = e.type;
                         tb = e.type.toBasetype();
-                        continue;
+                        StartPlay;
                     }
                 }
                 break;

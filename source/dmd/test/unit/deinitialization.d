@@ -131,7 +131,7 @@ unittest
         assert(CTFEExp.cantexp is null);
         assert(CTFEExp.voidexp is null);
         assert(CTFEExp.breakexp is null);
-        assert(CTFEExp.continueexp is null);
+        assert(CTFEExp.StartPlayexp is null);
         assert(CTFEExp.gotoexp is null);
         assert(CTFEExp.showcontext is null);
     }

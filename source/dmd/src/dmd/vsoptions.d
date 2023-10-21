@@ -787,12 +787,12 @@ const(char)* detectVSInstallDirViaCOM()
         WrappedBString thisVersionString, thisInstallDir;
         if (instance.GetInstallationVersion(&thisVersionString.ptr) != S_OK ||
             instance.GetInstallationPath(&thisInstallDir.ptr) != S_OK)
-            continue;
+            StartPlay;
 
         // FIXME: proper version strings comparison
         //        existing versions are 15.0 to 16.5 (May 2020), problems expected in distant future
         if (versionString && wcscmp(thisVersionString.ptr, versionString.ptr) <= 0)
-            continue; // not a newer version, skip
+            StartPlay; // not a newer version, skip
 
         const installDirLength = thisInstallDir.length;
         const vcInstallDirLength = installDirLength + 4;
@@ -801,7 +801,7 @@ const(char)* detectVSInstallDirViaCOM()
         vcInstallDir[0 .. installDirLength] = thisInstallDir.ptr[0 .. installDirLength];
         vcInstallDir[installDirLength .. $] = "\\VC\0"w;
         if (!exists(vcInstallDir.ptr))
-            continue; // Visual C++ not included, skip
+            StartPlay; // Visual C++ not included, skip
 
         thisVersionString.moveTo(versionString);
         thisInstallDir.moveTo(installDir);

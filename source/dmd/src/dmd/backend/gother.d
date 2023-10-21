@@ -183,7 +183,7 @@ private void rd_compute()
         //printf("       Bout "); vec_println(b.Boutrd);
 
         if (b.Bflags & BFLvisited)
-            continue;                   // not reliable for this block
+            StartPlay;                   // not reliable for this block
         if (b.Belem)
         {
             conpropwalk(b.Belem,b.Binrd);
@@ -570,7 +570,7 @@ private elem * chkprop(elem *n, Barray!(elem*) rdlist)
             else
             {
                 if (unambig)            /* unambiguous assignments only */
-                    continue;
+                    StartPlay;
                 goto noprop;
             }
             if (d.Eoper != OPeq)
@@ -579,7 +579,7 @@ private elem * chkprop(elem *n, Barray!(elem*) rdlist)
         else                            /* must be a call elem          */
         {
             if (unambig)
-                continue;
+                StartPlay;
             else
                 goto noprop;            /* could be affected            */
         }
@@ -670,7 +670,7 @@ void listrds(vec_t IN,elem *e,vec_t f, Barray!(elem*)* rdlist)
         }
         else if (!unambig)
             goto listit;                /* probably a function call     */
-        continue;
+        StartPlay;
 
     listit:
         //printf("\tlisting "); WReqn(d); printf("\n");
@@ -703,7 +703,7 @@ private void eqeqranges(ref Elemdatas eqeqlist)
         e = rel.pelem;
         v = e.EV.E1.EV.Vsym;
         if (!(sytab[v.Sclass] & SCRD))
-            continue;
+            StartPlay;
         sz = tysize(e.EV.E1.Ety);
         c = el_tolong(e.EV.E2);
 
@@ -723,7 +723,7 @@ private void eqeqranges(ref Elemdatas eqeqlist)
             szrd = tysize(erd1.Ety);
             if (erd1.EV.Voffset + szrd <= e.EV.E1.EV.Voffset ||
                 e.EV.E1.EV.Voffset + sz <= erd1.EV.Voffset)
-                continue;               // doesn't affect us, skip it
+                StartPlay;               // doesn't affect us, skip it
             if (szrd != sz || e.EV.E1.EV.Voffset != erd1.EV.Voffset)
                 goto L1;                // overlapping - forget it
 
@@ -782,17 +782,17 @@ private void intranges(ref Elemdatas rellist, ref Elemdatas inclist)
 
         // RD info is only reliable for registers and autos
         if (!(sytab[v.Sclass] & SCRD))
-            continue;
+            StartPlay;
 
         /* Look for two rd's: an = and an increment     */
         if (rel.rdlist.length != 2)
-            continue;
+            StartPlay;
         rdeq = rel.rdlist[1];
         if (rdeq.Eoper != OPeq)
         {   rdinc = rdeq;
             rdeq = rel.rdlist[0];
             if (rdeq.Eoper != OPeq)
-                continue;
+                StartPlay;
         }
         else
             rdinc = rel.rdlist[0];
@@ -806,14 +806,14 @@ private void intranges(ref Elemdatas rellist, ref Elemdatas inclist)
 
         incop = rdinc.Eoper;
         if (!OTpost(incop) && incop != OPaddass && incop != OPminass)
-            continue;
+            StartPlay;
 
         /* lvalues should be unambiguous defs   */
         if (rdeq.EV.E1.Eoper != OPvar || rdinc.EV.E1.Eoper != OPvar)
-            continue;
+            StartPlay;
         /* rvalues should be constants          */
         if (rdeq.EV.E2.Eoper != OPconst || rdinc.EV.E2.Eoper != OPconst)
-            continue;
+            StartPlay;
 
         /* Ensure that the only defs reaching the increment elem (rdinc) */
         /* are rdeq and rdinc.                                          */
@@ -824,7 +824,7 @@ private void intranges(ref Elemdatas rellist, ref Elemdatas inclist)
 
             ib = iel.pblock;
             if (iel.pelem != rdinc)
-                continue;               /* not our increment elem       */
+                StartPlay;               /* not our increment elem       */
             if (iel.rdlist.length != 2)
             {
                 //printf("!= 2\n");
@@ -849,7 +849,7 @@ private void intranges(ref Elemdatas rellist, ref Elemdatas inclist)
             i = loopcheck(ib,ib,rb);
             block_clearvisit();
             if (i)
-                continue;
+                StartPlay;
         }
 
         /* Gather initial, increment, and final values for loop */
@@ -1143,7 +1143,7 @@ Louter:
                 /* and the d=b copy elem now reaches the end    */
                 /* of the block (the d=a elem didn't).          */
                 if (recalc)
-                    continue Louter;
+                    StartPlay Louter;
             }
         }
         return;
@@ -1274,7 +1274,7 @@ private bool copyPropWalk(elem *n,vec_t IN)
                     if (v == t.EV.Vsym)
                         goto clr;
                 }
-                continue;
+                StartPlay;
 
             clr:                        /* this copy elem is not available */
                 vec_clearbit(i,IN);     /* so remove it from the vector */
@@ -1395,12 +1395,12 @@ void rmdeadass()
     foreach (b; dfo[])         // for each block b
     {
         if (!b.Belem)          /* if no elems at all           */
-            continue;
+            StartPlay;
         if (b.Btry)            // if in try-block guarded body
-            continue;
+            StartPlay;
         const assnum = numasg(b.Belem);   // # of assignment elems
         if (assnum == 0)                  // if no assignment elems
-            continue;
+            StartPlay;
 
         assnod.setLength(assnum);         // pre-allocate sufficient room
         vec_t DEAD = vec_calloc(assnum);
@@ -1423,17 +1423,17 @@ void rmdeadass()
             nv = n.EV.E1;
             v = nv.EV.Vsym;
             if (!symbol_isintab(v)) // not considered
-                continue;
+                StartPlay;
             //printf("assnod[%d]: ",j); WReqn(n); printf("\n");
             //printf("\tPOSS\n");
             /* If not positively dead but v is live on a    */
             /* successor to b, then v is live.              */
             //printf("\tDEAD=%d, live=%d\n",vec_testbit(j,DEAD),vec_testbit(v.Ssymnum,b.Boutlv));
             if (!vec_testbit(j,DEAD) && vec_testbit(v.Ssymnum,b.Boutlv))
-                continue;
+                StartPlay;
             /* volatile/shared variables are not dead              */
             if ((v.ty() | nv.Ety) & (mTYvolatile | mTYshared))
-                continue;
+                StartPlay;
 
             /* Do not mix up floating and integer variables
              * https://issues.dlang.org/show_bug.cgi?id=20363
@@ -1445,7 +1445,7 @@ void rmdeadass()
                     config.fpxmmregs &&
                     !tyfloating(v.Stype.Tty) != !tyfloating(e2.EV.Vsym.Stype.Tty)
                    )
-                    continue;
+                    StartPlay;
             }
 
             debug if (debugc)
@@ -1877,7 +1877,7 @@ private void dvwalk(elem *n,uint i)
         {
             if (OTbinary(n.Eoper))
                 dvwalk(n.EV.E2,i);
-            continue;
+            StartPlay;
         }
         break;
     }
@@ -1924,7 +1924,7 @@ void verybusyexp()
                 break;
 
             default:
-                continue;
+                StartPlay;
         }
 
         /* Find pointer to last statement in current elem */
@@ -1943,7 +1943,7 @@ void verybusyexp()
             /* just skip it for now.                */
             /*if (sideeffect(*pn))*/
             if (!(*pn).Eexp)
-                continue;
+                StartPlay;
         }
 
         /* Eliminate all elems that have already been           */
@@ -1966,7 +1966,7 @@ void verybusyexp()
             else
                 done = false;
         }
-        if (done) continue;
+        if (done) StartPlay;
 
         /* Eliminate from Bout all elems that are killed by     */
         /* a block between b and that elem.                     */
@@ -2027,7 +2027,7 @@ void verybusyexp()
                         el_match(go.expnod[j],go.expnod[k]))
                             goto foundvbe;
             }
-            continue;               /* no VBE here          */
+            StartPlay;               /* no VBE here          */
 
         foundvbe:                   /* we got one           */
             debug

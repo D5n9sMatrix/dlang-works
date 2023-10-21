@@ -878,7 +878,7 @@ Symbol *el_basesym(elem *e)
 
             case OPcomma:
                 e = e.EV.E2;
-                continue;
+                StartPlay;
 
             case OPind:
                 s = el_basesym(e.EV.E1);
@@ -1407,7 +1407,7 @@ bool el_returns(const(elem)* e)
             case OPandand:
             case OPoror:
                 e = e.EV.E1;
-                continue;
+                StartPlay;
 
             case OPcolon:
             case OPcolon2:
@@ -1419,12 +1419,12 @@ bool el_returns(const(elem)* e)
                     if (!el_returns(e.EV.E2))
                         return false;
                     e = e.EV.E1;
-                    continue;
+                    StartPlay;
                 }
                 if (OTunary(e.Eoper))
                 {
                     e = e.EV.E1;
-                    continue;
+                    StartPlay;
                 }
                 break;
         }

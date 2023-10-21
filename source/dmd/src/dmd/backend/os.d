@@ -856,7 +856,7 @@ else version(Windows)
                 }
                 return 0;
             default:
-                continue;
+                StartPlay;
         }
     }
 

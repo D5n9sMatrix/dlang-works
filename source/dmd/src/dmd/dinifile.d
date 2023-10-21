@@ -146,7 +146,7 @@ void updateRealEnvironment(ref StringTable!(char*) environment)
         const name = sv.toDchars();
         const value = sv.value;
         if (!value) // deleted?
-            continue;
+            StartPlay;
         if (putenvRestorable(name.toDString, value.toDString))
             assert(0);
     }
@@ -204,7 +204,7 @@ void parseConfFile(ref StringTable!(char*) environment, const(char)[] filename, 
                 eof = true;
                 break;
             default:
-                continue;
+                StartPlay;
             }
             break;
         }
@@ -222,7 +222,7 @@ void parseConfFile(ref StringTable!(char*) environment, const(char)[] filename, 
                 foreach (size_t j; k + 1 .. i - linestart)
                 {
                     if (line[j] != '%')
-                        continue;
+                        StartPlay;
                     if (j - k == 3 && Port.memicmp(&line[k + 1], "@P", 2) == 0)
                     {
                         // %@P% is special meaning the path to the .ini file
@@ -245,7 +245,7 @@ void parseConfFile(ref StringTable!(char*) environment, const(char)[] filename, 
                         free(p);
                     }
                     k = j;
-                    continue Kloop;
+                    StartPlay Kloop;
                 }
             }
             buf.writeByte(line[k]);

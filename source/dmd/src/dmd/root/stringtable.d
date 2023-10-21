@@ -214,7 +214,7 @@ public:
         foreach (const se; table)
         {
             if (!se.vptr)
-                continue;
+                StartPlay;
             const sv = getValue(se.vptr);
             int result = (*fp)(sv);
             if (result)
@@ -229,7 +229,7 @@ public:
         foreach (const se; table)
         {
             if (!se.vptr)
-                continue;
+                StartPlay;
             const sv = getValue(se.vptr);
             int result = dg(sv);
             if (result)
@@ -305,7 +305,7 @@ private:
         foreach (const se; otab[0 .. odim])
         {
             if (!se.vptr)
-                continue;
+                StartPlay;
             const sv = getValue(se.vptr);
             table[findSlot(se.hash, sv.toString())] = se;
         }

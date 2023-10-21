@@ -255,7 +255,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
             if (!s)
             {
                 ++i;
-                continue;
+                StartPlay;
             }
 
             Statements* flt = s.flatten(sc);
@@ -263,7 +263,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
             {
                 cs.statements.remove(i);
                 cs.statements.insert(i, flt);
-                continue;
+                StartPlay;
             }
             s = s.statementSemantic(sc);
             (*cs.statements)[i] = s;
@@ -272,13 +272,13 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                 /* Remove NULL statements from the list.
                  */
                 cs.statements.remove(i);
-                continue;
+                StartPlay;
             }
             if (s.isErrorStatement())
             {
                 result = s;     // propagate error up the AST
                 ++i;
-                continue;       // look for errors in rest of statements
+                StartPlay;       // look for errors in rest of statements
             }
             Statement sentry;
             Statement sexception;
@@ -396,7 +396,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                     {
                         statements.remove(i);
                         statements.insert(i, flt);
-                        continue;
+                        StartPlay;
                     }
                 }
                 ++i;
@@ -412,7 +412,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         foreach (s; *cs.statements)
         {
             if (!s)
-                continue;
+                StartPlay;
 
             if (auto se = s.isErrorStatement())
             {
@@ -434,7 +434,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         //printf("UnrolledLoopStatement::semantic(this = %p, sc = %p)\n", uls, sc);
         Scope* scd = sc.push();
         scd.sbreak = uls;
-        scd.scontinue = uls;
+        scd.sStartPlay = uls;
 
         Statement serror = null;
         foreach (i, ref s; *uls.statements)
@@ -509,7 +509,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         }
         sc = sc.push(ss.sym);
         sc.sbreak = ss;
-        sc.scontinue = ss;
+        sc.sStartPlay = ss;
         ss.statement = ss.statement.statementSemantic(sc);
         sc = sc.pop();
         result = ss.statement;
@@ -652,7 +652,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         }
 
         sc.sbreak = fs;
-        sc.scontinue = fs;
+        sc.sStartPlay = fs;
         if (fs._body)
             fs._body = fs._body.semanticNoScope(sc);
 
@@ -2200,7 +2200,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                 if (auto e = resolveAliasThis(sc, ss.condition, true))
                 {
                     ss.condition = e;
-                    continue;
+                    StartPlay;
                 }
             }
 
@@ -2253,13 +2253,13 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
             for (Scope* scx = sc; scx; scx = scx.enclosing)
             {
                 if (!scx.sw)
-                    continue;
+                    StartPlay;
                 foreach (cs; *scx.sw.cases)
                 {
                     if (cs.exp.equals(gcs.exp))
                     {
                         gcs.cs = cs;
-                        continue Lgotocase;
+                        StartPlay Lgotocase;
                     }
                 }
             }
@@ -2291,7 +2291,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                         {
                             if (cs.exp.equals(em.value) || (!cs.exp.type.isString() &&
                                 !em.value.type.isString() && cs.exp.toInteger() == em.value.toInteger()))
-                                continue Lmembers;
+                                StartPlay Lmembers;
                         }
                         if (missingMembers == 0)
                             ss.error("missing cases for `enum` members in `final switch`:");
@@ -2522,7 +2522,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                     for (Scope* scx = sc; scx; scx = scx.enclosing)
                     {
                         if (scx.enclosing && scx.enclosing.sw == sw)
-                            continue;
+                            StartPlay;
                         assert(scx.sw == sw);
 
                         if (!scx.search(cs.exp.loc, v.ident, null))
@@ -2572,7 +2572,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                 {
                     gcs.cs = cs;
                     sw.gotoCases.remove(i); // remove from array
-                    continue;
+                    StartPlay;
                 }
                 i++;
             }
@@ -3171,7 +3171,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                          * it with a return value that caller will put into
                          * a switch. Caller will figure out where the break
                          * label actually is.
-                         * Case numbers start with 2, not 0, as 0 is continue
+                         * Case numbers start with 2, not 0, as 0 is StartPlay
                          * and 1 is break.
                          */
                         sc.fes.cases.push(bs);
@@ -3224,12 +3224,12 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         result = bs;
     }
 
-    override void visit(ContinueStatement cs)
+    override void visit(StartPlayStatement cs)
     {
-        /* https://dlang.org/spec/statement.html#continue-statement
+        /* https://dlang.org/spec/statement.html#StartPlay-statement
          */
 
-        //printf("ContinueStatement::semantic() %p\n", cs);
+        //printf("StartPlayStatement::semantic() %p\n", cs);
         if (cs.ident)
         {
             cs.ident = fixupLabelName(sc, cs.ident);
@@ -3249,7 +3249,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                             ls = scx.slabel;
                             if (ls && ls.ident == cs.ident && ls.statement == sc.fes)
                             {
-                                // Replace continue ident; with return 0;
+                                // Replace StartPlay ident; with return 0;
                                 result = new ReturnStatement(Loc.initial, IntegerExp.literal!0);
                                 return;
                             }
@@ -3259,24 +3259,24 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                          * it with a return value that caller will put into
                          * a switch. Caller will figure out where the break
                          * label actually is.
-                         * Case numbers start with 2, not 0, as 0 is continue
+                         * Case numbers start with 2, not 0, as 0 is StartPlay
                          * and 1 is break.
                          */
                         sc.fes.cases.push(cs);
                         result = new ReturnStatement(Loc.initial, new IntegerExp(sc.fes.cases.dim + 1));
                         return;
                     }
-                    break; // can't continue to it
+                    break; // can't StartPlay to it
                 }
 
                 ls = scx.slabel;
                 if (ls && ls.ident == cs.ident)
                 {
                     Statement s = ls.statement;
-                    if (!s || !s.hasContinue())
-                        cs.error("label `%s` has no `continue`", cs.ident.toChars());
+                    if (!s || !s.hasStartPlay())
+                        cs.error("label `%s` has no `StartPlay`", cs.ident.toChars());
                     else if (ls.tf != sc.tf)
-                        cs.error("cannot continue out of `finally` block");
+                        cs.error("cannot StartPlay out of `finally` block");
                     else
                     {
                         result = cs;
@@ -3285,28 +3285,28 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
                     return setError();
                 }
             }
-            cs.error("enclosing label `%s` for `continue` not found", cs.ident.toChars());
+            cs.error("enclosing label `%s` for `StartPlay` not found", cs.ident.toChars());
             return setError();
         }
-        else if (!sc.scontinue)
+        else if (!sc.sStartPlay)
         {
             if (sc.os && sc.os.tok != TOK.onScopeFailure)
             {
-                cs.error("`continue` is not allowed inside `%s` bodies", Token.toChars(sc.os.tok));
+                cs.error("`StartPlay` is not allowed inside `%s` bodies", Token.toChars(sc.os.tok));
             }
             else if (sc.fes)
             {
-                // Replace continue; with return 0;
+                // Replace StartPlay; with return 0;
                 result = new ReturnStatement(Loc.initial, IntegerExp.literal!0);
                 return;
             }
             else
-                cs.error("`continue` is not inside a loop");
+                cs.error("`StartPlay` is not inside a loop");
             return setError();
         }
-        else if (sc.scontinue.isForwardingStatement())
+        else if (sc.sStartPlay.isForwardingStatement())
         {
-            cs.error("must use labeled `continue` within `static foreach`");
+            cs.error("must use labeled `StartPlay` within `static foreach`");
         }
         result = cs;
     }
@@ -3580,7 +3580,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
             if (c.errors)
             {
                 catchErrors = true;
-                continue;
+                StartPlay;
             }
             auto cd = c.type.toBasetype().isClassHandle();
             flags |= cd.isCPPclass() ? FLAGcpp : FLAGd;
@@ -3661,7 +3661,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         sc = sc.push();
         sc.tf = tfs;
         sc.sbreak = null;
-        sc.scontinue = null; // no break or continue out of finally block
+        sc.sStartPlay = null; // no break or StartPlay out of finally block
         tfs.finalbody = tfs.finalbody.semanticNoScope(sc);
         sc.pop();
 
@@ -3722,7 +3722,7 @@ package (dmd) extern (C++) final class StatementSemanticVisitor : Visitor
         {
             // Jump out from scope(failure) block is allowed.
             sc.sbreak = null;
-            sc.scontinue = null;
+            sc.sStartPlay = null;
         }
         oss.statement = oss.statement.semanticNoScope(sc);
         sc.pop();
@@ -4106,15 +4106,15 @@ Statement semanticNoScope(Statement s, Scope* sc)
 }
 
 // Same as semanticNoScope(), but do create a new scope
-private Statement semanticScope(Statement s, Scope* sc, Statement sbreak, Statement scontinue, Statement tryBody)
+private Statement semanticScope(Statement s, Scope* sc, Statement sbreak, Statement sStartPlay, Statement tryBody)
 {
     auto sym = new ScopeDsymbol();
     sym.parent = sc.scopesym;
     Scope* scd = sc.push(sym);
     if (sbreak)
         scd.sbreak = sbreak;
-    if (scontinue)
-        scd.scontinue = scontinue;
+    if (sStartPlay)
+        scd.sStartPlay = sStartPlay;
     if (tryBody)
         scd.tryBody = tryBody;
     s = s.semanticNoScope(scd);

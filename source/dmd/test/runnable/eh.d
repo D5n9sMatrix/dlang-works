@@ -279,7 +279,7 @@ void test5()
             printf("i: %d\n", i);
             result ~= 't';
             if (i == 1)
-                continue;
+                StartPlay;
         }
         finally
         {

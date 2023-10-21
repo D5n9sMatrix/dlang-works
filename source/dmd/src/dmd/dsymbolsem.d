@@ -141,7 +141,7 @@ AlignDeclaration getAlignment(AlignDeclaration ad, Scope* sc)
         {
             auto n = e.toInteger();
             if (sc.flags & SCOPE.Cfile && n == 0)       // C11 6.7.5-6 allows 0 for alignment
-                continue;
+                StartPlay;
 
             if (n < 1 || n & (n - 1) || ushort.max < n || !e.type.isintegral())
             {
@@ -550,7 +550,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                         if (iexps.dim > nelems)
                             goto Lnomatch;
                         if (e.type.implicitConvTo(arg.type))
-                            continue;
+                            StartPlay;
                     }
 
                     if (auto te = e.isTupleExp())
@@ -588,7 +588,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                             if (iexps_dim > nelems)
                                 goto Lnomatch;
                             if (ee.type.implicitConvTo(arg.type))
-                                continue;
+                                StartPlay;
 
                             if (expandAliasThisTuples(exps, u) != -1)
                                 goto Lexpand2;
@@ -1517,7 +1517,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                         if (c.isValidMangling)
                         {
                             ++i;
-                            continue;
+                            StartPlay;
                         }
                         else
                         {
@@ -1553,7 +1553,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
             {
                 s.dsymbolSemantic(sc2);
                 if (pd.ident != Id.mangle)
-                    continue;
+                    StartPlay;
                 assert(pd.args);
                 if (auto ad = s.isAggregateDeclaration())
                 {
@@ -2413,7 +2413,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                         return 1;       // found
                     emprev = enm;
                 }
-                return 0;       // continue
+                return 0;       // StartPlay
             });
 
             assert(emprev);
@@ -2586,7 +2586,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
             {
                 // Skip cases like: X(T : T)
                 if (i == j)
-                    continue;
+                    StartPlay;
 
                 if (TemplateTypeParameter ttp = (*tempdecl.parameters)[j].isTemplateTypeParameter())
                 {
@@ -2719,12 +2719,12 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
             //printf("\ts = '%s'\n", s.toChars());
             TemplateMixin tmix = s.isTemplateMixin();
             if (!tmix || tempdecl != tmix.tempdecl)
-                continue;
+                StartPlay;
 
             /* Different argument list lengths happen with variadic args
              */
             if (tm.tiargs.dim != tmix.tiargs.dim)
-                continue;
+                StartPlay;
 
             for (size_t i = 0; i < tm.tiargs.dim; i++)
             {
@@ -2737,21 +2737,21 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                 {
                     Type tmta = isType(tmo);
                     if (!tmta)
-                        goto Lcontinue;
+                        goto LStartPlay;
                     if (!ta.equals(tmta))
-                        goto Lcontinue;
+                        goto LStartPlay;
                 }
                 else if (ea)
                 {
                     Expression tme = isExpression(tmo);
                     if (!tme || !ea.equals(tme))
-                        goto Lcontinue;
+                        goto LStartPlay;
                 }
                 else if (sa)
                 {
                     Dsymbol tmsa = isDsymbol(tmo);
                     if (sa != tmsa)
-                        goto Lcontinue;
+                        goto LStartPlay;
                 }
                 else
                     assert(0);
@@ -2759,8 +2759,8 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
             tm.error("recursive mixin instantiation");
             return;
 
-        Lcontinue:
-            continue;
+        LStartPlay:
+            StartPlay;
         }
 
         // Copy the syntax trees from the TemplateDeclaration
@@ -3125,7 +3125,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                         if (AggregateDeclaration adx = p.isAggregateDeclaration())
                         {
                             if (adx.isNested())
-                                continue;
+                                StartPlay;
                             break;
                         }
                         if ((fd = p.isFuncDeclaration()) !is null)
@@ -3435,12 +3435,12 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                 BaseClass* b = (*cd.baseclasses)[i];
                 ClassDeclaration cbd = b.type.toBasetype().isClassHandle();
                 if (!cbd)
-                    continue;
+                    StartPlay;
                 for (size_t j = 0; j < cbd.vtbl.dim; j++)
                 {
                     FuncDeclaration f2 = cbd.vtbl[j].isFuncDeclaration();
                     if (!f2 || f2.ident != funcdecl.ident)
-                        continue;
+                        StartPlay;
                     if (cbd.parent && cbd.parent.isTemplateInstance())
                     {
                         if (!f2.functionSemantic())
@@ -4601,10 +4601,10 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
         {
             Type tb = v.type.baseElemOf();
             if (tb.ty != Tstruct)
-                continue;
+                StartPlay;
             auto sdec = (cast(TypeStruct)tb).sym;
             if (sdec.semanticRun >= PASS.semanticdone)
-                continue;
+                StartPlay;
 
             sc2.pop();
 
@@ -4946,7 +4946,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                               cldec.toPrettyChars(), b.type.toChars());
                     }
                     cldec.baseclasses.remove(i);
-                    continue;
+                    StartPlay;
                 }
 
                 // Check for duplicate interfaces
@@ -4957,7 +4957,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                     {
                         cldec.error("inherits from duplicate interface `%s`", b2.sym.toChars());
                         cldec.baseclasses.remove(i);
-                        continue BCLoop;
+                        StartPlay BCLoop;
                     }
                 }
                 if (tc.sym.isDeprecated())
@@ -5206,10 +5206,10 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
         {
             Type tb = v.type.baseElemOf();
             if (tb.ty != Tstruct)
-                continue;
+                StartPlay;
             auto sd = (cast(TypeStruct)tb).sym;
             if (sd.semanticRun >= PASS.semanticdone)
-                continue;
+                StartPlay;
 
             sc2.pop();
 
@@ -5507,7 +5507,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                     if (b.type != Type.terror)
                         idec.error("base type must be `interface`, not `%s`", b.type.toChars());
                     idec.baseclasses.remove(i);
-                    continue;
+                    StartPlay;
                 }
 
                 // Check for duplicate interfaces
@@ -5518,14 +5518,14 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                     {
                         idec.error("inherits from duplicate interface `%s`", b2.sym.toChars());
                         idec.baseclasses.remove(i);
-                        continue BCLoop;
+                        StartPlay BCLoop;
                     }
                 }
                 if (tc.sym == idec || idec.isBaseOf2(tc.sym))
                 {
                     idec.error("circular inheritance of interface");
                     idec.baseclasses.remove(i);
-                    continue;
+                    StartPlay;
                 }
                 if (tc.sym.isDeprecated())
                 {
@@ -5610,7 +5610,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                 for (size_t k = 0; k < i; k++)
                 {
                     if (b == idec.interfaces[k])
-                        goto Lcontinue;
+                        goto LStartPlay;
                 }
 
                 // Copy vtbl[] from base class
@@ -5627,7 +5627,7 @@ private extern(C++) final class DsymbolSemanticVisitor : Visitor
                     idec.vtbl.append(&b.sym.vtbl);
                 }
 
-            Lcontinue:
+            LStartPlay:
             }
         }
 
@@ -6017,7 +6017,7 @@ void templateInstanceSemantic(TemplateInstance tempinst, Scope* sc, Expressions*
     for (size_t i = 0; i < tempdecl.parameters.dim; i++)
     {
         if ((*tempdecl.parameters)[i].isTemplateThisParameter() is null)
-            continue;
+            StartPlay;
         Type t = isType((*tempinst.tiargs)[i]);
         assert(t);
         if (StorageClass stc = ModToStc(t.mod))
@@ -6235,12 +6235,12 @@ void templateInstanceSemantic(TemplateInstance tempinst, Scope* sc, Expressions*
             {
                 auto s = getDsymbol(oarg);
                 if (!s)
-                    continue;
+                    StartPlay;
 
                 if (auto td = s.isTemplateDeclaration())
                 {
                     if (!td.literal)
-                        continue;
+                        StartPlay;
                     assert(td.members && td.members.dim == 1);
                     s = (*td.members)[0];
                 }

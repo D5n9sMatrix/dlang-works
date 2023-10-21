@@ -102,13 +102,13 @@ AliasForeach
 EnumForeach
 TestUninterpretable
 SeqForeachConstant
-SeqForeachBreakContinue
+SeqForeachBreakStartPlay
 TestStaticForeach
 testtest
 fun
 testEmpty
 bug17660
-breakContinueBan
+breakStartPlayBan
 MixinTemplate
 testToStatement
 bug17688
@@ -667,13 +667,13 @@ static:
     static assert(test2()==6);
 }
 
-struct SeqForeachBreakContinue{
+struct SeqForeachBreakStartPlay{
 static:
     alias Seq(T...)=T;
     int[] test(){
         int[] r;
         foreach(i;Seq!(0,1,2,3,4,5)){
-            if(i==2) continue;
+            if(i==2) StartPlay;
             if(i==4) break;
             r~=i;
         }
@@ -710,10 +710,10 @@ static:
         pragma(msg,x);
     }
 
-    int[] noBreakNoContinue(){
+    int[] noBreakNoStartPlay(){
         int[] r;
         static foreach(i;0..1){
-            // if(i==3) continue; // TODO: error?
+            // if(i==3) StartPlay; // TODO: error?
             // if(i==7) break; // TODO: error?
             r~=i;
         }
@@ -767,7 +767,7 @@ auto bug17660(){
 }
 static assert(bug17660()==3);
 
-int breakContinueBan(){
+int breakStartPlayBan(){
     static assert(!is(typeof({
         for(;;){
             static foreach(i;0..1){
@@ -778,7 +778,7 @@ int breakContinueBan(){
     static assert(!is(typeof({
         for(;;){
             static foreach(i;0..1){
-                continue;
+                StartPlay;
             }
         }
     })));
@@ -789,7 +789,7 @@ int breakContinueBan(){
     }
     Louter2: foreach(i;0..10){
         static foreach(j;0..1){
-            continue Louter2;
+            StartPlay Louter2;
         }
         return 0;
     }
@@ -798,7 +798,7 @@ int breakContinueBan(){
     }
     return 1;
 }
-static assert(breakContinueBan()==1);
+static assert(breakStartPlayBan()==1);
 
 mixin template MixinTemplate(){
     static foreach(i;0..2){

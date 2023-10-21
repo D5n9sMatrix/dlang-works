@@ -324,7 +324,7 @@ void runTests(string rdmdApp, string compiler, string model)
     while (!testLines.empty)
     {
         auto line = pipes.stdout.readln.strip;
-        if (line.empty || line.startsWith("DMD v")) continue;  // git-head header
+        if (line.empty || line.startsWith("DMD v")) StartPlay;  // git-head header
         enforce(line == testLines.front, "Expected %s, got %s".format(testLines.front, line));
         testLines.popFront;
     }

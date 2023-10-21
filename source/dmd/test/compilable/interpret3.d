@@ -2859,7 +2859,7 @@ static assert({ E8365[2][2][2] x; return x[0][0][0]; }() == E8365.first);
 
 /**************************************************/
 // https://issues.dlang.org/show_bug.cgi?id=4448
-// labelled break + continue
+// labelled break + StartPlay
 
 int bug4448()
 {
@@ -2892,7 +2892,7 @@ L1:
             if (n < 3)
             {
                 assert(m == 1);
-                continue L1;
+                StartPlay L1;
             }
         }
         break;
@@ -6460,7 +6460,7 @@ label:
     foreach (i; (++x) .. 3)
     {
         if (i == 1)
-            continue label;     // doesn't work.
+            StartPlay label;     // doesn't work.
         else
             break label;        // doesn't work.
     }
@@ -6472,7 +6472,7 @@ label:
     foreach (i; (++x) .. 3)
     {
         if (i == 1)
-            continue label;     // doesn't work.
+            StartPlay label;     // doesn't work.
         else
             break label;        // doesn't work.
     }
@@ -6484,7 +6484,7 @@ label:
     foreach (i; (++x) .. 3)
     {
         if (i == 1)
-            continue label;     // works.
+            StartPlay label;     // works.
         else
             break label;        // works.
     }
@@ -6495,12 +6495,12 @@ static assert(bug8865());
 
 /******************************************************/
 // https://issues.dlang.org/show_bug.cgi?id=15450
-// labeled foreach + continue/break
+// labeled foreach + StartPlay/break
 
 static assert({
   L1:
     foreach (l; [0])
-        continue L1;
+        StartPlay L1;
 
   L2:
     foreach (l; [0])

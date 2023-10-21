@@ -90,7 +90,7 @@ struct Scope
     TryFinallyStatement tf;         /// enclosing try finally statement
     ScopeGuardStatement os;            /// enclosing scope(xxx) statement
     Statement sbreak;               /// enclosing statement that supports "break"
-    Statement scontinue;            /// enclosing statement that supports "continue"
+    Statement sStartPlay;            /// enclosing statement that supports "StartPlay"
     ForeachStatement fes;           /// if nested function for ForeachStatement, this is it
     Scope* callsc;                  /// used for __FUNCTION__, __PRETTY_FUNCTION__ and __MODULE__
     Dsymbol inunion;                /// != null if processing members of a union
@@ -347,7 +347,7 @@ struct Scope
             for (Scope* sc = &this; sc; sc = sc.enclosing)
             {
                 if (!sc.scopesym)
-                    continue;
+                    StartPlay;
                 printf("\tscope %s\n", sc.scopesym.toChars());
             }
 
@@ -370,7 +370,7 @@ struct Scope
             {
                 assert(sc != sc.enclosing);
                 if (!sc.scopesym)
-                    continue;
+                    StartPlay;
                 if (Dsymbol s = sc.scopesym.isModule())
                 {
                     //printMsg("\tfound", s);
@@ -452,13 +452,13 @@ struct Scope
             {
                 assert(sc != sc.enclosing);
                 if (!sc.scopesym)
-                    continue;
+                    StartPlay;
                 //printf("\tlooking in scopesym '%s', kind = '%s', flags = x%x\n", sc.scopesym.toChars(), sc.scopesym.kind(), flags);
 
                 if (sc.scopesym.isModule())
                     flags |= SearchUnqualifiedModule;        // tell Module.search() that SearchLocalsOnly is to be obeyed
                 else if (sc.flags & SCOPE.Cfile && sc.scopesym.isStructDeclaration())
-                    continue;                                // C doesn't have struct scope
+                    StartPlay;                                // C doesn't have struct scope
 
                 if (Dsymbol s = sc.scopesym.search(loc, ident, flags))
                 {
@@ -686,7 +686,7 @@ struct Scope
         for (Scope* sc = &this; sc; sc = sc.enclosing)
         {
             if (!sc.scopesym)
-                continue;
+                StartPlay;
             if (ClassDeclaration cd = sc.scopesym.isClassDeclaration())
                 return cd;
         }
@@ -701,7 +701,7 @@ struct Scope
         for (Scope* sc = &this; sc; sc = sc.enclosing)
         {
             if (!sc.scopesym)
-                continue;
+                StartPlay;
             if (AggregateDeclaration ad = sc.scopesym.isClassDeclaration())
                 return ad;
             if (AggregateDeclaration ad = sc.scopesym.isStructDeclaration())

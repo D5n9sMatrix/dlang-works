@@ -110,7 +110,7 @@ void generateCodeAndWrite(Module[] modules, const(char)*[] libmodules,
         foreach (m; modules)
         {
             if (m.filetype == FileType.dhdr)
-                continue;
+                StartPlay;
             if (!firstm)
             {
                 firstm = m;
@@ -131,7 +131,7 @@ void generateCodeAndWrite(Module[] modules, const(char)*[] libmodules,
         foreach (m; modules)
         {
             if (m.filetype == FileType.dhdr)
-                continue;
+                StartPlay;
             if (verbose)
                 message("code      %s", m.toChars());
             obj_start(objbuf, m.srcfile.toChars());

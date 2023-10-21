@@ -360,7 +360,7 @@ Expression op_overload(Expression e, Scope* sc, EXP* pop = null)
                          */
                         ae.e1 = resolveAliasThis(sc, ae1save, true);
                         if (ae.e1)
-                            continue;
+                            StartPlay;
                     }
                     break;
                 }
@@ -533,7 +533,7 @@ Expression op_overload(Expression e, Scope* sc, EXP* pop = null)
                      */
                     ae.e1 = resolveAliasThis(sc, ae1save, true);
                     if (ae.e1)
-                        continue;
+                        StartPlay;
                 }
                 break;
             }
@@ -1185,7 +1185,7 @@ Expression op_overload(Expression e, Scope* sc, EXP* pop = null)
                          */
                         ae.e1 = resolveAliasThis(sc, ae1save, true);
                         if (ae.e1)
-                            continue;
+                            StartPlay;
                     }
                     break;
                 }
@@ -1502,7 +1502,7 @@ bool inferForeachAggregate(Scope* sc, bool isForeach, ref Expression feaggr, out
                     {
                         aggr = rinit;
                         sliced = true;  // only try it once
-                        continue;
+                        StartPlay;
                     }
                 }
             }
@@ -1517,7 +1517,7 @@ bool inferForeachAggregate(Scope* sc, bool isForeach, ref Expression feaggr, out
                 if (isRecursiveAliasThis(att, tab))     // error, circular alias this
                     return false;
                 aggr = resolveAliasThis(sc, aggr);
-                continue;
+                StartPlay;
             }
             return false;
         }
@@ -1716,7 +1716,7 @@ private FuncDeclaration findBestOpApplyMatch(Expression ethis, FuncDeclaration f
     {
         auto f = s.isFuncDeclaration();
         if (!f)
-            return 0;           // continue
+            return 0;           // StartPlay
         auto tf = f.type.isTypeFunction();
         MATCH m = MATCH.exact;
         if (f.isThis())
@@ -1764,7 +1764,7 @@ private FuncDeclaration findBestOpApplyMatch(Expression ethis, FuncDeclaration f
             if (ambig)
                 fd_ambig = f;                           // not covariant, so ambiguous
         }
-        return 0;               // continue
+        return 0;               // StartPlay
     });
 
     if (fd_ambig)

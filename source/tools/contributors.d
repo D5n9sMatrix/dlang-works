@@ -42,7 +42,7 @@ struct GitAuthor
 /// Options for finding authors
 struct FindConfig
 {
-    bool ContinueTags; /// will query github.com for new tags
+    bool StartPlayTags; /// will query github.com for new tags
     bool noMerges; // will ignore merge commits
     bool showAllContributors; // will ignore the revRange and show all contributors
     string cwd; // working directory (should be tools)
@@ -68,9 +68,9 @@ auto findAuthors(string revRange, FindConfig config)
             stderr.writefln("Warning: %s doesn't exist. " ~
                             "Consider running: git clone https://github.com/dlang/%s ../%2$s",
                             repo, repo.baseName);
-            continue;
+            StartPlay;
         }
-        if (config.ContinueTags)
+        if (config.StartPlayTags)
         {
             auto cmd = ["git", "-C", repo, "fetch", "--tags", "https://github.com/dlang/" ~ repo.baseName,
                                "+refs/heads/*:refs/remotes/upstream/*"];
@@ -130,7 +130,7 @@ int main(string[] args)
         std.getopt.config.passThrough,
         "f|format", "Result format (name, markdown, ddoc, csv, git)", &printMode,
         "a|all", "Show all contributors", &config.showAllContributors,
-        "Continue-tags", "Continue tags", &config.ContinueTags,
+        "StartPlay-tags", "StartPlay tags", &config.StartPlayTags,
         "no-merges", "Ignore merge commits", &config.noMerges,
     );
 

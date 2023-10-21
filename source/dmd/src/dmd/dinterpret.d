@@ -669,7 +669,7 @@ private Expression interpretFunction(UnionExp* pue, FuncDeclaration fd, InterSta
         }
         else
         {
-            assert(!e || (e.op != EXP.continue_ && e.op != EXP.break_));
+            assert(!e || (e.op != EXP.StartPlay_ && e.op != EXP.break_));
             break;
         }
     }
@@ -856,7 +856,7 @@ public:
             Statement sx = (*s.statements)[i];
             Expression e = interpret(pue, sx, istate);
             if (!e) // succeeds to interpret, or goto target was not found
-                continue;
+                StartPlay;
             if (exceptionOrCant(e))
                 return;
             if (e.op == EXP.break_)
@@ -870,15 +870,15 @@ public:
                 result = null;
                 return;
             }
-            if (e.op == EXP.continue_)
+            if (e.op == EXP.StartPlay_)
             {
                 if (istate.gotoTarget && istate.gotoTarget != s)
                 {
-                    result = e; // continue at a higher level
+                    result = e; // StartPlay at a higher level
                     return;
                 }
                 istate.gotoTarget = null;
-                continue;
+                StartPlay;
             }
 
             // expression from return statement, or thrown exception
@@ -962,7 +962,7 @@ public:
                     x = getValue(v);
                     if (auto eaddr = e.isAddrExp())
                         eaddr.e1 = x;
-                    continue;
+                    StartPlay;
                 }
                 if (ctfeGlobals.stack.isInCurrentFrame(v))
                 {
@@ -1112,11 +1112,11 @@ public:
         result = CTFEExp.breakexp;
     }
 
-    override void visit(ContinueStatement s)
+    override void visit(StartPlayStatement s)
     {
         debug (LOG)
         {
-            printf("%s ContinueStatement::interpret()\n", s.loc.toChars());
+            printf("%s StartPlayStatement::interpret()\n", s.loc.toChars());
         }
         incUsageCtfe(istate, s.loc);
         if (istate.start)
@@ -1127,7 +1127,7 @@ public:
         }
 
         istate.gotoTarget = findGotoTarget(istate, s.ident);
-        result = CTFEExp.continueexp;
+        result = CTFEExp.StartPlayexp;
     }
 
     override void visit(WhileStatement s)
@@ -1167,11 +1167,11 @@ public:
                 istate.gotoTarget = null;
                 break;
             }
-            if (e && e.op == EXP.continue_)
+            if (e && e.op == EXP.StartPlay_)
             {
                 if (istate.gotoTarget && istate.gotoTarget != s)
                 {
-                    result = e; // continue at a higher level
+                    result = e; // StartPlay at a higher level
                     return;
                 }
                 istate.gotoTarget = null;
@@ -1246,11 +1246,11 @@ public:
                 istate.gotoTarget = null;
                 break;
             }
-            if (e && e.op == EXP.continue_)
+            if (e && e.op == EXP.StartPlay_)
             {
                 if (istate.gotoTarget && istate.gotoTarget != s)
                 {
-                    result = e; // continue at a higher level
+                    result = e; // StartPlay at a higher level
                     return;
                 }
                 istate.gotoTarget = null;
@@ -1488,7 +1488,7 @@ public:
             {
                 Type catype = ca.type;
                 if (!catype.equals(extype) && !catype.isBaseOf(extype, null))
-                    continue;
+                    StartPlay;
 
                 // Execute the handler
                 if (ca.var)
@@ -2315,7 +2315,7 @@ public:
                     VarDeclaration v2 = ds ? ds.s.isVarDeclaration() : null;
                     assert(v2);
                     if (v2.isDataseg() && !v2.isCTFE())
-                        continue;
+                        StartPlay;
 
                     ctfeGlobals.stack.push(v2);
                     if (v2._init)
@@ -2456,7 +2456,7 @@ public:
 
             // A tuple of assignments can contain void (Bug 5676).
             if (goal == CTFEGoal.Nothing)
-                continue;
+                StartPlay;
             if (ex.op == EXP.voidExpression)
             {
                 e.error("CTFE internal error: void element `%s` in tuple", exp.toChars());
@@ -2621,7 +2621,7 @@ public:
             {
                 auto ekey2 = (*keysx)[j];
                 if (!ctfeEqual(e.loc, EXP.equal, ekey, ekey2))
-                    continue;
+                    StartPlay;
 
                 // Remove ekey
                 keysx = copyArrayOnWrite(keysx, e.keys);
@@ -3795,7 +3795,7 @@ public:
         foreach (size_t i, v2; sle.sd.fields)
         {
             if (v is v2 || !v.isOverlappedWith(v2))
-                continue;
+                StartPlay;
             auto e = (*sle.elements)[i];
             if (e.op != EXP.void_)
                 (*sle.elements)[i] = voidInitLiteral(e.type, v).copy();
@@ -6517,7 +6517,7 @@ Expression interpretRegion(Expression e, InterState* istate, CTFEGoal goal = CTF
         case EXP.cantExpression: return CTFEExp.cantexp;
         case EXP.voidExpression: return CTFEExp.voidexp;
         case EXP.break_:         return CTFEExp.breakexp;
-        case EXP.continue_:      return CTFEExp.continueexp;
+        case EXP.StartPlay_:      return CTFEExp.StartPlayexp;
         case EXP.goto_:          return CTFEExp.gotoexp;
         default:                 break;
     }
@@ -6532,7 +6532,7 @@ Expression interpretRegion(Expression e, InterState* istate, CTFEGoal goal = CTF
  *    s = Statement to interpret
  *    istate = context
  * Returns:
- *      NULL    continue to next statement
+ *      NULL    StartPlay to next statement
  *      EXP.cantExpression      cannot interpret statement at compile time
  *      !NULL   expression from return statement, or thrown exception
  */
@@ -6607,7 +6607,7 @@ private Expression scrubReturnValue(const ref Loc loc, Expression e)
             // It can be NULL for performance reasons,
             // see StructLiteralExp::interpret().
             if (!e)
-                continue;
+                StartPlay;
 
             // A struct .init may contain void members.
             // Static array members are a weird special case https://issues.dlang.org/show_bug.cgi?id=10994

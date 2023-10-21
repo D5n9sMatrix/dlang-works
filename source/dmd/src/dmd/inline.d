@@ -206,7 +206,7 @@ public:
         foreach (i, sx; *s.statements)
         {
             if (!sx)
-                continue;
+                StartPlay;
             static if (asStatements)
             {
                 as.push(doInlineAs!Statement(sx, ids));
@@ -274,7 +274,7 @@ public:
         foreach (sx; *s.statements)
         {
             if (!sx)
-                continue;
+                StartPlay;
             auto r = doInlineAs!Result(sx, ids);
             static if (asStatements)
                 as.push(r);
@@ -440,7 +440,7 @@ public:
             foreach (i; 0 .. ids.from.dim)
             {
                 if (e.var != ids.from[i])
-                    continue;
+                    StartPlay;
                 auto se = e.copy().isSymOffExp();
                 se.var = ids.to[i].isDeclaration();
                 result = se;
@@ -455,7 +455,7 @@ public:
             foreach (i; 0 .. ids.from.dim)
             {
                 if (e.var != ids.from[i])
-                    continue;
+                    StartPlay;
                 auto ve = e.copy().isVarExp();
                 ve.var = ids.to[i].isDeclaration();
                 result = ve;
@@ -533,7 +533,7 @@ public:
                         ad = s.isAggregateDeclaration();
                         if (ad)
                             goto Lad;
-                        continue;
+                        StartPlay;
                     }
                     else if ((ad = s.isThis()) !is null)
                     {
@@ -648,7 +648,7 @@ public:
                     foreach (i; 0 .. ids.from.dim)
                     {
                         if (vd != ids.from[i])
-                            continue;
+                            StartPlay;
                         if (vd._init && !vd._init.isVoidInitializer())
                         {
                             result = vd._init.initializerToExpression();

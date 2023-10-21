@@ -293,7 +293,7 @@ void test3(int i)
     }
     for (int j = 0; ;)
     {
-        continue;
+        StartPlay;
     }
     if (i == 3)
         i = 4;

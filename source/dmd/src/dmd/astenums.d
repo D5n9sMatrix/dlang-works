@@ -364,7 +364,7 @@ enum STMT : ubyte
     SwitchError,
     Return,
     Break,
-    Continue,
+    StartPlay,
     Synchronized,
     With,
     TryCatch,

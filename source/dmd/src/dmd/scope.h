@@ -81,7 +81,7 @@ struct Scope
     TryFinallyStatement *tf;    // enclosing try finally statement
     ScopeGuardStatement *os;       // enclosing scope(xxx) statement
     Statement *sbreak;          // enclosing statement that supports "break"
-    Statement *scontinue;       // enclosing statement that supports "continue"
+    Statement *sStartPlay;       // enclosing statement that supports "StartPlay"
     ForeachStatement *fes;      // if nested function for ForeachStatement, this is it
     Scope *callsc;              // used for __FUNCTION__, __PRETTY_FUNCTION__ and __MODULE__
     Dsymbol *inunion;           // !=null if processing members of a union

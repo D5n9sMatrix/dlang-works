@@ -167,7 +167,7 @@ int bar8(int i)
     {
         j++;
         if (j == 4)
-            continue;
+            StartPlay;
         i += j;
     } while (j < 10);
     return i;
@@ -189,7 +189,7 @@ int bar9(int i)
     {
         j++;
         if (j == 4)
-            continue;
+            StartPlay;
         i += j;
     }
     return i;
@@ -293,7 +293,7 @@ int bar14(int i)
     for (int j; j < 10; j++)
     {
         if (j == 4)
-            continue;
+            StartPlay;
         i += j;
     }
     return i;
@@ -314,7 +314,7 @@ int bar15(int i)
     {
         i <<= 1;
         if (k == 4)
-            continue;
+            StartPlay;
         i += v;
     }
     return i;
@@ -335,7 +335,7 @@ int bar16(int i)
     {
         i <<= 1;
         if (k == 4)
-            continue;
+            StartPlay;
         i += v;
     }
     return i;
@@ -570,7 +570,7 @@ int bar27(int i)
     {
         i <<= 1;
         if (v == 23)
-            continue;
+            StartPlay;
         i += v;
     }
     return i;
@@ -591,7 +591,7 @@ int bar28(int i)
     {
         i <<= 1;
         if (v == 23)
-            continue;
+            StartPlay;
         i += v;
     }
     return i;

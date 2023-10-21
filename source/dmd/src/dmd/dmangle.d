@@ -758,13 +758,13 @@ public:
                 if (ea.op == EXP.tuple)
                 {
                     ea.error("tuple is not a valid template value argument");
-                    continue;
+                    StartPlay;
                 }
                 // Now that we know it is not an alias, we MUST obtain a value
                 uint olderr = global.errors;
                 ea = ea.ctfeInterpret();
                 if (ea.op == EXP.error || olderr != global.errors)
-                    continue;
+                    StartPlay;
 
                 /* Use type mangling that matches what it would be for a function parameter
                 */
@@ -785,18 +785,18 @@ public:
                     {
                         buf.writeByte('X');
                         toBuffer(buf, d.mangleOverride, d);
-                        continue;
+                        StartPlay;
                     }
                     if (const id = externallyMangledIdentifier(d))
                     {
                         buf.writeByte('X');
                         toBuffer(buf, id, d);
-                        continue;
+                        StartPlay;
                     }
                     if (!d.type || !d.type.deco)
                     {
                         ti.error("forward reference of %s `%s`", d.kind(), d.toChars());
-                        continue;
+                        StartPlay;
                     }
                 }
                 buf.writeByte('S');

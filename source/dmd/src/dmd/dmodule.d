@@ -76,7 +76,7 @@ void removeHdrFilesAndFail(ref Param params, ref Modules modules) nothrow
         foreach (m; modules)
         {
             if (m.filetype == FileType.dhdr)
-                continue;
+                StartPlay;
             File.remove(m.hdrfile.toChars());
         }
     }

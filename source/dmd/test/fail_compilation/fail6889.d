@@ -4,9 +4,9 @@ TEST_OUTPUT:
 fail_compilation/fail6889.d(16): Error: cannot `goto` out of `scope(success)` block
 fail_compilation/fail6889.d(17): Error: cannot `goto` in to `scope(success)` block
 fail_compilation/fail6889.d(19): Error: `return` statements cannot be in `scope(success)` bodies
-fail_compilation/fail6889.d(23): Error: `continue` is not allowed inside `scope(success)` bodies
+fail_compilation/fail6889.d(23): Error: `StartPlay` is not allowed inside `scope(success)` bodies
 fail_compilation/fail6889.d(24): Error: `break` is not allowed inside `scope(success)` bodies
-fail_compilation/fail6889.d(29): Error: `continue` is not allowed inside `scope(success)` bodies
+fail_compilation/fail6889.d(29): Error: `StartPlay` is not allowed inside `scope(success)` bodies
 fail_compilation/fail6889.d(30): Error: `break` is not allowed inside `scope(success)` bodies
 ---
 */
@@ -20,13 +20,13 @@ L1:
 
     foreach (i; 0..1)
     {
-        scope(success) continue;    // NG
+        scope(success) StartPlay;    // NG
         scope(success) break;       // NG
     }
 
     foreach (i; Aggr())
     {
-        scope(success) continue;    // NG
+        scope(success) StartPlay;    // NG
         scope(success) break;       // NG
     }
   /+
@@ -59,13 +59,13 @@ L1:
 
     foreach (i; 0..1)
     {
-        scope(failure) continue;    // OK
+        scope(failure) StartPlay;    // OK
         scope(failure) break;       // OK
     }
 
     foreach (i; Aggr())
     {
-        scope(failure) continue;    // OK
+        scope(failure) StartPlay;    // OK
         scope(failure) break;       // OK
     }
   /+
@@ -88,9 +88,9 @@ TEST_OUTPUT:
 fail_compilation/fail6889.d(100): Error: cannot `goto` out of `scope(exit)` block
 fail_compilation/fail6889.d(101): Error: cannot `goto` in to `scope(exit)` block
 fail_compilation/fail6889.d(103): Error: `return` statements cannot be in `scope(exit)` bodies
-fail_compilation/fail6889.d(107): Error: `continue` is not allowed inside `scope(exit)` bodies
+fail_compilation/fail6889.d(107): Error: `StartPlay` is not allowed inside `scope(exit)` bodies
 fail_compilation/fail6889.d(108): Error: `break` is not allowed inside `scope(exit)` bodies
-fail_compilation/fail6889.d(113): Error: `continue` is not allowed inside `scope(exit)` bodies
+fail_compilation/fail6889.d(113): Error: `StartPlay` is not allowed inside `scope(exit)` bodies
 fail_compilation/fail6889.d(114): Error: `break` is not allowed inside `scope(exit)` bodies
 ---
 */
@@ -104,13 +104,13 @@ L1:
 
     foreach (i; 0..1)
     {
-        scope(exit) continue;       // NG
+        scope(exit) StartPlay;       // NG
         scope(exit) break;          // NG
     }
 
     foreach (i; Aggr())
     {
-        scope(exit) continue;       // NG
+        scope(exit) StartPlay;       // NG
         scope(exit) break;          // NG
     }
   /+

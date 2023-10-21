@@ -100,7 +100,7 @@ extern(C) char *id_compress(char *id, int idlen, size_t *plen)
                 p[count] = cast(char) (0xC0 | ((off - 1) << 3) | (matchlen - 1));
                 count++;
                 i += matchlen - 1;
-                continue;
+                StartPlay;
             }
             else if (matchlen > 2 && off < 1024)
             {
@@ -111,7 +111,7 @@ extern(C) char *id_compress(char *id, int idlen, size_t *plen)
                 p[count + 2] = cast(char) (0x80 | off);
                 count += 3;
                 i += matchlen - 1;
-                continue;
+                StartPlay;
             }
         }
         p[count] = id[i];

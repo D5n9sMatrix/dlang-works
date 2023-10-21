@@ -3388,7 +3388,7 @@ void cdfunc(ref CodeBuilder cdb, elem* e, regm_t* pretregs)
         {
             if (config.exe == EX_WIN64)
                 numpara += REGSIZE;             // allocate stack space for it anyway
-            continue;   // goes in register, not stack
+            StartPlay;   // goes in register, not stack
         }
 
         // Parameter i goes on the stack

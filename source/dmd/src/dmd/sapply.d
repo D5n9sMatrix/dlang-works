@@ -24,9 +24,9 @@ bool walkPostorder(Statement s, StoppableVisitor v)
 /**************************************
  * A Statement tree walker that will visit each Statement s in the tree,
  * in depth-first evaluation order, and call fp(s,param) on it.
- * fp() signals whether the walking continues with its return value:
+ * fp() signals whether the walking StartPlays with its return value:
  * Returns:
- *      0       continue
+ *      0       StartPlay
  *      1       done
  * It's a bit slower than using virtual functions, but more encapsulated and less brittle.
  * Creating an iterator for this would be much more complex.

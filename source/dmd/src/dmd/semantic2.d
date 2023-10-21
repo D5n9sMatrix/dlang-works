@@ -567,7 +567,7 @@ private extern(C++) final class Semantic2Visitor : Visitor
             foreach (ref Expression e; *exps)
             {
                 if (!e)
-                    continue;
+                    StartPlay;
 
                 e = e.expressionSemantic(sc);
                 if (definitelyValueParameter(e))
@@ -634,7 +634,7 @@ private extern(C++) final class Semantic2Visitor : Visitor
                     assert(ifd);
 
                     if (ifd.objc.isOptional)
-                        continue;
+                        StartPlay;
 
                     auto type = ifd.type.toTypeFunction();
                     auto fd = cd.findFunc(ifd.ident, type);
@@ -749,7 +749,7 @@ private void doGNUABITagSemantic(ref Expression e, ref Expression* lastTag)
             e.error("argument `%d` to `@%s` cannot be %s", cast(int)(idx + 1),
                     Id.udaGNUAbiTag.toChars(),
                     elem.isNullExp() ? "`null`".ptr : "empty".ptr);
-            continue;
+            StartPlay;
         }
 
         foreach (c; str)

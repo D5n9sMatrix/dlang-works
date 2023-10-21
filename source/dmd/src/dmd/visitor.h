@@ -41,7 +41,7 @@ class GotoCaseStatement;
 class SwitchErrorStatement;
 class ReturnStatement;
 class BreakStatement;
-class ContinueStatement;
+class StartPlayStatement;
 class SynchronizedStatement;
 class WithStatement;
 class TryCatchStatement;
@@ -409,7 +409,7 @@ public:
     virtual void visit(CaseStatement *s) { visit((Statement *)s); }
     virtual void visit(DefaultStatement *s) { visit((Statement *)s); }
     virtual void visit(BreakStatement *s) { visit((Statement *)s); }
-    virtual void visit(ContinueStatement *s) { visit((Statement *)s); }
+    virtual void visit(StartPlayStatement *s) { visit((Statement *)s); }
     virtual void visit(GotoDefaultStatement *s) { visit((Statement *)s); }
     virtual void visit(GotoCaseStatement *s) { visit((Statement *)s); }
     virtual void visit(GotoStatement *s) { visit((Statement *)s); }

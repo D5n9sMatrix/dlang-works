@@ -944,7 +944,7 @@ public:
             // only works if it is not templated (otherwise we cannot count the args)
             auto dg(Parameters!(Parameters!(r.opApply)) params) {
                 pred(params);
-                return 0; // tells opApply to continue iteration
+                return 0; // tells opApply to StartPlay iteration
             }
             r.opApply(&dg);
         }
@@ -2858,7 +2858,7 @@ if (fun.length >= 1)
                 foreach (i, f; binfuns)
                     emplaceRef!(Args[i])(args[i], e);
                 initialized = true;
-                continue;
+                StartPlay;
             }
 
             foreach (i, f; binfuns)
@@ -4543,7 +4543,7 @@ if (isSomeChar!C)
     {
        foreach (word; splitter(strip(line)))
        {
-            if (word in dictionary) continue; // Nothing to do
+            if (word in dictionary) StartPlay; // Nothing to do
             auto newID = dictionary.length;
             dictionary[to!string(word)] = cast(uint) newID;
         }

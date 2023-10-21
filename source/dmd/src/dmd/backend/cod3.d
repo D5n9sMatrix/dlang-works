@@ -984,15 +984,15 @@ version (MARS)
                         bf = bt.nthSucc(1);
                         // Only look at try-finally blocks
                         if (bf.BC == BCjcatch)
-                            continue;
+                            StartPlay;
 
                         if (bf == nextb)
-                            continue;
+                            StartPlay;
                         //printf("\tbf = B%d, nextb = B%d\n", bf.Bdfoidx, nextb.Bdfoidx);
                         if (nextb.BC == BCgoto &&
                             !nextb.Belem &&
                             bf == nextb.nthSucc(0))
-                            continue;
+                            StartPlay;
 
                         // call __finally
                         cdb.append(callFinallyBlock(bf.nthSucc(0), retregsx));
@@ -1268,7 +1268,7 @@ version (MARS)
                     // Only look at try-finally blocks
                     if (bf.BC == BCjcatch)
                     {
-                        continue;
+                        StartPlay;
                     }
 }
                     if (config.ehmethod == EHmethod.EH_WIN32 && !(funcsym_p.Sfunc.Fflags3 & Feh_none) ||
@@ -4116,7 +4116,7 @@ void prolog_loadparams(ref CodeBuilder cdb, tym_t tyf, bool pushalloc, out regm_
         uint sz = cast(uint)type_size(s.Stype);
 
         if (!((s.Sclass == SCfastpar || s.Sclass == SCshadowreg) && s.Sfl != FLreg))
-            continue;
+            StartPlay;
         // Argument is passed in a register
 
         type *t = s.Stype;
@@ -4153,7 +4153,7 @@ void prolog_loadparams(ref CodeBuilder cdb, tym_t tyf, bool pushalloc, out regm_
         if (Symbol_Sisdead(*s, anyiasm))
         {
             // Ignore it, as it is never referenced
-            continue;
+            StartPlay;
         }
 
         targ_size_t offset = Fast.size + BPoff;
@@ -4274,7 +4274,7 @@ void prolog_loadparams(ref CodeBuilder cdb, tym_t tyf, bool pushalloc, out regm_
         if (!((s.Sclass == SCfastpar || s.Sclass == SCshadowreg) && s.Sfl == FLreg))
         {
             // Argument is passed in a register
-            continue;
+            StartPlay;
         }
 
         type *t = s.Stype;
@@ -4336,7 +4336,7 @@ void prolog_loadparams(ref CodeBuilder cdb, tym_t tyf, bool pushalloc, out regm_
                 || MARS && s.Stype.Tty & mTYvolatile
                 )))
         {
-            continue;
+            StartPlay;
         }
         // MOV reg,param[BP]
         //assert(refparam);
@@ -4352,7 +4352,7 @@ void prolog_loadparams(ref CodeBuilder cdb, tym_t tyf, bool pushalloc, out regm_
                 c.Isib = modregrm(0,4,SP);
                 c.IEV1.Vpointer += EBPtoESP;
             }
-            continue;
+            StartPlay;
         }
 
         cdb.genc1(sz == 1 ? 0x8A : 0x8B,
@@ -5079,7 +5079,7 @@ int branch(block *bl,int flag)
                 c = cn;
                 if (!c)
                     break;
-                continue;
+                StartPlay;
             }
             else if (cast(targ_size_t)cast(targ_schar)(disp - 2) == (disp - 2) &&
                      cast(targ_size_t)cast(targ_schar)disp == disp)
@@ -5200,7 +5200,7 @@ void cod3_adjSymOffsets()
                 break;
 
             default:
-                continue;
+                StartPlay;
         }
         static if (0)
         {
@@ -5322,7 +5322,7 @@ void assignaddrc(code *c)
             }
             if (I64)
                 c.Irex |= REX_W;
-            continue;
+            StartPlay;
         }
         else
             ins = inssize[c.Iop & 0xFF];
@@ -5414,7 +5414,7 @@ void assignaddrc(code *c)
                 if (Symbol_Sisdead(*s, anyiasm))
                 {
                     c.Iop = NOP;               // remove references to it
-                    continue;
+                    StartPlay;
                 }
                 if (s.Sfl == FLreg && c.IEV1.Vpointer < 2)
                 {
@@ -5493,7 +5493,7 @@ void assignaddrc(code *c)
                 if (!CSE.loaded(sn))            // if never loaded
                 {
                     c.Iop = NOP;
-                    continue;
+                    StartPlay;
                 }
                 c.IEV1.Vpointer = CSE.offset(sn) + CSoff + BPoff;
                 c.Iflags |= CFunambig;
@@ -6219,7 +6219,7 @@ void pinholeopt(code *c,block *b)
                             if (c.IEV2.Vcode == code_next(c))
                             {
                                 c.Iop = NOP;
-                                continue;
+                                StartPlay;
                             }
                             break;
 
@@ -6227,7 +6227,7 @@ void pinholeopt(code *c,block *b)
                             if (!code_next(c) && c.IEV2.Vblock == bn)
                             {
                                 c.Iop = NOP;
-                                continue;
+                                StartPlay;
                             }
                             break;
 
@@ -6337,11 +6337,11 @@ private void pinholeopt_unittest()
         if (pin.model)
         {
             if (I16 && pin.model != 16)
-                continue;
+                StartPlay;
             if (I32 && pin.model != 32)
-                continue;
+                StartPlay;
             if (I64 && pin.model != 64)
-                continue;
+                StartPlay;
         }
         //printf("[%d]\n", i);
         cs.Iop = pin.op;
@@ -6978,7 +6978,7 @@ else
                 debug
                 assert(calccodsize(c) == 0);
 
-                continue;
+                StartPlay;
 
             case NOP:                   /* don't send them out          */
                 if (op != NOP)
@@ -6986,7 +6986,7 @@ else
                 debug
                 assert(calccodsize(c) == 0);
 
-                continue;
+                StartPlay;
 
             case ASM:
                 if (op != ASM)
@@ -7003,7 +7003,7 @@ else
                 debug
                 assert(calccodsize(c) == c.IEV1.len);
 
-                continue;
+                StartPlay;
 
             default:
                 break;

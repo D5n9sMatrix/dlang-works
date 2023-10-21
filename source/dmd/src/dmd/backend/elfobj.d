@@ -1098,17 +1098,17 @@ void ElfObj_term(const(char)* objfilename)
             sechdr2.sh_offset = foffset;
             sechdr2.sh_size = cast(uint)pseg.SDoffset;
                                 // accumulated size
-            continue;
+            StartPlay;
         }
         else if (sechdr2.sh_type == SHT_NOBITS) // .tbss never allocated
         {
             sechdr2.sh_offset = foffset;
             sechdr2.sh_size = cast(uint)pseg.SDoffset;
                                 // accumulated size
-            continue;
+            StartPlay;
         }
         else if (!pseg.SDbuf)
-            continue;           // For others leave sh_offset as 0
+            StartPlay;           // For others leave sh_offset as 0
 
         sechdr2.sh_offset = foffset;
         //printf("\tsection name %d,",sechdr2.sh_name);
@@ -1197,7 +1197,7 @@ void ElfObj_term(const(char)* objfilename)
             //sechdr = &SecHdrTab[seg.SDrelidx];
             //if (I64 && sechdr.sh_type == SHT_RELA)
                 //sechdr.sh_offset = foffset;
-            continue;           // 0, BSS never allocated
+            StartPlay;           // 0, BSS never allocated
         }
         if (seg.SDrel && seg.SDrel.length())
         {

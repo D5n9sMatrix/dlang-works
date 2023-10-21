@@ -193,19 +193,19 @@ public:
         foreach (i, s; *scopeDsym.members)
         {
             if (s is null || s.ident is null)
-                continue;
+                StartPlay;
 
             // if the current symbol is from another module
             if (auto m = scopeDsym.isModule())
                 if (!(to!string(s.loc.filename).endsWith(m.ident.toString() ~ ".d")))
-                    continue;
+                    StartPlay;
 
             if (!s.isImport())
                 symbols ~= s;
 
             if (!i || dsym is null) {
                 dsym = s;
-                continue;
+                StartPlay;
             }
 
             // only visit a symbol which contains the cursor

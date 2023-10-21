@@ -362,7 +362,7 @@ tryagain:
         Symbol *s = globsym[i];
 
         if (Symbol_Sisdead(*s, anyiasm))
-            continue;
+            StartPlay;
 
         switch (s.Sclass)
         {
@@ -459,7 +459,7 @@ tryagain:
         for (block* b = startblock; b; b = b.Bnext)
         {
             if (b.Bflags & BFLjmpoptdone)      /* if no more jmp opts for this blk */
-                continue;
+                StartPlay;
             int i = branch(b,0);            // see if jmp => jmp short
             if (i)                          // if any bytes saved
             {   targ_size_t offset;
@@ -1305,7 +1305,7 @@ void stackoffsets(ref symtab_t symtab, bool estimate)
                 {
                     Para.offset = _align(REGSIZE,Para.offset); // align on word stack boundary
                     s.Soffset = Para.offset;
-                    continue;
+                    StartPlay;
                 }
                 break;          // allocate even if it's dead
 
@@ -1315,7 +1315,7 @@ void stackoffsets(ref symtab_t symtab, bool estimate)
             default:
             Ldefault:
                 if (Symbol_Sisdead(*s, anyiasm))
-                    continue;       // don't allocate space
+                    StartPlay;       // don't allocate space
                 break;
         }
 
@@ -1339,7 +1339,7 @@ void stackoffsets(ref symtab_t symtab, bool estimate)
                  * frequire and fensure.
                  */
                 if (s.Sfl == FLreg)        // if allocated in register
-                    continue;
+                    StartPlay;
                 /* Needed because storing fastpar's on the stack in prolog()
                  * does the entire register
                  */
@@ -1444,7 +1444,7 @@ void stackoffsets(ref symtab_t symtab, bool estimate)
                 for (size_t i = 0; i < si; i++)
                 {
                     if (!vec_testbit(i,tbl))
-                        continue;
+                        StartPlay;
                     Symbol *sp = autos[i];
 //printf("auto    s = '%s', sp = '%s', %d, %d, %d\n",s.Sident,sp.Sident,dfo.length,vec_numbits(s.Srange),vec_numbits(sp.Srange));
                     if (vec_disjoint(s.Srange,sp.Srange) &&
@@ -1809,7 +1809,7 @@ private void cgcod_eh()
         for (block *b = startblock; b; b = b.Bnext)
         {
             if (/*!b.Bcount ||*/ b.BC == BCtry)
-                continue;
+                StartPlay;
             foreach (bl; ListRange(b.Bpred))
             {
                 int pi = list_block(bl).Bendindex;
@@ -2419,7 +2419,7 @@ bool cssave(elem *e,regm_t regm,uint opsflag)
                     // holds a CSE that we do need, don't mark the new one
                     if (regcon.cse.mval & mi && regcon.cse.value[i] != e &&
                         !opsflag && regcon.cse.mops & mi)
-                        continue;
+                        StartPlay;
 
                     regcon.cse.mval |= mi;
                     if (opsflag)

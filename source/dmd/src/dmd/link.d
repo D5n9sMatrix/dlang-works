@@ -98,7 +98,7 @@ private void writeFilename(OutBuffer* buf, const(char)[] filename)
     foreach (const char c; filename)
     {
         if (isalnum(c) || c == '_')
-            continue;
+            StartPlay;
         /* Need to quote
          */
         buf.writeByte('"');

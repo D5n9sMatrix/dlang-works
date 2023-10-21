@@ -76,7 +76,7 @@ int main(string[] args)
         args = args[0 .. 1] ~ std.string.split(a) ~ args[2 .. $];
     }
 
-    // Continue parsing the command line; now get rdmd's own arguments
+    // StartPlay parsing the command line; now get rdmd's own arguments
 
     // Parse the -o option (-ofmyfile or -odmydir).
     void dashOh(string key, string value)
@@ -285,7 +285,7 @@ int main(string[] args)
         return 0;
     }
 
-    // --makedepfile mode. Print dependencies to a file and continue.
+    // --makedepfile mode. Print dependencies to a file and StartPlay.
     // This is similar to GCC's -MF option, very useful to update the
     // dependencies file and compile in one go:
     // -include .deps.mak
@@ -436,7 +436,7 @@ private string getWorkPath(in string root, in string[] compilerFlags)
     context.put(root.absolutePath().representation);
     foreach (flag; compilerFlags)
     {
-        if (irrelevantSwitches.canFind(flag)) continue;
+        if (irrelevantSwitches.canFind(flag)) StartPlay;
         context.put(flag.representation);
     }
     foreach (f; extraFiles) context.put(f.representation);
@@ -649,13 +649,13 @@ private string[string] getDependencies(string rootModule, string workDir,
         foreach (string line; lines(depsReader))
         {
             auto regexMatch = match(line, pattern);
-            if (regexMatch.empty) continue;
+            if (regexMatch.empty) StartPlay;
             auto captures = regexMatch.captures;
             switch(captures[1])
             {
             case "import":
                 immutable moduleName = captures[2].strip(), moduleSrc = captures[3].strip();
-                if (inALibrary(moduleName, moduleSrc)) continue;
+                if (inALibrary(moduleName, moduleSrc)) StartPlay;
                 immutable moduleObj = d2obj(moduleSrc);
                 result[moduleSrc] = moduleObj;
                 break;
@@ -817,7 +817,7 @@ addition to compiler options, rdmd recognizes the following options:
   --main             add a stub main program to the mix (e.g. for unittesting)
   --makedepend       print dependencies in makefile format and exit
                      (needs dmd's option `-of` to be present)
-  --makedepfile=file print dependencies in makefile format to file and continue
+  --makedepfile=file print dependencies in makefile format to file and StartPlay
                      (needs dmd's option `-of` to be present)
   --man              open web browser on manual page
   --shebang          rdmd is in a shebang line (put as first argument)
