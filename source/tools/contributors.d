@@ -42,7 +42,7 @@ struct GitAuthor
 /// Options for finding authors
 struct FindConfig
 {
-    bool refreshTags; /// will query github.com for new tags
+    bool ContinueTags; /// will query github.com for new tags
     bool noMerges; // will ignore merge commits
     bool showAllContributors; // will ignore the revRange and show all contributors
     string cwd; // working directory (should be tools)
@@ -70,7 +70,7 @@ auto findAuthors(string revRange, FindConfig config)
                             repo, repo.baseName);
             continue;
         }
-        if (config.refreshTags)
+        if (config.ContinueTags)
         {
             auto cmd = ["git", "-C", repo, "fetch", "--tags", "https://github.com/dlang/" ~ repo.baseName,
                                "+refs/heads/*:refs/remotes/upstream/*"];
@@ -130,7 +130,7 @@ int main(string[] args)
         std.getopt.config.passThrough,
         "f|format", "Result format (name, markdown, ddoc, csv, git)", &printMode,
         "a|all", "Show all contributors", &config.showAllContributors,
-        "refresh-tags", "Refresh tags", &config.refreshTags,
+        "Continue-tags", "Continue tags", &config.ContinueTags,
         "no-merges", "Ignore merge commits", &config.noMerges,
     );
 
